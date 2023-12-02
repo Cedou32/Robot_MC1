@@ -17,15 +17,44 @@ int main()
     TFT.cls();             // clear the screen
     TFT.set_orientation(3);
 
-    TFT.rect(10, 10, 100, 50, Green);
-    TFT.set_font((unsigned char *)Arial12x12); // select the font
+    TFT.rect(0, 0, 320, 240, Blue);
+
+    TFT.rect(10, 10, 110, 40, White);       //Menu
+    TFT.set_font((unsigned char *)Arial24x23); // select the font
     TFT.foreground(Blue);  // set chars to white
     TFT.locate(20, 15);
-    TFT.printf("Salut");
+    TFT.printf("Menu");
 
+    TFT.rect(10, 50, 90, 70, White);       //Vitesse
+    TFT.set_font((unsigned char *)Arial12x12); // select the font
+    TFT.foreground(Green);  // set chars to white
+    TFT.locate(25, 55);
+    TFT.printf("Vitesse");
+
+    TFT.rect(120, 50, 140, 70, White);       //V1
+    TFT.set_font((unsigned char *)Arial12x12); // select the font
     TFT.foreground(Red);  // set chars to white
-    TFT.locate(40, 30);
-    TFT.printf("Salut");
+    TFT.locate(127, 57);
+    TFT.printf("1");
+
+    TFT.rect(150, 50, 170, 70, White);       //V2
+    TFT.set_font((unsigned char *)Arial12x12); // select the font
+    TFT.foreground(Red);  // set chars to white
+    TFT.locate(157, 57);
+    TFT.printf("2");
+
+    TFT.rect(180, 50, 200, 70, White);       //V3
+    TFT.set_font((unsigned char *)Arial12x12); // select the font
+    TFT.foreground(Red);  // set chars to white
+    TFT.locate(187, 57);
+    TFT.printf("3");
+
+    TFT.rect(240, 210, 310, 230, White);       //Close
+    TFT.set_font((unsigned char *)Arial12x12); // select the font
+    TFT.foreground(White);  // set chars to white
+    TFT.locate(255, 215);
+    TFT.printf("Close");
+
 
 
 }
