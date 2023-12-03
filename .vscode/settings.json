@@ -2,6 +2,8 @@
     "files.associations": {
         "memory_resource": "cpp",
         "memory": "cpp",
-        "type_traits": "cpp"
+        "type_traits": "cpp",
+        "condition_variable": "cpp",
+        "future": "cpp"
     }
 }
