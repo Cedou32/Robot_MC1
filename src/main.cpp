@@ -10,7 +10,18 @@
  SPI_TFT_ILI9341 TFT(D11, D12, D13, D10, D8, D9, "TFT"); // mosi, miso, sclk, cs, reset, dc
 // If your display need a signal for switch the backlight use a aditional IO pin in your program
 
-int main()
+AnalogIn X(A5);
+
+uint16_t valeur_x = 0;
+
+int main() {
+    while(1) {
+        valeur_x = X.read_u16();
+        printf("\n\r%d",valeur_x);
+        thread_sleep_for(250);
+    }
+}
+/*int main()
 {
 
     TFT.claim(stdout); // send stderr to the TFT display
@@ -55,4 +66,4 @@ int main()
     TFT.foreground(White);  // set chars to white
     TFT.locate(255, 215);
     TFT.printf("Close");
-}
+}*/
