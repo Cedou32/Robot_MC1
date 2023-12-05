@@ -6,19 +6,39 @@
 #include "Arial12x12.h"
 #include "Arial24x23.h"
 
+#define Xp A4
+#define Yp A5
+#define Xn A2
+#define Yn A3
+
+int X;
+int Y;
+
+int getX(void);
+int getY(void);
+//bool touch_detect(void);
+int touch;
+int adcz1;
+int adcz2;
+
 // the TFT is connected to SPI pin 5-7 and IO's 8-10
- SPI_TFT_ILI9341 TFT(D11, D12, D13, D10, D8, D9, "TFT"); // mosi, miso, sclk, cs, reset, dc
+SPI_TFT_ILI9341 TFT(D11, D12, D13, D10, D8, D9, "TFT"); // mosi, miso, sclk, cs, reset, dc
 // If your display need a signal for switch the backlight use a aditional IO pin in your program
 
-AnalogIn X(A5);
+int main()
+{
+    while (1)
+    {
+        while (touch_detect() == false)
+        {
+        }
 
-uint16_t valeur_x = 0;
+        X = getX();
+        Y = getY();
 
-int main() {
-    while(1) {
-        valeur_x = X.read_u16();
-        printf("\n\r%d",valeur_x);
-        thread_sleep_for(250);
+        printf("L'écran a été touché\r\n");
+        printf("Coordonnée: X=%d    Y=%d", X, Y);
+        delay(250);
     }
 }
 /*int main()
