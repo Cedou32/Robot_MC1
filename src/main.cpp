@@ -114,8 +114,8 @@ int main()
             TFT.rect(240, 210, 310, 230, White);       
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(White);                     
-            TFT.locate(255, 215);
-            TFT.printf("Close");
+            TFT.locate(252, 215);
+            TFT.printf("Fermer");
 
             etat = attente_appui;
           break;
@@ -170,8 +170,8 @@ int main()
             TFT.rect(240, 180, 310, 200, White);       
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(White);                     
-            TFT.locate(255, 185);
-            TFT.printf("Select");
+            TFT.locate(252, 185);
+            TFT.printf("Choisir");
 
             etat = attente_appui;
           break;
@@ -198,8 +198,8 @@ int main()
             TFT.rect(240, 180, 310, 200, White);       
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(White);                     
-            TFT.locate(255, 185);
-            TFT.printf("Select");
+            TFT.locate(252, 185);
+            TFT.printf("Choisir");
 
             etat = attente_appui;
           break;
@@ -226,8 +226,8 @@ int main()
             TFT.rect(240, 180, 310, 200, White);       
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(White);                     
-            TFT.locate(255, 185);
-            TFT.printf("Select");
+            TFT.locate(252, 185);
+            TFT.printf("Choisir");
 
             etat = attente_appui;
           break;
