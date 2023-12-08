@@ -1,3 +1,8 @@
+/*       Fichier .h de la librairie TouchScreen         */
+/*Cette librarie controle le module tactile d'un        */
+/*écran tactile                                         */
+/*Créée par Mihai Stinga                                 */
+
 #ifndef TOUCHSCREEN_H
 #define TOUCHSCREEN_H
 

@@ -1,7 +1,7 @@
 /*      Fichier .cpp de la librairie TouchScreen        */
 /*Cette librarie controle le module tactile d'un        */
 /*écran tactile                                         */
-/*Créé par Mihai Stinga                                 */
+/*Créée par Mihai Stinga                                 */
 
 #include "TouchScreen.h"
 #include "mbed.h"
@@ -70,7 +70,7 @@ int TouchScreen::getX(void)
         Xvalue = 320;
     }
 
-    return Xvalue;
+    return Xvalue ;
 }
 
 int TouchScreen::getY()
