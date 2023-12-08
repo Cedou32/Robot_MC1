@@ -59,7 +59,7 @@ int TouchScreen::getX(void)
 
     int Xraw = XNA.read_u16();
     //int Xvalue = Xraw * -0.006213592 + 357.2815534;
-    int Xvalue = Xraw * -0.00625 + 359.375;
+    int Xvalue = Xraw * -0.006349206 + 356.1904762;
 
     if (Xvalue < 0)
     {
@@ -88,7 +88,8 @@ int TouchScreen::getY()
     wait_us(20);
 
     int Yraw = YPA.read_u16();
-    int Yvalue = Yraw * -0.004918033 + 282.7868852;
+    //int Yvalue = Yraw * -0.004918033 + 282.7868852;
+    int Yvalue = Yraw * -0.004968944 + 283.2298137;
 
     if (Yvalue < 0)
     {
