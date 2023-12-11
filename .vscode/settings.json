@@ -4,6 +4,7 @@
         "memory": "cpp",
         "type_traits": "cpp",
         "condition_variable": "cpp",
-        "future": "cpp"
+        "future": "cpp",
+        "*.tcc": "cpp"
     }
 }
