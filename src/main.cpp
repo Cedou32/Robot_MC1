@@ -14,7 +14,6 @@
 
 uint16_t X;
 uint16_t Y;
-
 AnalogIn axeX(PC_3);
 
 bool _menu = false;
