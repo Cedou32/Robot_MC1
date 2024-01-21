@@ -19,6 +19,8 @@ AnalogIn axeX(PC_3);
 bool _menu = false;
 bool _vitesse = false;
 
+uint8_t v_moteur;
+
 enum
 {
   demarrage,
@@ -34,11 +36,15 @@ enum
 }; 
 uint8_t etat = demarrage;
 
-SPI_TFT_ILI9341 TFT(D11, D12, D13, D10, D8, D9, "TFT"); // mosi, miso, sclk, cs, reset, dc
+SPI_TFT_ILI9341 TFT(D11, D12, D13, PD_2, D8, D9, "TFT"); // mosi, miso, sclk, cs, reset, dc
 TouchScreen Touch(A4, A2, A5, A3);
+
+BufferedSerial pc(PB_6, PA_10); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
+char buff[] = "  ";
 
 int main()
 {
+  pc.set_baud(38400);
   while (1)
   {
 
@@ -150,6 +156,8 @@ int main()
           break;
 
         case selection_vitesse1:
+            v_moteur = 1;
+
             TFT.rect(120, 50, 140, 70, DarkGrey);         
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(DarkGrey);                       
@@ -178,6 +186,8 @@ int main()
           break;
 
         case selection_vitesse2:
+            v_moteur = 2;
+
             TFT.rect(120, 50, 140, 70, White);         
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(Red);                       
@@ -206,6 +216,8 @@ int main()
           break;
 
         case selection_vitesse3:
+            v_moteur = 3;
+
             TFT.rect(120, 50, 140, 70, White);         
             TFT.set_font((unsigned char *)Arial12x12); 
             TFT.foreground(Red);                       
@@ -251,6 +263,19 @@ int main()
           break;
 
         case ok:
+            if(v_moteur == 1){
+            buff[1] = '1';  
+            pc.write(buff, 2);
+            }
+            else if(v_moteur == 2){
+            buff[1] = '2';  
+            pc.write(buff, 2);
+            }
+            else if(v_moteur == 3){
+            buff[1] = '3';  
+            pc.write(buff, 2);
+            }
+
             TFT.fillrect(10,50,200,70,Black);
             TFT.fillrect(240, 210, 310, 230, Black); 
             TFT.fillrect(240, 180, 310, 200, Black);
