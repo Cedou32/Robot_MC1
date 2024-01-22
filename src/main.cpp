@@ -15,11 +15,15 @@
 uint16_t X;
 uint16_t Y;
 AnalogIn axeX(PC_3);
+DigitalIn bouton_servo(PC_9);
 
 bool _menu = false;
 bool _vitesse = false;
 
 uint8_t v_moteur;
+
+AnalogIn joystick(PA_0);
+uint8_t direction_stepper;
 
 enum
 {
@@ -32,7 +36,10 @@ enum
   selection_vitesse2,
   selection_vitesse3,
   ok,
-  fermer
+  fermer,
+  servo,
+  stepper
+
 }; 
 uint8_t etat = demarrage;
 
@@ -40,7 +47,7 @@ SPI_TFT_ILI9341 TFT(D11, D12, D13, PD_2, D8, D9, "TFT"); // mosi, miso, sclk, cs
 TouchScreen Touch(A4, A2, A5, A3);
 
 BufferedSerial pc(PB_6, PA_10); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
-char buff[] = "  ";
+uint8_t data[10];
 
 int main()
 {
@@ -71,6 +78,32 @@ int main()
           {
             etat = detection_appui;
           }
+          if (bouton_servo.read() == 1){
+            thread_sleep_for(500);
+            etat = servo;
+          }
+          if (joystick.read_u16() > 0x8500){
+              direction_stepper = 1;
+              etat = stepper;
+          } else if(joystick.read_u16() < 0x7700){
+              direction_stepper = 2;
+              etat = stepper;
+          }
+        break;
+      
+      case stepper:
+        data[3] = direction_stepper;
+        pc.write(data, sizeof(data));
+        data[3] = 0;
+        thread_sleep_for(50);
+        etat = attente_appui;
+        break;
+
+      case servo:
+        data[2] = 1;
+        pc.write(data, sizeof(data));
+        data[2] = 0;
+        etat = attente_appui;
         break;
 
       case detection_appui:
@@ -264,16 +297,16 @@ int main()
 
         case ok:
             if(v_moteur == 1){
-            buff[1] = '1';  
-            pc.write(buff, 2);
+            data[1] = 1;  
+            pc.write(data, sizeof(data));
             }
             else if(v_moteur == 2){
-            buff[1] = '2';  
-            pc.write(buff, 2);
+            data[1] = 2;  
+            pc.write(data, sizeof(data));
             }
             else if(v_moteur == 3){
-            buff[1] = '3';  
-            pc.write(buff, 2);
+            data[1] = 3;  
+            pc.write(data, sizeof(data));
             }
 
             TFT.fillrect(10,50,200,70,Black);
