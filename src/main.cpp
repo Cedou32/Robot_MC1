@@ -1,39 +1,52 @@
 #include "mbed.h"
-#include "stdio.h"
 
-DigitalOut dir(D11);
-DigitalOut step(D10);
-AnalogIn Y(A0);
-AnalogIn X(A1);
+//          LISTE DE COMMANDE FOR AT25M01           //
+/*
+    Write Enable            =   0x06    
+    Write Disable           =   0x04    **Default at power up 
+    Read Status Register    =   0x05    
+    Write Status Register   =   0x01    **Suivi des 8 bits du registre
+    Read Sequence           =   0x03    **Suivi de l'adresse de 24 bits 
+    Write sequence          =   0x02    **Suivi de l'adresse de 24 bits
 
-uint16_t valeur_x = 0;
 
-int main (){
-    while(1){
-        uint16_t W = Y.read_u16();
-        printf("\n\r%d",W);
+*/
+SPI spi(D11, D12, D13); // mosi, miso, sck
+DigitalOut cs(D10);
+
+int main()
+{
+    spi.format(8, 0);
+    spi.frequency(5000000);
+
+    while (1)
+    {
+
+        cs = 0;
+        spi.write(0x06);    
+        cs = 1;
+
+        cs = 0;
+        spi.write(0x05);            
+        int x = spi.write(0x00);    
+        cs = 1;
+
+        /*cs = 0;
+        spi.write(0x02);
+        spi.write(0x00);
+        spi.write(0x0A);
+        spi.write(0xFF);
+        spi.write(0x10);
+        cs = 1;*/
+
+        cs = 0;
+        spi.write(0x03);
+        spi.write(0x00);
+        spi.write(0x0A);
+        spi.write(0xFF);
+        int y = spi.write(0x00);
+        cs = 1;
+
         thread_sleep_for(1000);
-        /*
-        valeur_x = Y.read_u16();
-        printf("\n\r%d",valeur_x);
-        thread_sleep_for(1);*/
-        /*
-        // Code stepper fonctionnel
-        dir = 1;
-        for (uint8_t i = 0; i <= 200; i++){
-            step = 1;
-            thread_sleep_for(1);
-            step = 0;
-            thread_sleep_for(1);
-        }
-        thread_sleep_for(250);
-        dir = 0;
-        for (uint8_t i = 0; i <= 200; i++){
-            step = 1;
-            thread_sleep_for(1);
-            step = 0;
-            thread_sleep_for(1);
-        }
-        thread_sleep_for(250);*/
     }
 }
