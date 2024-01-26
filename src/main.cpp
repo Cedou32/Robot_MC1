@@ -1,6 +1,6 @@
 #include "mbed.h"
 
-//          LISTE DE COMMANDE FOR ADXL312         //
+//          LISTE DE REGISTRE POUR ADXL312         //
 /*
 
 */
@@ -9,15 +9,23 @@ DigitalOut cs(D10);
 
 int main()
 {
-    spi.format(8, 0);
-    spi.frequency(5000000);
 
     while (1)
     {
 
+        spi.format(8, 3);
+        spi.frequency(5000000);
+
         cs = 0;
-        spi.write(0x06);    
+        spi.write(0x00);
+        int x = spi.write(0x00);
         cs = 1;
+        printf("ID: %X\r\n",x);
+
+        /*cs = 0;
+        spi.write(0x00);
+        int x = spi.write(0x00);
+        cs = 1;*/
 
         thread_sleep_for(1000);
     }
