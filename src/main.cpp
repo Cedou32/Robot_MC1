@@ -79,6 +79,15 @@ int main()
           TFT.locate(220, 15);
           TFT.printf("Menu");
 
+          TFT.rect(10, 5, 50, 20, White);
+          TFT.rect(50, 10, 55, 15, White);
+          TFT.line(50, 11, 50, 14, Black);
+          TFT.fillrect(11, 6, 20, 19, Red);
+          TFT.fillrect(21, 6, 35, 19, Yellow);
+          TFT.fillrect(36, 6, 49, 19, Green);
+          TFT.fillrect(50, 11, 54, 14, Green);
+
+
           etat = attente_appui;
         break;
 
@@ -88,7 +97,7 @@ int main()
           {
             etat = detection_appui;
           }
-          /*if (bouton_servo.read() == 1){
+          if (bouton_servo.read() == 1){
             thread_sleep_for(500);
             etat = servo;
           }
@@ -98,7 +107,7 @@ int main()
           } else if(joystick.read_u16() < 0x7700){
               direction_stepper = 2;
               etat = stepper;
-          }*/
+          }
         break;
       
       case stepper:
