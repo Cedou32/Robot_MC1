@@ -83,9 +83,9 @@ int main()
           TFT.rect(50, 10, 55, 15, White);
           TFT.line(50, 11, 50, 14, Black);
           TFT.fillrect(11, 6, 20, 19, Red);
-          TFT.fillrect(21, 6, 35, 19, Yellow);
-          TFT.fillrect(36, 6, 49, 19, Green);
-          TFT.fillrect(50, 11, 54, 14, Green);
+          TFT.fillrect(21, 6, 35, 19, Orange);
+          TFT.fillrect(36, 6, 49, 19, DarkGreen);
+          TFT.fillrect(50, 11, 54, 14, DarkGreen);
 
 
           etat = attente_appui;
