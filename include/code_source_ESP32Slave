@@ -1,0 +1,185 @@
+#include <Arduino.h>
+#include "BluetoothSerial.h"           // BT: Include the Serial bluetooth library
+#define LED_BT 13                      // BT: Internal LED (or LED on the pin D2) for the connection indication (connected solid/disconnected blinking)
+unsigned long previousMillis;          // BT: Variable used for comparing millis counter (LED blinking)
+bool ledBtState = false;               // BT: Variable used to chage the indication LED state
+bool MasterConnected;                  // BT: Variable used to store the current connection state (true=connected/false=disconnected)
+String device_name = "ESP32-BT-Slave"; // BT: Variable used to store the CLIENT(slave) bluetooth device name
+String MACadd = "FC:F5:C4:0A:45:32";   // BT: Variable used to store the CLIENT(slave) bluetooth Mac address; Use your own MAC address
+
+// BT: Bluetooth availabilty check
+#if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
+#error Bluetooth is not enabled! Please run make menuconfig to and enable it
+#endif
+// BT: Serial Bluetooth availabilty check
+#if !defined(CONFIG_BT_SPP_ENABLED)
+#error Serial Bluetooth not available or not enabled. It is only available for the ESP32 chip.
+#endif
+
+BluetoothSerial SerialBT; // BT: Set the Object SerialBT
+HardwareSerial SerialPort(2); // use UART2
+
+uint8_t bluetoothData[10];
+#define LED_C 15
+#define LED_XD 27
+#define LED_XG 21
+#define LED_YH 12
+#define LED_YB 14
+
+// BT: Bt_Status callback function
+void Bt_Status(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
+{
+
+  if (event == ESP_SPP_SRV_OPEN_EVT)
+  {                                     // BT: Checks if the SPP Server connection is open, the event comes
+    Serial.println("Client Connected"); // BT: Write to the serial monitor
+    digitalWrite(LED_BT, HIGH);         // BT: Turn ON the bluetooth indication LED (solid light)
+    MasterConnected = true;             // BT: Set the variable true = SERVER is connected to the CLIENT
+  }
+  else if (event == ESP_SPP_CLOSE_EVT)
+  {                                        // BT: Checks if the SPP connection is closed, the event comes
+    Serial.println("Client Disconnected"); // BT: Write to the serial monitor
+    digitalWrite(LED_BT, LOW);             // BT: Turn OFF the bluetooth indication LED
+    MasterConnected = false;               // BT: Set the variable false = SERVER connection lost
+  }
+}
+
+void setup()
+{
+  pinMode(LED_BT, OUTPUT); // BT: Set up the onboard LED pin as output
+  Serial.begin(115200);    // Sets the data rate in bits per second (baud) for serial data transmission
+  SerialPort.begin(115200, SERIAL_8N1, 16, 17);
+
+  // BT: Define the Bt_Status callback
+  SerialBT.register_callback(Bt_Status);
+  // BT: Starts the bluetooth device with the name stored in the device_name variable
+  SerialBT.begin(device_name);
+  Serial.printf("The device with name \"%s\" and MAC address \"%s\" is started.\nNow you can pair it with Bluetooth!\n", device_name.c_str(), MACadd.c_str());
+  
+  pinMode(LED_C, OUTPUT);
+  pinMode(LED_XD, OUTPUT);
+  pinMode(LED_XG, OUTPUT);
+  pinMode(LED_YH, OUTPUT);
+  pinMode(LED_YB, OUTPUT);
+}
+
+void loop()
+{
+  // BT: Blinking the bluetooth indication LED if the connection is not established
+  if (!MasterConnected)
+  {
+    if (millis() - previousMillis >= 500)
+    { // BT: Checks if 500ms is passed
+      if (ledBtState == false)
+      { // BT: Checks the leddState and toggles it
+        ledBtState = true;
+      }
+      else
+      {
+        ledBtState = false;
+      }
+      digitalWrite(LED_BT, ledBtState); // BT: Set LED ON/OFF based onthe ledBtState variable
+      previousMillis = millis();        // BT: Set previousMillis to current millis
+    }
+  }
+
+  if (SerialBT.available())
+  {
+    uint8_t data = SerialBT.read();
+    SerialPort.write(data);
+    Serial.println(data);
+  }
+
+  /*if (SerialBT.available())
+  { // BT: Checks if there are data from the bluetooth available
+    char startMarker[] = "#@+";
+    char endMarker[] = "?%";
+    char currentChar;
+
+    //Serial.println("Test1");
+
+    for (int i = 0; i < 3; ++i)
+    {
+      //Serial.println("Test2");
+      // Lire un caractère de la trame Bluetooth
+      currentChar = SerialBT.read();
+      Serial.println(currentChar);
+      // Vérifier s'il correspond au caractère de début actuel
+      if (currentChar != startMarker[i])
+      {
+        //Serial.println("Test3");
+        // Si le caractère ne correspond pas, abandonner la lecture
+        return;
+      }
+    }
+
+    // Lire le reste de la trame jusqu'aux 2 caractères de fin
+    int index = 0;
+    while (SerialBT.available() > 0)
+    {
+      //Serial.println("Test4");
+      // Lire un caractère de la trame Bluetooth
+      currentChar = SerialBT.read();
+
+      // Vérifier s'il correspond au caractère de fin actuel
+      if (currentChar == endMarker[index % 2])
+      {
+        //Serial.println("Test5");
+        ++index;
+
+        // Si les deux caractères de fin ont été trouvés, terminer la lecture
+        if (index == 2)
+        {
+          bluetoothData[index] = '\0'; // Ajouter le caractère de fin de chaîne
+          break;
+        }
+      }
+      else
+      {
+        // Serial.println("Test6");
+        //  Stocker le caractère dans le tableau
+        bluetoothData[index] = currentChar;
+        index++;
+
+        // Vérifier que nous ne dépassons pas la taille du tableau
+        if (index >= 5)
+        {
+          break; // Arrêter la lecture si le tableau est plein
+        }
+      }
+
+    }
+
+    if(bluetoothData[0] >= 85 && bluetoothData[0] < 170 && bluetoothData[1] >= 85 && bluetoothData[1] < 170){
+      digitalWrite(LED_C, HIGH); 
+      digitalWrite(LED_XD, LOW);
+      digitalWrite(LED_XG, LOW);
+      digitalWrite(LED_YH, LOW);
+      digitalWrite(LED_YB, LOW);
+    } else if (bluetoothData[0] >= 0 && bluetoothData[0] < 85){
+      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_XD, HIGH);
+      digitalWrite(LED_XG, LOW);
+      digitalWrite(LED_YH, LOW);
+      digitalWrite(LED_YB, LOW);
+    } else if (bluetoothData[0] >= 170 && bluetoothData[0] < 256){
+      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_XD, LOW);
+      digitalWrite(LED_XG, HIGH);
+      digitalWrite(LED_YH, LOW);
+      digitalWrite(LED_YB, LOW);
+    } else if (bluetoothData[1] >= 0 && bluetoothData[1] < 85){
+      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_XD, LOW);
+      digitalWrite(LED_XG, LOW);
+      digitalWrite(LED_YH, LOW);
+      digitalWrite(LED_YB, HIGH);
+    } else if (bluetoothData[1] >= 170 && bluetoothData[1] < 256){
+      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_XD, LOW);
+      digitalWrite(LED_XG, LOW);
+      digitalWrite(LED_YH, HIGH);
+      digitalWrite(LED_YB, LOW);
+    }
+  }*/
+}
