@@ -56,7 +56,7 @@ int main()
         }
       }
 
-      if (buff[0] >= 85 && buff[0] < 170 && buff[1] >= 85 && buff[1] < 170)
+      if (buff[3] >= 85 && buff[3] < 170 && buff[4] >= 85 && buff[4] < 170)
       {
         LED_C = 1;
         LED_XD = 0;
@@ -64,7 +64,7 @@ int main()
         LED_YH = 0;
         LED_YB = 0;
       }
-      else if (buff[0] >= 0 && buff[0] < 85)
+      else if (buff[3] >= 0 && buff[3] < 85)
       {
         LED_C = 0;
         LED_XD = 1;
@@ -72,7 +72,7 @@ int main()
         LED_YH = 0;
         LED_YB = 0;
       }
-      else if (buff[0] >= 170 && buff[0] < 256)
+      else if (buff[3] >= 170 && buff[3] < 256)
       {
         LED_C = 0;
         LED_XD = 0;
@@ -80,7 +80,7 @@ int main()
         LED_YH = 0;
         LED_YB = 0;
       }
-      else if (buff[1] >= 0 && buff[1] < 85)
+      else if (buff[4] >= 0 && buff[4] < 85)
       {
         LED_C = 0;
         LED_XD = 0;
@@ -88,7 +88,7 @@ int main()
         LED_YH = 0;
         LED_YB = 1;
       }
-      else if (buff[1] >= 170 && buff[1] < 256)
+      else if (buff[4] >= 170 && buff[4] < 256)
       {
         LED_C = 0;
         LED_XD = 0;
