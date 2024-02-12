@@ -2,46 +2,100 @@
 
 BufferedSerial pc(PB_6, PA_10);
 uint8_t buff[10];
-uint8_t buff1[] = "AB";
-
-AnalogIn joystickY(PA_0);
-AnalogIn joystickX(PA_1);
 
 uint8_t valueX;
 uint8_t valueY;
 
-uint8_t map(uint16_t raw_value){
-    uint8_t value_8bit = uint8_t (raw_value * 0.00389105);
-    return value_8bit;
-}
+DigitalOut LED_C(D3);
+DigitalOut LED_XD(D4);
+DigitalOut LED_XG(D5);
+DigitalOut LED_YH(D6);
+DigitalOut LED_YB(D7);
 
-
+char startMarker[] = "#@+";
+char endMarker[] = "?%";
+char currentChar;
 
 int main()
 {
-  buff[0] = '#';
-  buff[1] = '@';
-  buff[2] = '+';
-  buff[8] = '?';
-  buff[9] = '%';
-
   pc.set_baud(115200);
+  int buffindex = 0;
+  while (1)
+  {
+    if (pc.readable())
+    {
 
-    while (1){
+      pc.read(&currentChar, 1);
 
-        buff[3] = map(joystickX.read_u16());
-        buff[4] = map(joystickY.read_u16());
+      if (currentChar == startMarker[buffindex % 3])
+      {
+        printf("Test1\r\n");
+        buff[buffindex++] = currentChar;
 
-        
-        //buff1[0] = valueX;
-        //buff1[1] = valueY;
+        if (buffindex % 3 == 0)
+        {
+          printf("Test2\r\n");
+          while (pc.readable() && buffindex < 10)
+          {
+            printf("Test3\r\n");
+            pc.read(&currentChar, 1);
+            buff[buffindex++] = currentChar;
 
-        //printf("X = %u\r\n", buff[3]);
-        //printf("Y = %u\r\n", buff[4]);
+            // Vérifie si le caractère actuel correspond à la fin de la trame
+            if (currentChar == endMarker[(buffindex - 3) % 2])
+            {
+              printf("Test4\r\n");
+              for(int i = 0; i<10; i++){
+                printf("%d\r\n",buff[i]);
+              }
+              // Réinitialise l'index du buffer pour la prochaine trame
+              buffindex = 0;
+              break;
+            }
+          }
+        }
+      }
 
-        pc.write(buff, sizeof(buff));
-        //pc.write(buff1, sizeof(buff1));
-
-        //thread_sleep_for(500);
+      if (buff[0] >= 85 && buff[0] < 170 && buff[1] >= 85 && buff[1] < 170)
+      {
+        LED_C = 1;
+        LED_XD = 0;
+        LED_XG = 0;
+        LED_YH = 0;
+        LED_YB = 0;
+      }
+      else if (buff[0] >= 0 && buff[0] < 85)
+      {
+        LED_C = 0;
+        LED_XD = 1;
+        LED_XG = 0;
+        LED_YH = 0;
+        LED_YB = 0;
+      }
+      else if (buff[0] >= 170 && buff[0] < 256)
+      {
+        LED_C = 0;
+        LED_XD = 0;
+        LED_XG = 1;
+        LED_YH = 0;
+        LED_YB = 0;
+      }
+      else if (buff[1] >= 0 && buff[1] < 85)
+      {
+        LED_C = 0;
+        LED_XD = 0;
+        LED_XG = 0;
+        LED_YH = 0;
+        LED_YB = 1;
+      }
+      else if (buff[1] >= 170 && buff[1] < 256)
+      {
+        LED_C = 0;
+        LED_XD = 0;
+        LED_XG = 0;
+        LED_YH = 1;
+        LED_YB = 0;
+      }
     }
+  }
 }
