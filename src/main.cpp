@@ -35,6 +35,7 @@ int main()
     buff[3] = valueX;
     buff[4] = valueY;
 
+    //pc.write(buff, sizeof(buff));
     if ((valueX - saveX) > 10 || (saveX - valueX) > 10 || (valueY - saveY) > 10 || (saveY - valueY) > 10)
     {
       pc.write(buff, sizeof(buff));
@@ -42,6 +43,6 @@ int main()
       saveY = valueY;
     }
 
-    // thread_sleep_for(500);
+     thread_sleep_for(25);
   }
 }
