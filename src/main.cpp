@@ -35,7 +35,7 @@ int main()
     buff[3] = valueX;
     buff[4] = valueY;
 
-    if ((valueX - saveX) > 5 || (saveX - valueX) > 5 || (valueY - saveY) > 5 || (saveY - valueY) > 5)
+    if ((valueX - saveX) > 10 || (saveX - valueX) > 10 || (valueY - saveY) > 10 || (saveY - valueY) > 10)
     {
       pc.write(buff, sizeof(buff));
       saveX = valueX;
