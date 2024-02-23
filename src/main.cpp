@@ -1,86 +1,109 @@
 #include "mbed.h"
 #include "stdio.h"
 
-AnalogIn PA0(PA_0);
-AnalogIn PA1(PA_1);
-AnalogIn PA2(PA_2);
-AnalogIn PA3(PA_3);
-AnalogIn PA4(PA_4);
-AnalogIn PA5(PA_5);
-AnalogIn PA6(PA_6);
-AnalogIn PA7(PA_7);
+DigitalOut PA0(PA_0);
+DigitalOut PA5(PA_5);
+DigitalOut PA6(PA_6);
+DigitalOut PA7(PA_7);
+DigitalOut RX(PA_10);
 
-AnalogIn PB0 (PB_0);
-AnalogIn PB1(PB_1);
- 
-AnalogIn PC0(PC_0);
-AnalogIn PC1(PC_1);
-AnalogIn PC2(PC_2);
-AnalogIn PC3(PC_4);
-AnalogIn PC5(PC_5);
+DigitalOut PB0(PB_0);
+PwmOut PWMB3(PB_3);
+DigitalOut PB4(PB_4);
+DigitalOut PB5(PB_5);
+DigitalOut TX(PB_6);
+DigitalOut PB7(PB_7);
+DigitalOut PB8(PB_8);
+DigitalOut PB9(PB_9);
 
-uint16_t _0PA = 0;
-uint16_t _1PA = 0;
-uint16_t _2PA = 0;
-uint16_t _3PA = 0;
-uint16_t _4PA = 0;
-uint16_t _5PA = 0;
-uint16_t _6PA = 0;
-uint16_t _7PA = 0;
+DigitalOut PC0(PC_0);
+DigitalOut PC1(PC_1);
+DigitalOut PC2(PC_2);
+DigitalOut PC3(PC_3);
+DigitalOut PC4(PC_4);
+DigitalOut PC5(PC_5);
+PwmOut PWMC11(PC_11);
+PwmOut PWMC12(PC_12);
 
-uint16_t _0PB = 0;
-uint16_t _1PB = 0;
+int main()
+{
+  PWMB3.period_ms(250);
+  PWMC11.period_ms(250);
+  PWMC11.period_ms(250);
 
-uint16_t _0PC = 0;
-uint16_t _1PC = 0;
-uint16_t _2PC = 0;
-uint16_t _3PC = 0;
-uint16_t _4PC = 0;
+  PWMB3.write(0.5f);
+  PWMC11.write(0.5f);
+  PWMC12.write(0.5f);
+  while (1)
+  {
 
-int main (){
-    while(1){
-        _0PA = PA0.read_u16();
-        _1PA = PA1.read_u16();
-        _2PA = PA2.read_u16();
-        _3PA = PA3.read_u16();
-        _4PA = PA4.read_u16();
-        _5PA = PA5.read_u16();
-        _6PA = PA6.read_u16();
-        _7PA = PA7.read_u16();
+    /*PA0 = 1;
+    PA5 = 1;
+    PA6 = 1;
+    PA7 = 1;
+    RX = 1;
 
-        _0PB = PB0.read_u16();
-        _1PB = PB1.read_u16();
+    PB0 = 1;
+    PB4 = 1;
+    PB5 = 1;
+    TX = 1;
+    PB7 = 1;
+    PB8 = 1;
+    PB9 = 1;
 
-        _0PC = PC0.read_u16();
-        _1PC = PC1.read_u16();
-        _2PC = PC2.read_u16();
-        _3PC = PC3.read_u16();
-        _4PC = PC4.read_u16();
+    PC0 = 1;
+    PC1 = 1;
+    PC2 = 1;
+    PC3 = 1;
+    PC4 = 1;
+    PC5 = 1;
 
+    thread_sleep_for(200);
 
-        printf("\n\r%d",W);
-        thread_sleep_for(1000);
-        /*
-        valeur_x = Y.read_u16();
-        printf("\n\r%d",valeur_x);
-        thread_sleep_for(1);*/
-        /*
-        // Code stepper fonctionnel
-        dir = 1;
-        for (uint8_t i = 0; i <= 200; i++){
-            step = 1;
-            thread_sleep_for(1);
-            step = 0;
-            thread_sleep_for(1);
-        }
-        thread_sleep_for(250);
-        dir = 0;
-        for (uint8_t i = 0; i <= 200; i++){
-            step = 1;
-            thread_sleep_for(1);
-            step = 0;
-            thread_sleep_for(1);
-        }
-        thread_sleep_for(250);*/
+    PA0 = 0;
+    PA5 = 0;
+    PA6 = 0;
+    PA7 = 0;
+    RX = 0;
+
+    PB0 = 0;
+    PB4 = 0;
+    PB5 = 0;
+    TX = 0;
+    PB7 = 0;
+    PB8 = 0;
+    PB9 = 0;
+
+    PC0 = 0;
+    PC1 = 0;
+    PC2 = 0;
+    PC3 = 0;
+    PC4 = 0;
+    PC5 = 0;
+
+    thread_sleep_for(200);*/
+
+    /*
+    valeur_x = Y.read_u16();
+    printf("\n\r%d",valeur_x);
+    thread_sleep_for(1);*/
+    /*
+    // Code stepper fonctionnel
+    dir = 1;
+    for (uint8_t i = 0; i <= 200; i++){
+        step = 1;
+        thread_sleep_for(1);
+        step = 0;
+        thread_sleep_for(1);
     }
+    thread_sleep_for(250);
+    dir = 0;
+    for (uint8_t i = 0; i <= 200; i++){
+        step = 1;
+        thread_sleep_for(1);
+        step = 0;
+        thread_sleep_for(1);
+    }
+    thread_sleep_for(250);*/
+  }
 }
