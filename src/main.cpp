@@ -8,7 +8,6 @@ DigitalOut PA7(PA_7);
 DigitalOut RX(PA_10);
 
 DigitalOut PB0(PB_0);
-PwmOut PWMB3(PB_3);
 DigitalOut PB4(PB_4);
 DigitalOut PB5(PB_5);
 DigitalOut TX(PB_6);
@@ -22,22 +21,24 @@ DigitalOut PC2(PC_2);
 DigitalOut PC3(PC_3);
 DigitalOut PC4(PC_4);
 DigitalOut PC5(PC_5);
-PwmOut PWMC11(PC_11);
-PwmOut PWMC12(PC_12);
+PwmOut PWMC6(PC_6);
+PwmOut PWMC8(PC_8);
+PwmOut PWMC9(PC_9);
 
 int main()
 {
-  PWMB3.period_ms(250);
-  PWMC11.period_ms(250);
-  PWMC11.period_ms(250);
+  PWMC6.period_ms(250);
+  PWMC6.write(0.5f);
 
-  PWMB3.write(0.5f);
-  PWMC11.write(0.5f);
-  PWMC12.write(0.5f);
+  PWMC8.period_ms(250);
+  PWMC8.write(0.5f);
+
+  PWMC9.period_ms(250);
+  PWMC9.write(0.5f);
   while (1)
   {
 
-    /*PA0 = 1;
+    PA0 = 1;
     PA5 = 1;
     PA6 = 1;
     PA7 = 1;
@@ -81,7 +82,7 @@ int main()
     PC4 = 0;
     PC5 = 0;
 
-    thread_sleep_for(200);*/
+    thread_sleep_for(200);
 
     /*
     valeur_x = Y.read_u16();
