@@ -35,55 +35,13 @@ int main()
 
   PWMC9.period_ms(250);
   PWMC9.write(0.5f);
+  
   while (1)
   {
-
-    PA0 = 1;
-    PA5 = 1;
-    PA6 = 1;
-    PA7 = 1;
     RX = 1;
-
-    PB0 = 1;
-    PB4 = 1;
-    PB5 = 1;
-    TX = 1;
-    PB7 = 1;
-    PB8 = 1;
-    PB9 = 1;
-
-    PC0 = 1;
-    PC1 = 1;
-    PC2 = 1;
-    PC3 = 1;
-    PC4 = 1;
-    PC5 = 1;
-
-    thread_sleep_for(200);
-
-    PA0 = 0;
-    PA5 = 0;
-    PA6 = 0;
-    PA7 = 0;
+    thread_sleep_for(50);
     RX = 0;
-
-    PB0 = 0;
-    PB4 = 0;
-    PB5 = 0;
-    TX = 0;
-    PB7 = 0;
-    PB8 = 0;
-    PB9 = 0;
-
-    PC0 = 0;
-    PC1 = 0;
-    PC2 = 0;
-    PC3 = 0;
-    PC4 = 0;
-    PC5 = 0;
-
-    thread_sleep_for(200);
-
+    thread_sleep_for(50);
     /*
     valeur_x = Y.read_u16();
     printf("\n\r%d",valeur_x);
