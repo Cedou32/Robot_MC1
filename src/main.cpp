@@ -7,10 +7,10 @@
 #include "Arial24x23.h"
 #include "TouchScreen.h"
 //Pins pour l<interface tactile
-#define Xp PC_1
-#define Yp PC_0
-#define Xn PC_3
-#define Yn PC_2
+#define Xp PC_3
+#define Yp PC_2
+#define Xn PC_1
+#define Yn PC_0
 uint16_t positionX; //valeur de l'axe X du toucher
 uint16_t positionY; //valeur de l'axe Y du toucher
 DigitalIn bouton_servo(PC_9); //bouton pour simuler le controle de la pince
