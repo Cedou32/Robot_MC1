@@ -1,68 +1,43 @@
 #include "mbed.h"
 #include "stdio.h"
 
-DigitalOut PA0(PA_0);
-DigitalOut PA5(PA_5);
-DigitalOut PA6(PA_6);
-DigitalOut PA7(PA_7);
-DigitalOut RX(PA_10);
+AnalogIn Y1(PC_5);
+AnalogIn Y2(PA_1);
+AnalogIn X1(PB_1);
+AnalogIn X2(PA_0);
 
-DigitalOut PB0(PB_0);
-DigitalOut PB4(PB_4);
-DigitalOut PB5(PB_5);
-DigitalOut TX(PB_6);
-DigitalOut PB7(PB_7);
-DigitalOut PB8(PB_8);
-DigitalOut PB9(PB_9);
+DigitalIn CTRL(PB_15);
+DigitalIn Pince(PA_3);
 
-DigitalOut PC0(PC_0);
-DigitalOut PC1(PC_1);
-DigitalOut PC2(PC_2);
-DigitalOut PC3(PC_3);
-DigitalOut PC4(PC_4);
-DigitalOut PC5(PC_5);
-PwmOut PWMC6(PC_6);
-PwmOut PWMC8(PC_8);
-PwmOut PWMC9(PC_9);
+DigitalOut led(PC_13);
+
+BufferedSerial pc(PB_6, PB_7);
+
+uint8_t buff[10];
+uint8_t value;
+
+uint8_t map(uint16_t raw_value)
+{
+  uint8_t value_8bit = uint8_t(raw_value * 0.00389105);
+  return value_8bit;
+}
 
 int main()
 {
-  PWMC6.period_ms(250);
-  PWMC6.write(0.5f);
+  pc.set_baud(9600);
 
-  PWMC8.period_ms(250);
-  PWMC8.write(0.5f);
-
-  PWMC9.period_ms(250);
-  PWMC9.write(0.5f);
-  
   while (1)
   {
-    RX = 1;
-    thread_sleep_for(50);
-    RX = 0;
-    thread_sleep_for(50);
-    /*
-    valeur_x = Y.read_u16();
-    printf("\n\r%d",valeur_x);
-    thread_sleep_for(1);*/
-    /*
-    // Code stepper fonctionnel
-    dir = 1;
-    for (uint8_t i = 0; i <= 200; i++){
-        step = 1;
-        thread_sleep_for(1);
-        step = 0;
-        thread_sleep_for(1);
+    if (CTRL == 1)
+    {
+      led = 1;
     }
-    thread_sleep_for(250);
-    dir = 0;
-    for (uint8_t i = 0; i <= 200; i++){
-        step = 1;
-        thread_sleep_for(1);
-        step = 0;
-        thread_sleep_for(1);
+    else
+    {
+      led = 0;
     }
-    thread_sleep_for(250);*/
+    /*value = map(X2.read_u16());
+    buff[0] = value;
+    pc.write(buff, 1);*/
   }
 }
