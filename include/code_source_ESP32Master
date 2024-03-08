@@ -94,9 +94,7 @@ void loop() {
     
   }
  
-  SerialBT.write(buff, sizeof(buff));
-  delay(500);
-
+  
   /*joystickY = analogRead(analogPinY);
   joystickX = analogRead(analogPinX);
 
@@ -114,12 +112,12 @@ void loop() {
   Serial.print("\tJoystick X: ");
   Serial.println(valueX);*/
 
-  /*if (SerialPort.available())
+  if (SerialPort.available())
   {
     uint8_t data = SerialPort.read();
     SerialBT.write(data);
     Serial.println(data);
-  }*/
+  }
   
   
 }
