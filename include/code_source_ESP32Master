@@ -1,8 +1,9 @@
 #include <Arduino.h>
 #include "BluetoothSerial.h"                                                              // BT: Include the Serial bluetooth library
 #include <HardwareSerial.h>
-#define LED_BT_BLUE 14                                                                    // BT: Internal LED (or LED on the pin D2) for the connection indication (connected LED ON / disconnected LED OFF)
-#define LED_BT_RED 32                                                                     // BT: LED (LED on the pin D4) for the connection indication (connected LED OFF / disconnected LED ON)
+
+#define LED_BT_BLUE 21                                                                   // BT: Internal LED (or LED on the pin D2) for the connection indication (connected LED ON / disconnected LED OFF)
+#define LED_BT_RED 19                                                                    // BT: LED (LED on the pin D4) for the connection indication (connected LED OFF / disconnected LED ON)
 unsigned long previousMillisReconnect;                                                    // BT: Variable used for comparing millis counter for the reconnection timer
 bool ledBtState = false;                                                                  // BT: Variable used to chage the indication LED state
 bool SlaveConnected;                                                                      // BT: Variable used to store the current connection state (true=connected/false=disconnected)
@@ -23,8 +24,8 @@ uint8_t buff[10];
 
 String myName = "ESP32-BT-Master";                                                        // BT: Variable used to store the SERVER(Master) bluetooth device name; just for prinitng
 String slaveName = "ESP32-BT-Slave";                                                      // BT: Variable used to store the CLIENT(Slave) bluetooth device name; just for prinitng; just for printing in this case
-String MACadd = "FC:F5:C4:0A:45:32";                                                    // BT: Variable used to store the CLIENT(Slave) bluetooth device Mac address; just for prinitng; just for printing in this case
-uint8_t address[6] = { 0xFC, 0xF5, 0xC4, 0x0A, 0x45, 0x32 };                              // BT: Variable used to store the CLIENT(Slave) MAC address used for the connection; Use your own andress in the same format
+String MACadd = "24:62:AB:D1:B5:E2";                                                   // BT: Variable used to store the CLIENT(Slave) bluetooth device Mac address; just for prinitng; just for printing in this case
+uint8_t address[6] = { 0x24, 0x62, 0xAB, 0xD1, 0xB5, 0xE2 };                              // BT: Variable used to store the CLIENT(Slave) MAC address used for the connection; Use your own andress in the same format
 
 BluetoothSerial SerialBT;                                                                 // BT: Set the Object SerialBT
 HardwareSerial SerialPort(2); // use UART2
@@ -72,10 +73,7 @@ void setup() {
   buff[8] = '?';
   buff[9] = '%';
 
- 
 }
-
-
 
 void loop() {
   
@@ -95,6 +93,9 @@ void loop() {
     }
     
   }
+ 
+  SerialBT.write(buff, sizeof(buff));
+  delay(500);
 
   /*joystickY = analogRead(analogPinY);
   joystickX = analogRead(analogPinX);
@@ -113,12 +114,12 @@ void loop() {
   Serial.print("\tJoystick X: ");
   Serial.println(valueX);*/
 
-  if (SerialPort.available())
+  /*if (SerialPort.available())
   {
     uint8_t data = SerialPort.read();
     SerialBT.write(data);
     Serial.println(data);
-  }
+  }*/
   
   
 }
