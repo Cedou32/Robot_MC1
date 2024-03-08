@@ -7,7 +7,6 @@ bool MasterConnected;                  // BT: Variable used to store the current
 String device_name = "ESP32-BT-Slave"; // BT: Variable used to store the CLIENT(slave) bluetooth device name
 String MACadd = "24:62:AB:D1:B5:E2";   // BT: Variable used to store the CLIENT(slave) bluetooth Mac address; Use your own MAC address
 
-
 // BT: Bluetooth availabilty check
 #if !defined(CONFIG_BT_ENABLED) || !defined(CONFIG_BLUEDROID_ENABLED)
 #error Bluetooth is not enabled! Please run make menuconfig to and enable it
@@ -17,7 +16,7 @@ String MACadd = "24:62:AB:D1:B5:E2";   // BT: Variable used to store the CLIENT(
 #error Serial Bluetooth not available or not enabled. It is only available for the ESP32 chip.
 #endif
 
-BluetoothSerial SerialBT; // BT: Set the Object SerialBT
+BluetoothSerial SerialBT;     // BT: Set the Object SerialBT
 HardwareSerial SerialPort(2); // use UART2
 
 uint8_t bluetoothData[10];
@@ -51,7 +50,6 @@ void setup()
   // BT: Starts the bluetooth device with the name stored in the device_name variable
   SerialBT.begin(device_name);
   Serial.printf("The device with name \"%s\" and MAC address \"%s\" is started.\nNow you can pair it with Bluetooth!\n", device_name.c_str(), MACadd.c_str());
-  
 }
 
 void loop()
@@ -74,31 +72,32 @@ void loop()
     }
   }
 
-  if (SerialBT.available())
+  /*if (SerialBT.available())
   {
     uint8_t data = SerialBT.read();
     Serial.println(data);
-  }
+  }*/
 
-  /*if (SerialBT.available())
+  if (SerialBT.available())
   { // BT: Checks if there are data from the bluetooth available
-    char startMarker[] = "#@+";
-    char endMarker[] = "?%";
-    char currentChar;
+
+    uint8_t startMarker[] = "#@+";
+    uint8_t endMarker[] = "?%";
+    uint8_t currentChar;
 
     //Serial.println("Test1");
 
     for (int i = 0; i < 3; ++i)
     {
       //Serial.println("Test2");
-      // Lire un caractère de la trame Bluetooth
+      //  Lire un caractère de la trame Bluetooth
       currentChar = SerialBT.read();
       Serial.println(currentChar);
-      // Vérifier s'il correspond au caractère de début actuel
+      //  Vérifier s'il correspond au caractère de début actuel
       if (currentChar != startMarker[i])
       {
         //Serial.println("Test3");
-        // Si le caractère ne correspond pas, abandonner la lecture
+        //  Si le caractère ne correspond pas, abandonner la lecture
         return;
       }
     }
@@ -108,8 +107,11 @@ void loop()
     while (SerialBT.available() > 0)
     {
       //Serial.println("Test4");
-      // Lire un caractère de la trame Bluetooth
+      //  Lire un caractère de la trame Bluetooth
       currentChar = SerialBT.read();
+
+      // Serial.println("Salut");
+      Serial.println(currentChar);
 
       // Vérifier s'il correspond au caractère de fin actuel
       if (currentChar == endMarker[index % 2])
@@ -120,13 +122,14 @@ void loop()
         // Si les deux caractères de fin ont été trouvés, terminer la lecture
         if (index == 2)
         {
+          //Serial.println("Test7");
           bluetoothData[index] = '\0'; // Ajouter le caractère de fin de chaîne
           break;
         }
       }
       else
       {
-        // Serial.println("Test6");
+        //Serial.println("Test6");
         //  Stocker le caractère dans le tableau
         bluetoothData[index] = currentChar;
         index++;
@@ -134,42 +137,52 @@ void loop()
         // Vérifier que nous ne dépassons pas la taille du tableau
         if (index >= 5)
         {
+          //Serial.println("Test8");
           break; // Arrêter la lecture si le tableau est plein
         }
       }
-
     }
 
-    if(bluetoothData[0] >= 85 && bluetoothData[0] < 170 && bluetoothData[1] >= 85 && bluetoothData[1] < 170){
-      digitalWrite(LED_C, HIGH); 
+    Serial.print("Joystick 1: X= ");
+    Serial.print(bluetoothData[1]);
+    Serial.print(" Y= ");
+    Serial.println(bluetoothData[0]);
+    Serial.print("Joystick 2: X= ");
+    Serial.print(bluetoothData[3]);
+    Serial.print(" Y= ");
+    Serial.println(bluetoothData[2]);
+    Serial.println();
+
+    /*if(bluetoothData[0] >= 85 && bluetoothData[0] < 170 && bluetoothData[1] >= 85 && bluetoothData[1] < 170){
+      digitalWrite(LED_C, HIGH);
       digitalWrite(LED_XD, LOW);
       digitalWrite(LED_XG, LOW);
       digitalWrite(LED_YH, LOW);
       digitalWrite(LED_YB, LOW);
     } else if (bluetoothData[0] >= 0 && bluetoothData[0] < 85){
-      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_C, LOW);
       digitalWrite(LED_XD, HIGH);
       digitalWrite(LED_XG, LOW);
       digitalWrite(LED_YH, LOW);
       digitalWrite(LED_YB, LOW);
     } else if (bluetoothData[0] >= 170 && bluetoothData[0] < 256){
-      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_C, LOW);
       digitalWrite(LED_XD, LOW);
       digitalWrite(LED_XG, HIGH);
       digitalWrite(LED_YH, LOW);
       digitalWrite(LED_YB, LOW);
     } else if (bluetoothData[1] >= 0 && bluetoothData[1] < 85){
-      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_C, LOW);
       digitalWrite(LED_XD, LOW);
       digitalWrite(LED_XG, LOW);
       digitalWrite(LED_YH, LOW);
       digitalWrite(LED_YB, HIGH);
     } else if (bluetoothData[1] >= 170 && bluetoothData[1] < 256){
-      digitalWrite(LED_C, LOW); 
+      digitalWrite(LED_C, LOW);
       digitalWrite(LED_XD, LOW);
       digitalWrite(LED_XG, LOW);
       digitalWrite(LED_YH, HIGH);
       digitalWrite(LED_YB, LOW);
-    }
-  }*/
+    }*/
+  }
 }
