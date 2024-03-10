@@ -3,18 +3,54 @@
 /*surcharger le code principal                              */
 /*Créée par Mihai Stinga                                    */
 
-#ifndef TOUCHSCREEN_H
-#define TOUCHSCREEN_H
+#ifndef DISPLAYINTERFACE_H
+#define DISPLAYINTERFACE_H
 
 #include <mbed.h>
 #include "SPI_TFT_ILI9341.h"
+#include "Arial12x12.h"
+#include "Arial24x23.h"
 
 class DisplayInterface {
 public:
-    DisplayInterface(PinName mosi, PinName miso, PinName sclk, PinName cs, PinName reset, PinName dc, const char* name ="TFT");
+    DisplayInterface(PinName mosi, PinName miso, PinName sclk, PinName cs, PinName rst, PinName dc);
+    
     void Demarrage();
+
     void BtnMenuNonAppuye();
+    void BtnMenuAppuye();
+
+    void BtnVitesseNonAppuye();
+    void BtnVitesseAppuye();
+
+    void BtnVitesse1NonAppuye();
+    void BtnVitesse2NonAppuye();
+    void BtnVitesse3NonAppuye();
+    void BtnVitesse1Appuye();
+    void BtnVitesse2Appuye();
+    void BtnVitesse3Appuye();
+
+    void BtnModesNonAppuye();
+    void BtnModesAppuye();
+
+    void BtnLibreNonAppuye();
+    void BtnLibreAppuye();
+
+    void BtnEnregistrerNonAppuye();
+    void BtnEnregistrerAppuye();
+
+    void BtnEtenduNonAppuye();
+    void BtnEtenduAppuye();
+
+    void BtnDebogageNonAppuye();
+    void BtnDebogageAppuye();
+
+    
+
     void BtnBatterie();
+    void BtnFermer();
+    void BtnChoisir();
+    void Fermer();
 
 private:
     SPI_TFT_ILI9341 TFT;
