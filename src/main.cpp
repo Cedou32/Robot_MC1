@@ -202,106 +202,23 @@ int main()
         Ecran.BtnVitesseNonAppuye();
         Ecran.BtnModesNonAppuye();
         Ecran.BtnFermer();
-        // changer la couleur du bouton pour indiquer qu'il a ete appuye
-        /*TFT.rect(210, 10, 310, 40, DarkGrey);
-        TFT.set_font((unsigned char *)Arial24x23);
-        TFT.foreground(DarkGrey);
-        TFT.locate(220, 15);
-        TFT.printf("Menu");
-
-        // afficher le bouton "Vitesse"
-        TFT.rect(10, 50, 90, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(25, 55);
-        TFT.printf("Vitesse");
-
-        // afficher le bouton "Modes"
-        TFT.rect(10, 80, 90, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Orange);
-        TFT.locate(25, 85);
-        TFT.printf("Modes");
-
-        // afficher le bouton "Fermer"
-        TFT.rect(240, 210, 310, 230, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 215);
-        TFT.printf("Fermer");*/
         etat = attente_appui;
         break;
       case vitesse:
+        Ecran.FermerMode();
         Ecran.BtnVitesseAppuye();
         Ecran.BtnVitesse1NonAppuye();
         Ecran.BtnVitesse2NonAppuye();
         Ecran.BtnVitesse3NonAppuye();
-        /*// changer la couleur du bouton pour indiquer qu'il a ete appuye
-        TFT.rect(10, 50, 90, 70, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(25, 55);
-        TFT.printf("Vitesse");
-
-        // afficher le bouton de vitesse "1"
-        TFT.rect(120, 50, 140, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(127, 57);
-        TFT.printf("1");
-
-        // afficher le bouton de vitesse "2"
-        TFT.rect(150, 50, 170, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(157, 57);
-        TFT.printf("2");
-
-        // afficher le bouton de vitesse "3"
-        TFT.rect(180, 50, 200, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(187, 57);
-        TFT.printf("3");*/
         etat = attente_appui;
         break;
       case modes:
+        Ecran.FermerVitesse();
         Ecran.BtnModesAppuye();
         Ecran.BtnLibreNonAppuye();
         Ecran.BtnEnregistrerNonAppuye();
         Ecran.BtnEtenduNonAppuye();
         Ecran.BtnDebogageNonAppuye();
-        /*// Changer la couleur du bouton
-        TFT.rect(10, 80, 90, 100, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(25, 85);
-        TFT.printf("Modes");
-
-        TFT.rect(120, 80, 210, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 85);
-        TFT.printf("Libre");
-
-        TFT.rect(220, 80, 310, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 85);
-        TFT.printf("Enregistrer");
-
-        TFT.rect(120, 110, 210, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 115);
-        TFT.printf("Etendu");
-
-        TFT.rect(220, 110, 310, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 115);
-        TFT.printf("Debogage");*/
-
         etat = attente_appui;
         break;
       case libre:
@@ -310,36 +227,6 @@ int main()
         Ecran.BtnEtenduNonAppuye();
         Ecran.BtnDebogageNonAppuye();
         Ecran.BtnChoisir();
-        /*TFT.rect(120, 80, 210, 100, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(140, 85);
-        TFT.printf("Libre");
-
-        TFT.rect(220, 80, 310, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 85);
-        TFT.printf("Enregistrer");
-
-        TFT.rect(120, 110, 210, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 115);
-        TFT.printf("Etendu");
-
-        TFT.rect(220, 110, 310, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 115);
-        TFT.printf("Debogage");
-
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case enregistrer:
@@ -348,32 +235,6 @@ int main()
         Ecran.BtnEtenduNonAppuye();
         Ecran.BtnDebogageNonAppuye();
         Ecran.BtnChoisir();
-        /*TFT.rect(120, 80, 210, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 85);
-        TFT.printf("Libre");
-        TFT.rect(220, 80, 310, 100, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(225, 85);
-        TFT.printf("Enregistrer");
-        TFT.rect(120, 110, 210, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 115);
-        TFT.printf("Etendu");
-        TFT.rect(220, 110, 310, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 115);
-        TFT.printf("Debogage");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case etendu:
@@ -382,32 +243,6 @@ int main()
         Ecran.BtnEtenduAppuye();
         Ecran.BtnDebogageNonAppuye();
         Ecran.BtnChoisir();
-        /*TFT.rect(120, 80, 210, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 85);
-        TFT.printf("Libre");
-        TFT.rect(220, 80, 310, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 85);
-        TFT.printf("Enregistrer");
-        TFT.rect(120, 110, 210, 130, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(140, 115);
-        TFT.printf("Etendu");
-        TFT.rect(220, 110, 310, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 115);
-        TFT.printf("Debogage");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case debogage:
@@ -416,32 +251,6 @@ int main()
         Ecran.BtnEtenduNonAppuye();
         Ecran.BtnDebogageAppuye();
         Ecran.BtnChoisir();
-        /*TFT.rect(120, 80, 210, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 85);
-        TFT.printf("Libre");
-        TFT.rect(220, 80, 310, 100, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(225, 85);
-        TFT.printf("Enregistrer");
-        TFT.rect(120, 110, 210, 130, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Green);
-        TFT.locate(140, 115);
-        TFT.printf("Etendu");
-        TFT.rect(220, 110, 310, 130, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(225, 115);
-        TFT.printf("Debogage");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case selection_vitesse1:
@@ -449,31 +258,6 @@ int main()
         Ecran.BtnVitesse2NonAppuye();
         Ecran.BtnVitesse3NonAppuye();
         Ecran.BtnChoisir();
-        /*vitesse_moteur = 1; // mettre la vitesse a 1
-        // changer la couleur du bouton pour indiquer qu'il a ete appuye
-        TFT.rect(120, 50, 140, 70, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(127, 57);
-        TFT.printf("1");
-        // remettre la couleur originale du bouton
-        TFT.rect(150, 50, 170, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(157, 57);
-        TFT.printf("2");
-        // remettre la couleur originale du bouton
-        TFT.rect(180, 50, 200, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(187, 57);
-        TFT.printf("3");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case selection_vitesse2:
@@ -481,31 +265,6 @@ int main()
         Ecran.BtnVitesse2Appuye();
         Ecran.BtnVitesse3NonAppuye();
         Ecran.BtnChoisir();
-        /*vitesse_moteur = 2; // mettre la vitesse a 2
-        // remettre la couleur originale du bouton
-        TFT.rect(120, 50, 140, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(127, 57);
-        TFT.printf("1");
-        // changer la couleur du bouton pour indiquer qu'il a ete appuye
-        TFT.rect(150, 50, 170, 70, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(157, 57);
-        TFT.printf("2");
-        // remettre la couleur originale du bouton
-        TFT.rect(180, 50, 200, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(187, 57);
-        TFT.printf("3");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case selection_vitesse3:
@@ -513,52 +272,11 @@ int main()
         Ecran.BtnVitesse2NonAppuye();
         Ecran.BtnVitesse3Appuye();
         Ecran.BtnChoisir();
-        /*vitesse_moteur = 3; // mettrre la vitesse a 3
-        // remettre la couleur originale du bouton
-        TFT.rect(120, 50, 140, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(127, 57);
-        TFT.printf("1");
-        // remettre la couleur originale du bouton
-        TFT.rect(150, 50, 170, 70, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(Red);
-        TFT.locate(157, 57);
-        TFT.printf("2");
-        // changer la couleur du bouton pour indiquer qu'il a ete appuye
-        TFT.rect(150, 50, 170, 70, DarkGrey);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(DarkGrey);
-        TFT.locate(157, 57);
-        TFT.printf("2");
-        // afficher le bouton "Choisir"
-        TFT.rect(240, 180, 310, 200, White);
-        TFT.set_font((unsigned char *)Arial12x12);
-        TFT.foreground(White);
-        TFT.locate(252, 185);
-        TFT.printf("Choisir");*/
         etat = attente_appui;
         break;
       case fermer:
-      Ecran.Fermer();
-      Ecran.BtnMenuNonAppuye();
-        /*// fermer les boutons affiche
-        TFT.fillrect(10, 50, 200, 70, Black);
-        TFT.fillrect(240, 210, 310, 230, Black);
-        TFT.fillrect(240, 180, 310, 200, Black);
-        TFT.fillrect(10, 80, 90, 100, Black);
-        TFT.fillrect(120, 80, 210, 100, Black);
-        TFT.fillrect(220, 80, 310, 100, Black);
-        TFT.fillrect(220, 110, 310, 130, Black);
-        TFT.fillrect(120, 110, 210, 130, Black);
-
-        // remettre la couleur originale du bouton "Menu"
-        TFT.rect(210, 10, 310, 40, White);
-        TFT.set_font((unsigned char *)Arial24x23);
-        TFT.foreground(Blue);
-        TFT.locate(220, 15);
-        TFT.printf("Menu");*/
+        Ecran.Fermer();
+        Ecran.BtnMenuNonAppuye();
         // baisser les flags
         flag_menu = false;
         flag_vitesse = false;
@@ -566,27 +284,8 @@ int main()
         etat = attente_appui;
         break;
       case ok:
-      Ecran.Fermer();
-      Ecran.BtnMenuNonAppuye();
-        /*// envoyer la vitesse par BT
-        data[1] = vitesse_moteur;
-        pc.write(data, sizeof(data));
-
-        // effacer les boutons affiche
-        TFT.fillrect(10, 50, 200, 70, Black);
-        TFT.fillrect(240, 210, 310, 230, Black);
-        TFT.fillrect(240, 180, 310, 200, Black);
-        TFT.fillrect(10, 80, 90, 100, Black);
-        TFT.fillrect(120, 80, 210, 100, Black);
-        TFT.fillrect(220, 80, 310, 100, Black);
-        TFT.fillrect(220, 110, 310, 130, Black);
-        TFT.fillrect(120, 110, 210, 130, Black);
-        // remettre la couleur originale du bouton "Menu"
-        TFT.rect(210, 10, 310, 40, White);
-        TFT.set_font((unsigned char *)Arial24x23);
-        TFT.foreground(Blue);
-        TFT.locate(220, 15);
-        TFT.printf("Menu");*/
+        Ecran.Fermer();
+        Ecran.BtnMenuNonAppuye();
         // baisser les
         flag_menu = false;
         flag_vitesse = false;
