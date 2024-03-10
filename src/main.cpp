@@ -19,6 +19,7 @@ AnalogIn Y2(PA_1);
 AnalogIn Batt(PA_4);
 int8_t batterie, last_batterie;
 uint8_t ligne = 0, prev_ligne = 0;
+uint8_t compteur = 0;
 Ticker InterruptionBatterie;
 
 // Boutons de controle
@@ -70,6 +71,7 @@ uint8_t data[10];              // tableau de donnee transmis par BT
 // fonction interruption
 void VerifBatterie()
 {
+  compteur = compteur + 1;
   etat = battery;
 }
 
@@ -125,21 +127,35 @@ int main()
       case battery:
         batterie = (Batt.read_u16() * (100.0 / 40000.0));
         ligne = batterie * 0.43 + 11;
-        if (ligne != prev_ligne)
+        if (compteur < 25)
         {
-          if (batterie > 100)
+          if (ligne != prev_ligne)
           {
-            batterie = 100;
+            if (batterie > 100)
+            {
+              batterie = 100;
+            }
+            else if (batterie < 0)
+            {
+              batterie = 0;
+            }
+            Ecran.BatterieInteractif(batterie, last_batterie, ligne, prev_ligne);
+            Ecran.BtnBatterie(batterie, ligne);
+            last_batterie = batterie;
+            prev_ligne = ligne;
           }
-          else if (batterie < 0)
-          {
-            batterie = 0;
-          }
-          Ecran.BatterieInteractif(batterie, last_batterie, ligne, prev_ligne);
-          last_batterie = batterie;
-          prev_ligne = ligne;
-
         }
+        else if (compteur == 25)
+        {
+          if (ligne < 20){
+            Ecran.BatteryLow();
+          } else{
+            compteur = 0;
+          }
+        } else if (compteur > 50){
+          compteur = 0;
+        }
+        etat = attente_appui;
 
         break;
 

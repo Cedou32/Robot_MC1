@@ -298,6 +298,10 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
     }
 }
 
+void DisplayInterface::BatteryLow(){
+    TFT.fillrect(10, 5, 55, 20, Black);
+}
+
 void DisplayInterface::Batterie(int8_t batterie)
 {
     TFT.rect(240, 180, 310, 200, White);
