@@ -195,6 +195,14 @@ void DisplayInterface::BtnDebogageAppuye()
     TFT.printf("Debogage");
 }
 
+void DisplayInterface::FermerVitesse(){
+    TFT.fillrect(10, 50, 200, 70, Black);
+}
+
+void DisplayInterface::FermerMode(){
+    TFT.fillrect(10, 80, 310, 130, Black);
+}
+
 void DisplayInterface::BtnFermer()
 {
     TFT.rect(240, 210, 310, 230, White);
@@ -202,18 +210,6 @@ void DisplayInterface::BtnFermer()
     TFT.foreground(White);
     TFT.locate(252, 215);
     TFT.printf("Fermer");
-}
-
-void DisplayInterface::Fermer()
-{
-    TFT.fillrect(10, 50, 200, 70, Black);
-    TFT.fillrect(240, 210, 310, 230, Black);
-    TFT.fillrect(240, 180, 310, 200, Black);
-    TFT.fillrect(10, 80, 90, 100, Black);
-    TFT.fillrect(120, 80, 210, 100, Black);
-    TFT.fillrect(220, 80, 310, 100, Black);
-    TFT.fillrect(220, 110, 310, 130, Black);
-    TFT.fillrect(120, 110, 210, 130, Black);
 }
 
 void DisplayInterface::BtnChoisir()
@@ -234,4 +230,15 @@ void DisplayInterface::BtnBatterie()
     TFT.fillrect(21, 6, 35, 19, Orange);
     TFT.fillrect(36, 6, 49, 19, DarkGreen);
     TFT.fillrect(50, 11, 54, 14, DarkGreen);
+}
+void DisplayInterface::Fermer()
+{
+    TFT.fillrect(10, 50, 200, 70, Black);
+    TFT.fillrect(240, 210, 310, 230, Black);
+    TFT.fillrect(240, 180, 310, 200, Black);
+    TFT.fillrect(10, 80, 90, 100, Black);
+    TFT.fillrect(120, 80, 210, 100, Black);
+    TFT.fillrect(220, 80, 310, 100, Black);
+    TFT.fillrect(220, 110, 310, 130, Black);
+    TFT.fillrect(120, 110, 210, 130, Black);
 }

@@ -45,11 +45,13 @@ public:
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
 
-    
+    void FermerVitesse();
+    void FermerMode();
 
-    void BtnBatterie();
+    
     void BtnFermer();
     void BtnChoisir();
+    void BtnBatterie();
     void Fermer();
 
 private:
