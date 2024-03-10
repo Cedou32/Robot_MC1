@@ -233,6 +233,14 @@ void DisplayInterface::BtnBatterie()
     TFT.fillrect(36, 6, 49, 19, Green);
     TFT.fillrect(50, 11, 54, 14, Green);
 }
+
+void DisplayInterface::Batterie(int8_t batterie){
+    TFT.rect(240, 180, 310, 200, White);
+    TFT.set_font((unsigned char *)Arial12x12);
+    TFT.foreground(White);
+    TFT.locate(252, 185);
+    TFT.printf("%u", batterie);
+}
  
 void DisplayInterface::Fermer()
 {

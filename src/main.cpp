@@ -15,6 +15,10 @@ AnalogIn Y1(PC_5);
 AnalogIn X2(PA_0);
 AnalogIn Y2(PA_1);
 
+// Batterie
+AnalogIn Batt(PA_4);
+int8_t batterie;
+
 // Boutons de controle
 DigitalIn pince(PA_3);
 DigitalIn ctrl(PB_15);
@@ -78,7 +82,7 @@ int main()
       Ecran.Demarrage();
 
       Ecran.LogoOn();
-      
+
       /*Ecran.BtnMenuNonAppuye();
       Ecran.BtnBatterie();
       /*TFT.background(Black);
@@ -112,6 +116,17 @@ int main()
         break;
 
       case mvt_robot:
+        batterie = (Batt.read_u16() * (100.0/6500.0)) - 476.9230769;
+        if (batterie > 100)
+        {
+          batterie = 100;
+        }
+        else if (batterie < 0)
+        {
+          batterie = 0;
+        }
+
+        Ecran.Batterie(batterie);
         buff[3] = Y1.read_u16() * 0.00389106;
         buff[4] = X1.read_u16() * 0.00389106;
         buff[5] = Y2.read_u16() * 0.00389106;

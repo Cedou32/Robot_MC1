@@ -52,6 +52,7 @@ public:
     void BtnFermer();
     void BtnChoisir();
     void BtnBatterie();
+    void Batterie(int8_t batterie);
     void Fermer();
     void LogoOn();
     void LogoOff();
