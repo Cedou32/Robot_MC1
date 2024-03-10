@@ -76,7 +76,10 @@ int main()
     // initialisation de l'ecran d'acceuil
     case demarrage:
       Ecran.Demarrage();
-      Ecran.BtnMenuNonAppuye();
+
+      Ecran.LogoOn();
+      
+      /*Ecran.BtnMenuNonAppuye();
       Ecran.BtnBatterie();
       /*TFT.background(Black);
       TFT.cls();
@@ -206,19 +209,23 @@ int main()
         break;
       case vitesse:
         Ecran.FermerMode();
+        Ecran.BtnModesNonAppuye();
         Ecran.BtnVitesseAppuye();
         Ecran.BtnVitesse1NonAppuye();
         Ecran.BtnVitesse2NonAppuye();
         Ecran.BtnVitesse3NonAppuye();
+        flag_modes = false;
         etat = attente_appui;
         break;
       case modes:
         Ecran.FermerVitesse();
+        Ecran.BtnVitesseNonAppuye();
         Ecran.BtnModesAppuye();
         Ecran.BtnLibreNonAppuye();
         Ecran.BtnEnregistrerNonAppuye();
         Ecran.BtnEtenduNonAppuye();
         Ecran.BtnDebogageNonAppuye();
+        flag_vitesse = false;
         etat = attente_appui;
         break;
       case libre:

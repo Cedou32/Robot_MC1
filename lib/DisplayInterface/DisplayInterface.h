@@ -53,6 +53,8 @@ public:
     void BtnChoisir();
     void BtnBatterie();
     void Fermer();
+    void LogoOn();
+    void LogoOff();
 
 private:
     SPI_TFT_ILI9341 TFT;
