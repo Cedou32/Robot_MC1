@@ -17,7 +17,9 @@ AnalogIn Y2(PA_1);
 
 // Batterie
 AnalogIn Batt(PA_4);
-int8_t batterie;
+int8_t batterie, last_batterie;
+uint8_t ligne = 0, prev_ligne = 0;
+Ticker InterruptionBatterie;
 
 // Boutons de controle
 DigitalIn pince(PA_3);
@@ -55,7 +57,8 @@ enum
   ok,
   fermer,
   servo,
-  mvt_robot
+  mvt_robot,
+  battery
 };
 uint8_t etat = demarrage;
 DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk, cs, reset, dc
@@ -63,8 +66,17 @@ TouchScreen Touch(Xp, Xn, Yp, Yn);                           // PinName Xp, PinN
 
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 uint8_t data[10];              // tableau de donnee transmis par BT
+
+// fonction interruption
+void VerifBatterie()
+{
+  etat = battery;
+}
+
 int main()
 {
+
+  InterruptionBatterie.attach(&VerifBatterie, 0.01);
 
   buff[0] = '#';
   buff[1] = '@';
@@ -82,27 +94,22 @@ int main()
       Ecran.Demarrage();
 
       Ecran.LogoOn();
-
-      /*Ecran.BtnMenuNonAppuye();
-      Ecran.BtnBatterie();
-      /*TFT.background(Black);
-      TFT.cls();
-      TFT.set_orientation(3);
-      TFT.rect(0, 0, 320, 240, Blue);
-      TFT.rect(210, 10, 310, 40, White);
-      TFT.set_font((unsigned char *)Arial24x23);
-      TFT.foreground(Blue);
-      TFT.locate(220, 15);
-      TFT.printf("Menu");
-      TFT.rect(10, 5, 50, 20, White);
-      TFT.rect(50, 10, 55, 15, White);
-      TFT.line(50, 11, 50, 14, Black);
-      TFT.fillrect(11, 6, 20, 19, Red);
-      TFT.fillrect(21, 6, 35, 19, Orange);
-      TFT.fillrect(36, 6, 49, 19, DarkGreen);
-      TFT.fillrect(50, 11, 54, 14, DarkGreen);*/
+      batterie = (Batt.read_u16() * (100.0 / 40000.0));
+      ligne = batterie * 0.43 + 11;
+      if (batterie > 100)
+      {
+        batterie = 100;
+      }
+      else if (batterie < 0)
+      {
+        batterie = 0;
+      }
+      Ecran.BtnBatterie(batterie, ligne);
+      // Ecran.BtnMenuNonAppuye();
 
       etat = attente_appui;
+
+      // etat = attente_appui;
       break;
     // attente d'un appui
     case attente_appui:
@@ -112,21 +119,32 @@ int main()
       }
       if (pince == 1)
       {
-        etat = mvt_robot;
+        etat = battery;
+        break;
+
+      case battery:
+        batterie = (Batt.read_u16() * (100.0 / 40000.0));
+        ligne = batterie * 0.43 + 11;
+        if (ligne != prev_ligne)
+        {
+          if (batterie > 100)
+          {
+            batterie = 100;
+          }
+          else if (batterie < 0)
+          {
+            batterie = 0;
+          }
+          Ecran.BatterieInteractif(batterie, last_batterie, ligne, prev_ligne);
+          last_batterie = batterie;
+          prev_ligne = ligne;
+
+        }
+
         break;
 
       case mvt_robot:
-        batterie = (Batt.read_u16() * (100.0/6500.0)) - 476.9230769;
-        if (batterie > 100)
-        {
-          batterie = 100;
-        }
-        else if (batterie < 0)
-        {
-          batterie = 0;
-        }
 
-        Ecran.Batterie(batterie);
         buff[3] = Y1.read_u16() * 0.00389106;
         buff[4] = X1.read_u16() * 0.00389106;
         buff[5] = Y2.read_u16() * 0.00389106;
