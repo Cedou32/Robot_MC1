@@ -229,7 +229,7 @@ void DisplayInterface::BtnBatterie(int8_t batterie, uint8_t ligne)
     TFT.rect(50, 10, 55, 15, White);
     TFT.line(50, 11, 50, 14, Black);
 
-    //uint8_t ligne = batterie * 0.43 + 11;
+    // uint8_t ligne = batterie * 0.43 + 11;
 
     if (ligne < 21)
     {
@@ -253,18 +253,18 @@ void DisplayInterface::BtnBatterie(int8_t batterie, uint8_t ligne)
         TFT.fillrect(36, 6, 49, 19, Green);
         TFT.fillrect(50, 11, ligne, 14, Green);
     }
-
 }
 
 void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie, uint8_t ligne, uint8_t last_ligne)
 {
-    //uint8_t ligne = batterie * 0.43 + 11;
-    //uint8_t last_ligne = last_batterie * 0.43 + 11;
+    // uint8_t ligne = batterie * 0.43 + 11;
+    // uint8_t last_ligne = last_batterie * 0.43 + 11;
     int8_t etat = batterie - last_batterie; //<0 = decharge
     uint16_t couleur;
     if (ligne < 21)
     {
-        if(etat <0){
+        if (etat < 0)
+        {
             TFT.line(last_ligne, 6, last_ligne, 19, Black);
         }
         couleur = 0xF800;
@@ -272,7 +272,8 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
     }
     else if (ligne > 20 && ligne < 36)
     {
-        if(etat <0){
+        if (etat < 0)
+        {
             TFT.line(last_ligne, 6, last_ligne, 19, Black);
         }
         couleur = 0xFFE0;
@@ -280,9 +281,12 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
     }
     else if (ligne > 35 && ligne < 50)
     {
-        if(etat < 0 && last_ligne == 50){
+        if (etat < 0 && last_ligne == 50)
+        {
             TFT.line(last_ligne, 11, last_ligne, 14, Black);
-        } else if (etat < 0){
+        }
+        else if (etat < 0)
+        {
             TFT.line(last_ligne, 6, last_ligne, 19, Black);
         }
         couleur = 0x07E0;
@@ -290,7 +294,8 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
     }
     else if (ligne > 49 && ligne < 55)
     {
-        if(etat < 0){
+        if (etat < 0)
+        {
             TFT.line(last_ligne, 11, last_ligne, 14, Black);
         }
         couleur = 0x07E0;
@@ -298,7 +303,8 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
     }
 }
 
-void DisplayInterface::BatteryLow(){
+void DisplayInterface::BatteryLow()
+{
     TFT.fillrect(10, 5, 55, 20, Black);
 }
 
@@ -321,6 +327,15 @@ void DisplayInterface::Fermer()
     TFT.fillrect(220, 80, 310, 100, Black);
     TFT.fillrect(220, 110, 310, 130, Black);
     TFT.fillrect(120, 110, 210, 130, Black);
+}
+
+void DisplayInterface::Test(uint8_t variable)
+{
+    TFT.rect(240, 180, 310, 200, White);
+    TFT.set_font((unsigned char *)Arial12x12);
+    TFT.foreground(White);
+    TFT.locate(252, 185);
+    TFT.printf("Test %u", variable);
 }
 
 void DisplayInterface::LogoOn()
@@ -478,6 +493,148 @@ void DisplayInterface::LogoOn()
     TFT.line(194, 156, 211, 156, White);
     TFT.line(194, 155, 212, 155, White);
     TFT.fillrect(151, 148, 241, 154, White);
+
+    TFT.line(199, 135, 237, 135, White);
+    TFT.line(200, 134, 237, 134, White);
+    TFT.line(202, 133, 236, 133, White);
+    TFT.line(204, 132, 236, 132, White);
+
+    TFT.fillrect(187, 123, 245, 129, White);
+
+    TFT.line(136, 129, 156, 129, White);
+    TFT.line(136, 128, 156, 128, White);
+    TFT.line(135, 127, 156, 127, White);
+    TFT.line(135, 126, 156, 126, White);
+    TFT.line(135, 125, 156, 125, White);
+    TFT.line(134, 124, 156, 124, White);
+    TFT.line(133, 123, 156, 123, White);
+
+    TFT.fillrect(158, 120, 185, 122, White);
+
+    TFT.fillrect(161, 117, 182, 118, White);
+
+    TFT.line(148, 115, 192, 115, White);
+    TFT.line(147, 114, 193, 114, White);
+    TFT.line(147, 113, 193, 113, White);
+    TFT.line(147, 112, 192, 112, White);
+    TFT.line(149, 111, 190, 111, White);
+    TFT.line(154, 110, 156, 110, White);
+    TFT.line(154, 109, 156, 109, White);
+    TFT.line(154, 108, 156, 108, White);
+    TFT.line(154, 107, 156, 107, White);
+    TFT.line(153, 106, 156, 106, White);
+    TFT.line(152, 105, 157, 105, White);
+    TFT.line(153, 104, 156, 104, White);
+
+    TFT.line(172, 105, 173, 105, White);
+    TFT.line(172, 104, 173, 104, White);
+    TFT.line(171, 103, 174, 103, White);
+    TFT.line(171, 102, 174, 102, White);
+
+    TFT.line(169, 99, 176, 99, White);
+    TFT.line(169, 98, 176, 98, White);
+    TFT.line(169, 97, 176, 97, White);
+    TFT.line(170, 96, 175, 96, White);
+    TFT.line(170, 95, 175, 95, White);
+    TFT.line(169, 94, 176, 94, White);
+    TFT.line(169, 93, 176, 93, White);
+
+    TFT.line(163, 90, 182, 90, White);
+    TFT.line(162, 89, 183, 89, White);
+    TFT.line(161, 88, 184, 88, White);
+    TFT.line(168, 87, 177, 87, White);
+    TFT.line(161, 87, 164, 87, White);
+    TFT.line(181, 87, 184, 87, White);
+    TFT.fillrect(168, 69, 177, 88, White);
+    TFT.fillrect(161, 71, 163, 86, White);
+    TFT.fillrect(182, 71, 184, 86, White);
+    TFT.line(160, 70, 163, 70, White);
+    TFT.line(182, 70, 185, 70, White);
+    TFT.line(158, 69, 162, 69, White);
+    TFT.line(183, 69, 187, 69, White);
+    TFT.line(158, 68, 162, 68, White);
+    TFT.line(168, 68, 170, 68, White);
+    TFT.line(175, 68, 177, 68, White);
+    TFT.line(183, 68, 187, 68, White);
+    TFT.line(158, 67, 161, 67, White);
+    TFT.line(166, 67, 168, 67, White);
+    TFT.line(177, 67, 179, 67, White);
+    TFT.line(184, 67, 187, 67, White);
+    TFT.line(158, 66, 161, 66, White);
+    TFT.line(165, 66, 166, 66, White);
+    TFT.line(179, 66, 180, 66, White);
+    TFT.line(184, 66, 187, 66, White);
+    TFT.line(158, 65, 161, 65, White);
+    TFT.line(164, 65, 165, 65, White);
+    TFT.line(180, 65, 181, 65, White);
+    TFT.line(184, 65, 187, 65, White);
+    TFT.line(158, 64, 161, 64, White);
+    TFT.line(164, 64, 164, 64, White);
+    TFT.line(181, 64, 181, 64, White);
+    TFT.line(184, 64, 187, 64, White);
+    TFT.line(159, 63, 161, 63, White);
+    TFT.line(184, 63, 186, 63, White);
+    TFT.line(160, 62, 161, 62, White);
+    TFT.line(184, 62, 185, 62, White);
+
+    TFT.line(169, 65, 175, 65, White);
+    TFT.line(168, 64, 176, 64, White);
+    TFT.line(167, 63, 177, 63, White);
+    TFT.line(166, 62, 178, 62, White);
+    TFT.line(166, 61, 170, 61, White);  TFT.line(175, 61, 179, 61, White);
+    //
+    TFT.line(165, 60, 169, 60, White);                                      TFT.line(176, 60, 180, 60, White);
+    TFT.line(165, 59, 167, 59, White);  TFT.line(171, 59, 173, 59, White);  TFT.line(177, 59, 180, 59, White);
+    TFT.line(164, 58, 166, 58, White);  TFT.line(170, 58, 174, 58, White);  TFT.line(178, 58, 180, 58, White);
+    TFT.line(164, 57, 165, 57, White);  TFT.line(169, 57, 175, 57, White);  TFT.line(179, 57, 181, 57, White);
+    TFT.line(164, 56, 165, 56, White);  TFT.line(168, 56, 176, 56, White);  TFT.line(179, 56, 181, 56, White);
+    TFT.line(163, 55, 165, 55, White);  TFT.line(168, 55, 176, 55, White);  TFT.line(179, 55, 181, 55, White);
+    TFT.line(163, 54, 165, 54, White);  TFT.line(169, 54, 175, 54, White);  TFT.line(179, 54, 181, 54, White);
+    TFT.line(162, 53, 166, 53, White);  TFT.line(170, 53, 174, 53, White);  TFT.line(178, 53, 181, 53, White);
+    TFT.line(162, 52, 167, 52, White);  TFT.line(171, 52, 173, 52, White);  TFT.line(178, 52, 181, 52, White);
+    TFT.line(161, 51, 167, 51, White);                                      TFT.line(177, 51, 181, 51, White);
+    //
+    TFT.line(161, 50, 170, 50, White);  TFT.line(176, 50, 181, 50, White);
+    TFT.line(161, 49, 170, 49, White);  TFT.line(173, 49, 181, 49, White);
+    TFT.line(161, 48, 170, 48, White);  TFT.line(173, 48, 181, 48, White);
+    TFT.line(161, 47, 170, 47, White);  TFT.line(173, 47, 182, 47, White);
+    TFT.line(161, 46, 170, 46, White);  TFT.line(173, 46, 182, 46, White);
+    TFT.line(161, 45, 170, 45, White);  TFT.line(173, 45, 182, 45, White);
+    TFT.line(161, 44, 170, 44, White);  TFT.line(173, 44, 182, 44, White);
+    TFT.line(161, 43, 170, 43, White);  TFT.line(173, 43, 182, 43, White);
+    TFT.line(161, 42, 170, 42, White);  TFT.line(173, 42, 182, 42, White);
+    TFT.line(161, 41, 170, 41, White);  TFT.line(173, 41, 182, 41, White);
+    //
+    TFT.line(161, 40, 170, 40, White);  TFT.line(173, 40, 182, 40, White);
+    TFT.line(161, 39, 170, 39, White);  TFT.line(173, 39, 182, 39, White);
+    TFT.line(161, 38, 170, 38, White);  TFT.line(173, 38, 182, 38, White);
+    TFT.line(161, 37, 170, 37, White);  TFT.line(173, 37, 182, 37, White);
+    TFT.line(161, 36, 170, 36, White);  TFT.line(173, 36, 182, 36, White);
+    TFT.line(162, 35, 170, 35, White);  TFT.line(173, 35, 182, 35, White);
+    TFT.line(162, 34, 170, 34, White);  TFT.line(173, 34, 182, 34, White);
+    TFT.line(163, 33, 170, 33, White);  TFT.line(173, 33, 182, 33, White);
+    TFT.line(163, 32, 170, 32, White);  TFT.line(173, 32, 182, 32, White);
+    TFT.line(163, 31, 170, 31, White);  TFT.line(173, 31, 182, 31, White);
+    //
+    TFT.line(163, 30, 170, 30, White);  TFT.line(173, 30, 182, 30, White);
+    TFT.line(163, 29, 170, 29, White);  TFT.line(173, 29, 182, 29, White);
+    TFT.line(163, 28, 169, 28, White);  TFT.line(173, 28, 182, 28, White);
+    TFT.line(162, 27, 169, 27, White);  TFT.line(173, 27, 181, 27, White);
+    TFT.line(161, 26, 169, 26, White);  TFT.line(173, 26, 180, 26, White);
+    TFT.line(161, 25, 169, 25, White);  TFT.line(172, 25, 180, 25, White);
+    TFT.line(160, 24, 168, 24, White);  TFT.line(171, 24, 179, 24, White);
+    TFT.line(159, 23, 167, 23, White);  TFT.line(171, 23, 178, 23, White);
+    TFT.line(158, 22, 167, 22, White);  TFT.line(170, 22, 178, 22, White);
+    TFT.line(157, 21, 166, 21, White);  TFT.line(170, 21, 177, 21, White);
+    //
+    TFT.line(158, 20, 165, 20, White);  TFT.line(169, 20, 176, 20, White);
+    TFT.line(160, 19, 165, 19, White);  TFT.line(168, 19, 175, 19, White);
+    TFT.line(161, 18, 164, 18, White);  TFT.line(169, 18, 175, 18, White);
+    TFT.line(163, 17, 164, 17, White);  TFT.line(170, 17, 174, 17, White);
+    TFT.line(171, 16, 174, 16, White);
+    TFT.line(172, 15, 173, 15, White);
+
+
 }
 void DisplayInterface::LogoOff()
 {

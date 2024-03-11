@@ -59,6 +59,8 @@ public:
     void LogoOn();
     void LogoOff();
 
+    void Test(uint8_t variable);
+
 private:
     SPI_TFT_ILI9341 TFT;
 
