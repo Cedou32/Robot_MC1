@@ -340,10 +340,13 @@ void DisplayInterface::Test(uint8_t variable)
 
 void DisplayInterface::Menu()
 {
+    DisplayInterface::LogoOff();
     DisplayInterface::BtnMenuAppuye();
     DisplayInterface::BtnVitesseNonAppuye();
     DisplayInterface::BtnModesNonAppuye();
     DisplayInterface::BtnFermer();
+    
+
 }
 
 void DisplayInterface::Vitesse()
@@ -428,16 +431,19 @@ void DisplayInterface::Fin()
 {
     DisplayInterface::Fermer();
     DisplayInterface::BtnMenuNonAppuye();
+    DisplayInterface::LogoOn();
 }
 
 void DisplayInterface::LogoOn()
 {
+    //Base
     TFT.line(70, 225, 250, 225, White);
     TFT.line(95, 224, 225, 224, White);
     TFT.line(96, 223, 224, 223, White);
     TFT.line(97, 222, 223, 222, White);
     TFT.line(98, 221, 222, 221, White);
 
+    //Grosse base
     TFT.line(99, 217, 222, 217, White);
     TFT.line(100, 216, 221, 216, White);
     TFT.line(100, 215, 221, 215, White);
@@ -527,6 +533,7 @@ void DisplayInterface::LogoOn()
     TFT.line(139, 141, 244, 141, White);
     TFT.line(140, 140, 244, 140, White);
 
+    //Support Base
     TFT.line(163, 200, 189, 200, White);
     TFT.fillrect(185, 170, 189, 190, White);
     TFT.line(163, 199, 189, 199, White);
@@ -586,6 +593,8 @@ void DisplayInterface::LogoOn()
     TFT.line(194, 155, 212, 155, White);
     TFT.fillrect(151, 148, 241, 154, White);
 
+    //rectangle+table au dessu de base
+      
     TFT.line(199, 135, 237, 135, White);
     TFT.line(200, 134, 237, 134, White);
     TFT.line(202, 133, 236, 133, White);
@@ -781,4 +790,7 @@ void DisplayInterface::LogoOn()
 }
 void DisplayInterface::LogoOff()
 {
+    TFT.fillrect(70, 10, 200, 120, Black);
+    TFT.fillrect(70, 120, 250, 230, Black);
+
 }
