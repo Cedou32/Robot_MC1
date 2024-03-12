@@ -59,6 +59,19 @@ public:
     void LogoOn();
     void LogoOff();
 
+    void Menu();
+    void Vitesse();
+    void Modes();
+    void Libre();
+    void Enregistrer();
+    void Etendu();
+    void Debogage();
+    void Vitesse1();
+    void Vitesse2();
+    void Vitesse3();
+    void Fin();
+
+
     void Test(uint8_t variable);
 
 private:
