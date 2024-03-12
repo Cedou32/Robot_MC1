@@ -2,49 +2,52 @@
 #include "mbed.h"
 #include "TouchScreen.h"
 #include "DisplayInterface.h"
+#include "TouchInterface.h"
 
 // Pins pour l'interface tactile
-#define Xp PC_3
-#define Yp PC_2
-#define Xn PC_1
-#define Yn PC_0
+#define TouchXp PC_3
+#define TouchYp PC_2
+#define TouchXn PC_1
+#define TouchYn PC_0
 
+//******Pins Analogiques*******//
 // Joysticks
-AnalogIn X1(PB_1);
-AnalogIn Y1(PC_5);
-AnalogIn X2(PA_0);
-AnalogIn Y2(PA_1);
-
+AnalogIn DroitX(PB_1);
+AnalogIn DroitY(PC_5);
+AnalogIn GaucheX(PA_0);
+AnalogIn GaucheY(PA_1);
 // Batterie
 AnalogIn Batt(PA_4);
-int8_t batterie, last_batterie;
-uint8_t ligne = 0, prev_ligne = 0;
+
+//******Pins Numeriques*******//
+// Push button
+DigitalIn SW1(PA_3);
+DigitalIn SW2(PB_15);
+
+//******Variables Globales******//
+// Variables pour la verification de la tension de la batterie
+int8_t batterie, prevBatterie;
+uint8_t ligne = 0, prevLigne = 0;
 uint8_t compteur = 0;
-Ticker InterruptionBatterie;
-
-// Boutons de controle
-DigitalIn pince(PA_3);
-DigitalIn ctrl(PB_15);
-
-// Valeurs de l'ecran
+// Variables contenant les coordonnees d'un appui
 uint16_t positionX;
 uint16_t positionY;
-
-// trame
-uint8_t buff[10];
-
 // Flags
-bool flag_menu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
-bool flag_vitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
-bool flag_modes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
+bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
+bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
+bool flagModes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
+bool flagBatterie = false;
+// Trames
+uint8_t trameBras[10];
+uint8_t trameDonees[10];
 
-uint8_t vitesse_moteur;    // vitesse des mvt_robot qui sera transmise
-uint8_t direction_stepper; // direction de rotation du moteur transmise
-enum
+//******Machine a etat******//
+// Enumeration des etats
+/*enum
 {
   demarrage,
-  attente_appui,
-  detection_appui,
+  attente,
+  detectionAppui,
   menu,
   vitesse,
   modes,
@@ -52,39 +55,41 @@ enum
   enregistrer,
   etendu,
   debogage,
-  selection_vitesse1,
-  selection_vitesse2,
-  selection_vitesse3,
+  selectVitesse1,
+  selectVitesse2,
+  selectVitesse3,
   ok,
   fermer,
-  servo,
-  mvt_robot,
+  mvtRobot,
   battery
-};
+};*/
+// Declaration de la variable etat
 uint8_t etat = demarrage;
+
+//******Declaration des objets******//
 DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk, cs, reset, dc
-TouchScreen Touch(Xp, Xn, Yp, Yn);                           // PinName Xp, PinName Xn, PinName Yp, PinName Yn
-
+TouchScreen Touch(TouchXp, TouchXn, TouchYp, TouchYn);
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
-uint8_t data[10];              // tableau de donnee transmis par BT
+Ticker InterruptionBatterie;
 
-// fonction interruption
+//******Fonctions pour les interruptions******//
 void VerifBatterie()
 {
   compteur = compteur + 1;
-  etat = battery;
+  flagBatterie = true;
 }
 
 int main()
 {
-
+  // Attacher la fonction
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
 
-  buff[0] = '#';
-  buff[1] = '@';
-  buff[2] = '+';
-  buff[8] = '?';
-  buff[9] = '%';
+  // Indication des valeurs de securite de la trame
+  trameBras[0] = '#';
+  trameBras[1] = '@';
+  trameBras[2] = '+';
+  trameBras[8] = '?';
+  trameBras[9] = '%';
 
   pc.set_baud(115200); // instancier baud-rate pour la communication BT
   while (1)
@@ -94,8 +99,9 @@ int main()
     // initialisation de l'ecran d'acceuil
     case demarrage:
       Ecran.Demarrage();
-
       Ecran.LogoOn();
+
+      // verification du niveau de la batterie au demarrage
       batterie = (Batt.read_u16() * (100.0 / 40000.0));
       ligne = batterie * 0.43 + 11;
       if (batterie > 100)
@@ -106,249 +112,130 @@ int main()
       {
         batterie = 0;
       }
+
+      // afficher l'icone de la batteire
       Ecran.BtnBatterie(batterie, ligne);
-      // Ecran.BtnMenuNonAppuye();
+      // afficher le bouton menu
+      Ecran.BtnMenuNonAppuye();
 
-      etat = attente_appui;
-
-      // etat = attente_appui;
+      etat = attente;
       break;
     // attente d'un appui
-    case attente_appui:
+    case attente:
+
       if (Touch.Touch_detect())
       {
-        etat = detection_appui;
+        positionX = Touch.getX(); // prendre la valeur de l'axe X
+        positionY = Touch.getY(); // prendre la valeur de l'axe Y
+        etat = detectionAppui;
       }
-      if (pince == 1)
+      else if (flagBatterie == true)
       {
+        flagBatterie = false;
         etat = battery;
-        break;
-
-      case battery:
-        batterie = (Batt.read_u16() * (100.0 / 40000.0));
-        ligne = batterie * 0.43 + 11;
-        if (compteur < 25)
-        {
-          if (ligne != prev_ligne)
-          {
-            if (batterie > 100)
-            {
-              batterie = 100;
-            }
-            else if (batterie < 0)
-            {
-              batterie = 0;
-            }
-            Ecran.BatterieInteractif(batterie, last_batterie, ligne, prev_ligne);
-            Ecran.BtnBatterie(batterie, ligne);
-            last_batterie = batterie;
-            prev_ligne = ligne;
-          }
-        }
-        else if (compteur == 25)
-        {
-          if (ligne < 20){
-            Ecran.BatteryLow();
-          } else{
-            compteur = 0;
-          }
-        } else if (compteur > 50){
-          compteur = 0;
-        }
-        etat = attente_appui;
-
-        break;
-
-      case mvt_robot:
-
-        buff[3] = Y1.read_u16() * 0.00389106;
-        buff[4] = X1.read_u16() * 0.00389106;
-        buff[5] = Y2.read_u16() * 0.00389106;
-        buff[6] = X2.read_u16() * 0.00389106;
-        pc.write(buff, sizeof(buff));
-        thread_sleep_for(250);
-        etat = attente_appui;
-        break;
-      case servo:
-        data[2] = 1;
-        pc.write(data, sizeof(data));
-        data[2] = 0;
-        etat = attente_appui;
-        break;
-      // lorsque l'utilisateur appuie sur l'ecran
-      case detection_appui:
-        positionX = Touch.getX();                  // prendre la valeur de l'axe X
-        positionY = Touch.getY();                  // prendre la valeur de l'axe Y
-        printf("%d,%d\r\n", positionX, positionY); // afficher
-        // si on appuie sur le bouton "Menu"
-        if (positionX >= 210 && positionX <= 310 && positionY >= 10 && positionY <= 40 && flag_menu == false)
-        {
-          flag_menu = true; // activer le flag du bouton
-          etat = menu;
-        }
-        // si on appuie sur le bouton "Vitesse"
-        else if (positionX >= 10 && positionX <= 90 && positionY >= 50 && positionY <= 70 && flag_vitesse == false)
-        {
-          flag_vitesse = true; // activer le flag du bouton
-          etat = vitesse;
-        }
-        // si on appuie sur le bouton "Modes"
-        else if (positionX >= 10 && positionX <= 90 && positionY >= 80 && positionY <= 100)
-        {
-          flag_modes = true;
-          etat = modes;
-        }
-        // si on appuie sur le bouton "Libre"
-        else if (positionX >= 120 && positionX <= 210 && positionY >= 80 && positionY <= 100 && flag_modes == true)
-        {
-          etat = libre;
-        }
-        // si on appuie sur le bouton "Enregistrer"
-        else if (positionX >= 220 && positionX <= 310 && positionY >= 80 && positionY <= 100 && flag_modes == true)
-        {
-          etat = enregistrer;
-        }
-        // si on appuie sur le bouton "Etendu"
-        else if (positionX >= 120 && positionX <= 210 && positionY >= 110 && positionY <= 130 && flag_modes == true)
-        {
-          etat = etendu;
-        }
-        // si on appuie sur le bouton "Debogage"
-        else if (positionX >= 220 && positionX <= 310 && positionY >= 110 && positionY <= 130 && flag_modes == true)
-        {
-          etat = debogage;
-        }
-
-        // si on appuie sur le bouton de la vitesse "1"
-        else if (positionX >= 120 && positionX <= 140 && positionY >= 50 && positionY <= 70 && flag_vitesse == true)
-        {
-          etat = selection_vitesse1;
-        }
-        // si on appuie dur le bouton de la vitesse "2"
-        else if (positionX >= 150 && positionX <= 170 && positionY >= 50 && positionY <= 70 && flag_vitesse == true)
-        {
-          etat = selection_vitesse2;
-        }
-        // si on appuie sur le bouton de la vitesse "3"
-        else if (positionX >= 180 && positionX <= 200 && positionY >= 50 && positionY <= 70 && flag_vitesse == true)
-        {
-          etat = selection_vitesse3;
-        }
-        // si on appuie sur le bouton "Fermer"
-        else if (positionX >= 240 && positionX <= 310 && positionY >= 210 && positionY <= 230)
-        {
-          etat = fermer;
-        }
-        // si on appuie sur le bouton "choisir"
-        else if (positionX >= 240 && positionX <= 310 && positionY >= 180 && positionY <= 200)
-        {
-          etat = ok;
-        }
-        else
-        {
-          etat = attente_appui;
-        }
-        break;
-      case menu:
-        Ecran.BtnMenuAppuye();
-        Ecran.BtnVitesseNonAppuye();
-        Ecran.BtnModesNonAppuye();
-        Ecran.BtnFermer();
-        etat = attente_appui;
-        break;
-      case vitesse:
-        Ecran.FermerMode();
-        Ecran.BtnModesNonAppuye();
-        Ecran.BtnVitesseAppuye();
-        Ecran.BtnVitesse1NonAppuye();
-        Ecran.BtnVitesse2NonAppuye();
-        Ecran.BtnVitesse3NonAppuye();
-        flag_modes = false;
-        etat = attente_appui;
-        break;
-      case modes:
-        Ecran.FermerVitesse();
-        Ecran.BtnVitesseNonAppuye();
-        Ecran.BtnModesAppuye();
-        Ecran.BtnLibreNonAppuye();
-        Ecran.BtnEnregistrerNonAppuye();
-        Ecran.BtnEtenduNonAppuye();
-        Ecran.BtnDebogageNonAppuye();
-        flag_vitesse = false;
-        etat = attente_appui;
-        break;
-      case libre:
-        Ecran.BtnLibreAppuye();
-        Ecran.BtnEnregistrerNonAppuye();
-        Ecran.BtnEtenduNonAppuye();
-        Ecran.BtnDebogageNonAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case enregistrer:
-        Ecran.BtnLibreNonAppuye();
-        Ecran.BtnEnregistrerAppuye();
-        Ecran.BtnEtenduNonAppuye();
-        Ecran.BtnDebogageNonAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case etendu:
-        Ecran.BtnLibreNonAppuye();
-        Ecran.BtnEnregistrerNonAppuye();
-        Ecran.BtnEtenduAppuye();
-        Ecran.BtnDebogageNonAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case debogage:
-        Ecran.BtnLibreNonAppuye();
-        Ecran.BtnEnregistrerNonAppuye();
-        Ecran.BtnEtenduNonAppuye();
-        Ecran.BtnDebogageAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case selection_vitesse1:
-        Ecran.BtnVitesse1Appuye();
-        Ecran.BtnVitesse2NonAppuye();
-        Ecran.BtnVitesse3NonAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case selection_vitesse2:
-        Ecran.BtnVitesse1NonAppuye();
-        Ecran.BtnVitesse2Appuye();
-        Ecran.BtnVitesse3NonAppuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case selection_vitesse3:
-        Ecran.BtnVitesse1NonAppuye();
-        Ecran.BtnVitesse2NonAppuye();
-        Ecran.BtnVitesse3Appuye();
-        Ecran.BtnChoisir();
-        etat = attente_appui;
-        break;
-      case fermer:
-        Ecran.Fermer();
-        Ecran.BtnMenuNonAppuye();
-        // baisser les flags
-        flag_menu = false;
-        flag_vitesse = false;
-        flag_modes = false;
-        etat = attente_appui;
-        break;
-      case ok:
-        Ecran.Fermer();
-        Ecran.BtnMenuNonAppuye();
-        // baisser les
-        flag_menu = false;
-        flag_vitesse = false;
-        flag_modes = false;
-        etat = attente_appui;
-        break;
       }
+      break;
+
+    case battery:
+      // lecture du niveau de la batterie et mise a jour de l'icone
+      batterie = (Batt.read_u16() * (100.0 / 40000.0));
+      ligne = batterie * 0.43 + 11;
+      if (ligne != prevLigne)
+      {
+        if (batterie > 100)
+        {
+          batterie = 100;
+        }
+        else if (batterie < 0)
+        {
+          batterie = 0;
+        }
+        Ecran.BatterieInteractif(batterie, prevBatterie, ligne, prevLigne);
+        prevBatterie = batterie;
+        prevLigne = ligne;
+      }
+      etat = attente;
+      break;
+    // Controle du robot
+    case mvtRobot:
+      // Lecture et transmission de la valeur des joysticks
+      trameBras[3] = DroitY.read_u16() * 0.00389106;
+      trameBras[4] = DroitX.read_u16() * 0.00389106;
+      trameBras[5] = GaucheY.read_u16() * 0.00389106;
+      trameBras[6] = GaucheX.read_u16() * 0.00389106;
+      pc.write(trameBras, sizeof(trameBras));
+      thread_sleep_for(250);
+      etat = attente;
+      break;
+    // lorsque l'utilisateur appuie sur l'ecran
+    case detectionAppui:
+      printf("%d,%d\r\n", positionX, positionY); // afficher
+                                                 // si on appuie sur le bouton "Menu"
+
+      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagVitesse, flagModes);
+
+      break;
+    case menu:
+      Ecran.Menu();
+      flagMenu = true; // activer le flag du bouton
+      etat = attente;
+      break;
+    case vitesse:
+      Ecran.Vitesse();
+      flagVitesse = true; // activer le flag du bouton
+      flagModes = false;
+      etat = attente;
+      break;
+    case modes:
+      Ecran.Modes();
+      flagModes = true;
+      flagVitesse = false;
+      etat = attente;
+      break;
+    case libre:
+      Ecran.Libre();
+      etat = attente;
+      break;
+    case enregistrer:
+      Ecran.Enregistrer();
+      etat = attente;
+      break;
+    case etendu:
+      Ecran.Etendu();
+      etat = attente;
+      break;
+    case debogage:
+      Ecran.Debogage();
+      etat = attente;
+      break;
+    case selectVitesse1:
+      Ecran.Vitesse1();
+      etat = attente;
+      break;
+    case selectVitesse2:
+      Ecran.Vitesse2();
+      etat = attente;
+      break;
+    case selectVitesse3:
+      Ecran.Vitesse3();
+      etat = attente;
+      break;
+    case fermer:
+      Ecran.Fin();
+      // baisser les flags
+      flagMenu = false;
+      flagVitesse = false;
+      flagModes = false;
+      etat = attente;
+      break;
+    case ok:
+      Ecran.Fin();
+      // baisser les
+      flagMenu = false;
+      flagVitesse = false;
+      flagModes = false;
+      etat = attente;
+      break;
     }
   }
 }
