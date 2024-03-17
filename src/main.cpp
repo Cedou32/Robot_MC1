@@ -23,6 +23,8 @@ AnalogIn Batt(PA_4);
 // Push button
 DigitalIn SW1(PA_3);
 DigitalIn SW2(PB_15);
+//LEDS
+DigitalOut LED(PC_13);
 
 //******Variables Globales******//
 // Variables pour la verification de la tension de la batterie
@@ -42,27 +44,6 @@ uint8_t trameBras[10];
 uint8_t trameDonees[10];
 
 //******Machine a etat******//
-// Enumeration des etats
-/*enum
-{
-  demarrage,
-  attente,
-  detectionAppui,
-  menu,
-  vitesse,
-  modes,
-  libre,
-  enregistrer,
-  etendu,
-  debogage,
-  selectVitesse1,
-  selectVitesse2,
-  selectVitesse3,
-  ok,
-  fermer,
-  mvtRobot,
-  battery
-};*/
 // Declaration de la variable etat
 uint8_t etat = demarrage;
 
@@ -134,6 +115,9 @@ int main()
         flagBatterie = false;
         etat = battery;
       }
+
+
+
       break;
 
     case battery:
