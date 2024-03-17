@@ -14,6 +14,9 @@
 class DisplayInterface {
 public:
     DisplayInterface(PinName mosi, PinName miso, PinName sclk, PinName cs, PinName rst, PinName dc);
+
+    void BtnOn();
+    void BtnOff();
     
     void Demarrage();
 

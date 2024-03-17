@@ -8,6 +8,24 @@
 DisplayInterface::DisplayInterface(PinName mosi, PinName miso, PinName sclk, PinName cs, PinName reset, PinName dc)
     : TFT(mosi, miso, sclk, cs, reset, dc) {}
 
+void DisplayInterface::BtnOn()
+{
+    TFT.rect(60, 100, 130, 140, White);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Green);
+    TFT.locate(75, 110);
+    TFT.printf("ON");
+}
+
+void DisplayInterface::BtnOff()
+{
+    TFT.rect(190, 100, 260, 140, White);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Red);
+    TFT.locate(193, 110);
+    TFT.printf("OFF");
+}
+
 void DisplayInterface::Demarrage()
 {
     TFT.background(Black);
@@ -342,9 +360,11 @@ void DisplayInterface::Menu()
 {
     DisplayInterface::LogoOff();
     DisplayInterface::BtnMenuAppuye();
-    DisplayInterface::BtnVitesseNonAppuye();
-    DisplayInterface::BtnModesNonAppuye();
-    DisplayInterface::BtnFermer();
+    //DisplayInterface::BtnVitesseNonAppuye();
+    //DisplayInterface::BtnModesNonAppuye();
+    //DisplayInterface::BtnFermer();
+    DisplayInterface::BtnOn();
+    DisplayInterface::BtnOff();
     
 
 }

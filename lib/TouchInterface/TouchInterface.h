@@ -27,7 +27,9 @@ enum EtatLib
     ok,
     fermer,
     mvtRobot,
-    battery
+    battery,
+    LedOn,
+    LedOff
 };
 
 class TouchInterface

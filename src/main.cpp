@@ -23,7 +23,7 @@ AnalogIn Batt(PA_4);
 // Push button
 DigitalIn SW1(PA_3);
 DigitalIn SW2(PB_15);
-//LEDS
+// LEDS
 DigitalOut LED(PC_13);
 
 //******Variables Globales******//
@@ -116,8 +116,6 @@ int main()
         etat = battery;
       }
 
-
-
       break;
 
     case battery:
@@ -153,11 +151,19 @@ int main()
       break;
     // lorsque l'utilisateur appuie sur l'ecran
     case detectionAppui:
-      printf("%d,%d\r\n", positionX, positionY); // afficher
-                                                 // si on appuie sur le bouton "Menu"
 
       etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagVitesse, flagModes);
 
+      break;
+    case LedOn:
+      trameBras[7] = 1;
+      pc.write(trameBras, sizeof(trameBras));
+      etat = attente;
+      break;
+    case LedOff:
+      trameBras[7] = 0;
+      pc.write(trameBras, sizeof(trameBras));
+      etat = attente;
       break;
     case menu:
       Ecran.Menu();
