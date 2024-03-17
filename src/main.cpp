@@ -1,43 +1,57 @@
 #include "mbed.h"
-#include "stdio.h"
 
-AnalogIn Y1(PC_5);
-AnalogIn Y2(PA_1);
-AnalogIn X1(PB_1);
-AnalogIn X2(PA_0);
-
-DigitalIn CTRL(PB_15);
-DigitalIn Pince(PA_3);
-
-DigitalOut led(PC_13);
-
-BufferedSerial pc(PB_6, PB_7);
-
+BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 uint8_t buff[10];
-uint8_t value;
 
-uint8_t map(uint16_t raw_value)
-{
-  uint8_t value_8bit = uint8_t(raw_value * 0.00389105);
-  return value_8bit;
-}
+DigitalOut LED(PC_13);
+
+char startMarker[] = "#@+";
+char endMarker[] = "?%";
+char currentChar;
 
 int main()
 {
-  pc.set_baud(9600);
-
+  pc.set_baud(115200);
+  int buffindex = 0;
   while (1)
   {
-    if (CTRL == 1)
+    LED = buff[7];
+    pc.write(buff, sizeof(buff));
+    
+    if (pc.readable())
     {
-      led = 1;
+
+      pc.read(&currentChar, 1);
+
+      if (currentChar == startMarker[buffindex % 3])
+      {
+        printf("Test1\r\n");
+        buff[buffindex++] = currentChar;
+
+        if (buffindex % 3 == 0)
+        {
+          printf("Test2\r\n");
+          while (pc.readable() && buffindex < 10)
+          {
+            printf("Test3\r\n");
+            pc.read(&currentChar, 1);
+            buff[buffindex++] = currentChar;
+
+            // Vérifie si le caractère actuel correspond à la fin de la trame
+            if (currentChar == endMarker[(buffindex - 3) % 2])
+            {
+              printf("Test4\r\n");
+              for (int i = 0; i < 10; i++)
+              {
+                printf("%d\r\n", buff[i]);
+              }
+              // Réinitialise l'index du buffer pour la prochaine trame
+              buffindex = 0;
+              break;
+            }
+          }
+        }
+      }
     }
-    else
-    {
-      led = 0;
-    }
-    /*value = map(X2.read_u16());
-    buff[0] = value;
-    pc.write(buff, 1);*/
   }
 }
