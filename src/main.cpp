@@ -104,7 +104,7 @@ int main()
     // attente d'un appui
     case attente:
 
-      if (Touch.Touch_detect())
+      /*if (Touch.Touch_detect())
       {
         positionX = Touch.getX(); // prendre la valeur de l'axe X
         positionY = Touch.getY(); // prendre la valeur de l'axe Y
@@ -114,7 +114,8 @@ int main()
       {
         flagBatterie = false;
         etat = battery;
-      }
+      }*/
+      etat = mvtRobot;
 
       break;
 
@@ -141,12 +142,12 @@ int main()
     // Controle du robot
     case mvtRobot:
       // Lecture et transmission de la valeur des joysticks
-      trameBras[3] = DroitY.read_u16() * 0.00389106;
-      trameBras[4] = DroitX.read_u16() * 0.00389106;
+      trameBras[3] = DroitX.read_u16() * 0.00389106;
+      trameBras[4] = DroitY.read_u16() * 0.00389106;
       trameBras[5] = GaucheY.read_u16() * 0.00389106;
       trameBras[6] = GaucheX.read_u16() * 0.00389106;
       pc.write(trameBras, sizeof(trameBras));
-      thread_sleep_for(250);
+      thread_sleep_for(100);
       etat = attente;
       break;
     // lorsque l'utilisateur appuie sur l'ecran
