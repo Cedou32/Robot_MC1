@@ -1,57 +1,99 @@
 #include "mbed.h"
 
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
-uint8_t buff[10];
+uint8_t buffer[10];
 
 DigitalOut LED(PC_13);
+
+DigitalOut dirPinB(PC_0);
+DigitalOut stepPinB(PC_1);
+
+DigitalOut dirPinC(PB_9);
+DigitalOut stepPinC(PB_8);
+
+Ticker InterruptionBT1;
+Ticker InterruptionBT2;
 
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
 char currentChar;
 
+uint8_t flagBT = 0;
+int flag_protection = 0;
+
+void VerifStepperBase()
+{
+  if (buffer[3] >= 85 && buffer[3] <=170){
+    stepPinB = 0;
+  }else if(buffer[3] >= 0 && buffer[3] < 85){
+    dirPinB = 0;
+    stepPinB = !stepPinB;
+  }else if(buffer[3] >= 170 && buffer[3] <= 270){
+    dirPinB = 1;
+    stepPinB = !stepPinB;
+  }
+}
+
+void VerifStepperCoude()
+{
+  if (buffer[5] >= 85 && buffer[5] <=170){
+    stepPinC = 0;
+  }else if(buffer[5] >= 0 && buffer[5] < 85){
+    dirPinC = 0;
+    stepPinC = !stepPinC;
+  }else if(buffer[5] >= 170 && buffer[5] <= 270){
+    dirPinC = 1;
+    stepPinC = !stepPinC;
+  }
+}
+
 int main()
 {
+  InterruptionBT1.attach(&VerifStepperBase, 0.002);
+  InterruptionBT2.attach(&VerifStepperCoude, 0.002);
   pc.set_baud(115200);
-  int buffindex = 0;
   while (1)
   {
-    LED = buff[7];
-    pc.write(buff, sizeof(buff));
-    
     if (pc.readable())
     {
-
       pc.read(&currentChar, 1);
 
-      if (currentChar == startMarker[buffindex % 3])
+      if (currentChar == '#')
       {
-        printf("Test1\r\n");
-        buff[buffindex++] = currentChar;
-
-        if (buffindex % 3 == 0)
+        buffer[0] = currentChar;
+        flag_protection++;
+      }
+      else if (currentChar == '@' && flag_protection == 1)
+      {
+        buffer[1] = currentChar;
+        flag_protection++;
+      }
+      else if (currentChar == '+' && flag_protection == 2)
+      {
+        buffer[2] = currentChar;
+        flag_protection++;
+        for (int i = 3; i <= 7; i++)
         {
-          printf("Test2\r\n");
-          while (pc.readable() && buffindex < 10)
-          {
-            printf("Test3\r\n");
-            pc.read(&currentChar, 1);
-            buff[buffindex++] = currentChar;
-
-            // Vérifie si le caractère actuel correspond à la fin de la trame
-            if (currentChar == endMarker[(buffindex - 3) % 2])
-            {
-              printf("Test4\r\n");
-              for (int i = 0; i < 10; i++)
-              {
-                printf("%d\r\n", buff[i]);
-              }
-              // Réinitialise l'index du buffer pour la prochaine trame
-              buffindex = 0;
-              break;
-            }
-          }
+          pc.read(&currentChar, 1);
+          buffer[i] = currentChar;
         }
       }
+      else if (currentChar == '?' && flag_protection == 3)
+      {
+        buffer[8] = currentChar;
+        flag_protection++;
+      }
+      else if (currentChar == '%' && flag_protection == 4)
+      {
+        buffer[9] = currentChar;
+        flag_protection = 0;
+        pc.write(buffer, 10);
+      }
+      else
+      {
+        memset(buffer, 0, 10);
+      }
+      LED = int(buffer[7]);
     }
   }
 }
