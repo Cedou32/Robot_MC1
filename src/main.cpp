@@ -158,11 +158,13 @@ int main()
     case LedOn:
       trameBras[7] = 1;
       pc.write(trameBras, sizeof(trameBras));
+      thread_sleep_for(100);
       etat = attente;
       break;
     case LedOff:
       trameBras[7] = 0;
       pc.write(trameBras, sizeof(trameBras));
+      thread_sleep_for(100);
       etat = attente;
       break;
     case menu:
