@@ -24,7 +24,7 @@ char currentChar;
 uint8_t flagBT = 0;
 int flag_protection = 0;
 
-float dutyCycle = 0.05;
+float dutyCycle = 0.125;
 
 void VerifStepperBase()
 {
@@ -74,15 +74,15 @@ void VerifServoCoude()
     
     dutyCycle -= 0.0001;
   }
-  else if (buffer[5] >= 170 && buffer[5] <= 270)
+  else if (buffer[5] >= 170 && buffer[5] <= 255)
   {
     //ServoCoude.resume();
     dutyCycle += 0.0001;
   }
   if(dutyCycle < 0.05){
     dutyCycle = 0.05;
-  } else if(dutyCycle > 0.1){
-    dutyCycle = 0.1;
+  } else if(dutyCycle > 0.125){
+    dutyCycle = 0.125;
   }
   ServoCoude.write(dutyCycle);
   
@@ -95,6 +95,7 @@ int main()
   InterruptionBT3.attach(&VerifServoCoude, 0.002);
 
   //ServoCoude.period_ms(1);
+  buffer[5] = 100;
   pc.set_baud(115200);
   while (1)
   {
