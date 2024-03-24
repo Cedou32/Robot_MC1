@@ -174,6 +174,7 @@ int main()
         dutyCyclePoignet = 0.125;
       }
       ServoPoignet.write(dutyCyclePoignet);
+      
     }
   }
 }
