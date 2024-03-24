@@ -115,6 +115,7 @@ int main()
         flagBatterie = false;
         etat = battery;
       }*/
+      
       etat = mvtRobot;
 
       break;
