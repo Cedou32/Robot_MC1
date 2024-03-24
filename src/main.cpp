@@ -132,6 +132,7 @@ int main()
 
     if (flagServo == 1)
     {
+      flagServo = 0;
       if (buffer[5] >= 85 && buffer[5] <= 170)
       {
       }
