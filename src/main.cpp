@@ -1,7 +1,7 @@
 #include "mbed.h"
 
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
-uint8_t buffer[10];
+uint8_t buffer[15];
 
 DigitalOut LED(PC_13);
 
@@ -13,10 +13,10 @@ DigitalOut stepPinC(PB_8);
 
 PwmOut ServoCoude(PC_8);
 PwmOut ServoPoignet(PC_9);
+PwmOut ServoPince(PC_6);
 
-Ticker InterruptionBT1;
-Ticker InterruptionBT2;
-Ticker InterruptionBT3;
+Ticker InterruptionServo;
+Ticker InterruptionStepper;
 
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
@@ -29,6 +29,7 @@ int flagServo = 0;
 
 float dutyCycleCoude = 0.125;
 float dutyCyclePoignet = 0.125;
+float dutyCyclePince = 0.125;
 
 void VerifServo()
 {
@@ -42,8 +43,8 @@ void VerifStepper()
 
 int main()
 {
-  InterruptionBT1.attach(&VerifServo, 0.002);
-  InterruptionBT2.attach(&VerifStepper, 0.002);
+  InterruptionServo.attach(&VerifServo, 0.002);
+  InterruptionStepper.attach(&VerifStepper, 0.002);
 
   // ServoCoude.period_ms(1);
   buffer[3] = 100;
@@ -80,12 +81,12 @@ int main()
       }
       else if (currentChar == '?' && flag_protection == 3)
       {
-        buffer[8] = currentChar;
+        buffer[13] = currentChar;
         flag_protection++;
       }
       else if (currentChar == '%' && flag_protection == 4)
       {
-        buffer[9] = currentChar;
+        buffer[14] = currentChar;
         flag_protection = 0;
         pc.write(buffer, 10);
       }
@@ -133,16 +134,15 @@ int main()
     if (flagServo == 1)
     {
       flagServo = 0;
-      if (buffer[5] >= 85 && buffer[5] <= 170)
-      {
-      }
+      //Code du servo Poignet
+      if (buffer[5] >= 85 && buffer[5] <= 170){}
       else if (buffer[5] >= 0 && buffer[5] < 85)
       {
-        dutyCycleCoude -= 0.0001;
+        dutyCycleCoude -= 0.00005   ;
       }
       else if (buffer[5] >= 170 && buffer[5] <= 255)
       {
-        dutyCycleCoude += 0.0001;
+        dutyCycleCoude += 0.00005;
       }
       if (dutyCycleCoude < 0.05)
       {
@@ -153,17 +153,15 @@ int main()
         dutyCycleCoude = 0.125;
       }
       ServoCoude.write(dutyCycleCoude);
-
-      if (buffer[4] >= 85 && buffer[4] <= 170)
-      {
-      }
+      //Code du servo Coude
+      if (buffer[4] >= 85 && buffer[4] <= 170){}
       else if (buffer[4] >= 0 && buffer[4] < 85)
       {
-        dutyCyclePoignet -= 0.0001;
+        dutyCyclePoignet -= 0.00005;
       }
       else if (buffer[4] >= 170 && buffer[4] <= 255)
       {
-        dutyCyclePoignet += 0.0001;
+        dutyCyclePoignet += 0.00005;
       }
       if (dutyCyclePoignet < 0.05)
       {
@@ -174,7 +172,25 @@ int main()
         dutyCyclePoignet = 0.125;
       }
       ServoPoignet.write(dutyCyclePoignet);
-      
+      //Code du servo Pince
+      if (buffer[7] >= 85 && buffer[7] <= 170){}
+      else if (buffer[7] >= 0 && buffer[7] < 85)
+      {
+        dutyCyclePince -= 0.00005;
+      }
+      else if (buffer[7] >= 170 && buffer[7] <= 255)
+      {
+        dutyCyclePince += 0.00005;
+      }
+      if (dutyCyclePince < 0.05)
+      {
+        dutyCyclePince = 0.05;
+      }
+      else if (dutyCyclePince > 0.125)
+      {
+        dutyCyclePince = 0.125;
+      }
+      ServoPoignet.write(dutyCyclePince);
     }
   }
 }
