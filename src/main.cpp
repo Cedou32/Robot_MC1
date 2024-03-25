@@ -21,8 +21,8 @@ AnalogIn Batt(PA_4);
 
 //******Pins Numeriques*******//
 // Push button
-DigitalIn SW1(PA_3);
-DigitalIn SW2(PB_15);
+InterruptIn SW1(PA_3);
+InterruptIn SW2(PB_15);
 // LEDS
 DigitalOut LED(PC_13);
 
@@ -34,13 +34,17 @@ uint8_t compteur = 0;
 // Variables contenant les coordonnees d'un appui
 uint16_t positionX;
 uint16_t positionY;
+// Temps d'appui boutons
+long currentFermer = 0, previousFermer = 0;
+long currentOuvert = 0, previousOuvert = 0;
+uint8_t valeurPince = 130;
 // Flags
 bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
 bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
 bool flagModes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
 // Trames
-uint8_t trameBras[10];
+uint8_t trameBras[15];
 uint8_t trameDonees[10];
 
 //******Machine a etat******//
@@ -49,9 +53,12 @@ uint8_t etat = demarrage;
 
 //******Declaration des objets******//
 DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk, cs, reset, dc
+SPI_TFT_ILI9341 TFT(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9);
 TouchScreen Touch(TouchXp, TouchXn, TouchYp, TouchYn);
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 Ticker InterruptionBatterie;
+Timer Ouvrir;
+Timer Fermer;
 
 //******Fonctions pour les interruptions******//
 void VerifBatterie()
@@ -60,19 +67,43 @@ void VerifBatterie()
   flagBatterie = true;
 }
 
+void FermerPinceRise()
+{
+  Fermer.start();
+}
+
+void OuvrirPinceRise()
+{
+  Ouvrir.start();
+}
+void FermerPinceFall()
+{
+  Fermer.stop();
+}
+
+void OuvrirPinceFall()
+{
+  Ouvrir.stop();
+}
+
 int main()
 {
   // Attacher la fonction
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
+  SW1.rise(&FermerPinceRise);
+  SW2.rise(&OuvrirPinceRise);
+  SW1.fall(&FermerPinceFall);
+  SW2.fall(&OuvrirPinceFall);
 
   // Indication des valeurs de securite de la trame
   trameBras[0] = '#';
   trameBras[1] = '@';
   trameBras[2] = '+';
-  trameBras[8] = '?';
-  trameBras[9] = '%';
+  trameBras[13] = '?';
+  trameBras[14] = '%';
 
   pc.set_baud(115200); // instancier baud-rate pour la communication BT
+  // Ecran.Reset();
   while (1)
   {
     switch (etat)
@@ -104,7 +135,7 @@ int main()
     // attente d'un appui
     case attente:
 
-      /*if (Touch.Touch_detect())
+      if (Touch.Touch_detect())
       {
         positionX = Touch.getX(); // prendre la valeur de l'axe X
         positionY = Touch.getY(); // prendre la valeur de l'axe Y
@@ -114,8 +145,8 @@ int main()
       {
         flagBatterie = false;
         etat = battery;
-      }*/
-      
+      }
+
       etat = mvtRobot;
 
       break;
@@ -142,6 +173,30 @@ int main()
       break;
     // Controle du robot
     case mvtRobot:
+      currentFermer = Fermer.read_us();
+      currentOuvert = Ouvrir.read_us();
+
+      if (currentFermer - previousFermer >= 50000)
+      {
+        valeurPince += 5;
+        if (valeurPince >= 255)
+        {
+          valeurPince = 255;
+        }
+        trameBras[7] = valeurPince;
+        previousFermer = currentFermer;
+      }
+
+      if (currentOuvert - previousOuvert >= 100)
+      {
+        valeurPince -= 5;
+        if (valeurPince <= 0)
+        {
+          valeurPince = 0;
+        }
+        trameBras[7] = valeurPince;
+        previousFermer = currentFermer;
+      }
       // Lecture et transmission de la valeur des joysticks
       trameBras[3] = DroitX.read_u16() * 0.00389106;
       trameBras[4] = DroitY.read_u16() * 0.00389106;
