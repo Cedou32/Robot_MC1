@@ -27,6 +27,7 @@ enum EtatLib
     ok,
     fermer,
     mvtRobot,
+    lectureLibre,
     battery,
     LedOn,
     LedOff

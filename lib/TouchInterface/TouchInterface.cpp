@@ -12,7 +12,7 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     {
         return menu;
     }
-    /*else if (positionX >= 10 && positionX <= 90 && positionY >= 50 && positionY <= 70 && !flagVitesse)
+    else if (positionX >= 10 && positionX <= 90 && positionY >= 50 && positionY <= 70 && !flagVitesse)
     {
         return vitesse;
     }
@@ -47,7 +47,7 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     else if (positionX >= 180 && positionX <= 200 && positionY >= 50 && positionY <= 70 && flagVitesse)
     {
         return selectVitesse3;
-    }*/
+    }
     else if (positionX >= 240 && positionX <= 310 && positionY >= 210 && positionY <= 230)
     {
         return fermer;
@@ -56,14 +56,14 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     {
         return ok;
     }
-    else if (positionX >= 60 && positionX <= 130 && positionY >= 100 && positionY <= 140)
+    /*else if (positionX >= 60 && positionX <= 130 && positionY >= 100 && positionY <= 140)
     {
         return LedOn;
     }
     else if (positionX >= 190 && positionX <= 260 && positionY >= 100 && positionY <= 140)
     {
         return LedOff;
-    }
+    }*/
     else
     {
         return attente;

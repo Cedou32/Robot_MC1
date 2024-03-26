@@ -43,9 +43,13 @@ bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
 bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
 bool flagModes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
+bool flagLibre = false, flagEtendu = false, flagDebug = false, flagEnregistrement = false;
+bool flagSelection = false;
 // Trames
 uint8_t trameBras[15];
 uint8_t trameDonees[10];
+//
+uint8_t previousGX = 0, previousGY = 0, previousDX = 0, previousDY = 0;
 
 //******Machine a etat******//
 // Declaration de la variable etat
@@ -146,8 +150,11 @@ int main()
         flagBatterie = false;
         etat = battery;
       }
+      else if (flagLibre && flagSelection){
+        etat = lectureLibre;
+      }
 
-      etat = mvtRobot;
+      //etat = mvtRobot;
 
       break;
 
@@ -171,8 +178,7 @@ int main()
       }
       etat = attente;
       break;
-    // Controle du robot
-    case mvtRobot:
+    case lectureLibre:
       currentFermer = Fermer.read_us();
       currentOuvert = Ouvrir.read_us();
 
@@ -187,7 +193,7 @@ int main()
         previousFermer = currentFermer;
       }
 
-      if (currentOuvert - previousOuvert >= 100)
+      if (currentOuvert - previousOuvert >= 50000)
       {
         valeurPince -= 5;
         if (valeurPince <= 0)
@@ -202,6 +208,18 @@ int main()
       trameBras[4] = DroitY.read_u16() * 0.00389106;
       trameBras[5] = GaucheY.read_u16() * 0.00389106;
       trameBras[6] = GaucheX.read_u16() * 0.00389106;
+
+      if (trameBras[3] > 170 || trameBras[3] < 85 || trameBras[4] > 170 || trameBras[4] < 85 ||trameBras[5] > 170 || trameBras[5] < 85 ||trameBras[6] > 170 || trameBras[6] < 85){
+        /*previousDX = trameBras[3];
+        previousDY = trameBras[4];
+        previousGY = trameBras[5];
+        previousDX = trameBras[6];*/
+        etat = mvtRobot;
+      }
+      etat = attente;
+      break;
+    // Controle du robot
+    case mvtRobot:
       pc.write(trameBras, sizeof(trameBras));
       thread_sleep_for(100);
       etat = attente;
@@ -242,18 +260,34 @@ int main()
       etat = attente;
       break;
     case libre:
+      flagLibre = true;
+      flagEtendu = false;
+      flagDebug = false;
+      flagEnregistrement = false;
       Ecran.Libre();
       etat = attente;
       break;
     case enregistrer:
+      flagLibre = false;
+      flagEtendu = false;
+      flagDebug = false;
+      flagEnregistrement = true;
       Ecran.Enregistrer();
       etat = attente;
       break;
     case etendu:
+      flagLibre = false;
+      flagEtendu = true;
+      flagDebug = false;
+      flagEnregistrement = false;
       Ecran.Etendu();
       etat = attente;
       break;
     case debogage:
+      flagLibre = false;
+      flagEtendu = false;
+      flagDebug = true;
+      flagEnregistrement = false;
       Ecran.Debogage();
       etat = attente;
       break;
@@ -275,6 +309,7 @@ int main()
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
+      flagSelection = false;
       etat = attente;
       break;
     case ok:
@@ -283,6 +318,7 @@ int main()
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
+      flagSelection = true;
       etat = attente;
       break;
     }

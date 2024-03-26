@@ -338,7 +338,7 @@ void DisplayInterface::Batterie(int8_t batterie)
 void DisplayInterface::Fermer()
 {
     TFT.fillrect(10, 50, 200, 70, Black);
-    TFT.fillrect(240, 210, 310, 230, Black);
+    //TFT.fillrect(240, 210, 310, 230, Black);
     TFT.fillrect(240, 180, 310, 200, Black);
     TFT.fillrect(10, 80, 90, 100, Black);
     TFT.fillrect(120, 80, 210, 100, Black);
@@ -360,11 +360,11 @@ void DisplayInterface::Menu()
 {
     DisplayInterface::LogoOff();
     DisplayInterface::BtnMenuAppuye();
-    //DisplayInterface::BtnVitesseNonAppuye();
-    //DisplayInterface::BtnModesNonAppuye();
-    //DisplayInterface::BtnFermer();
-    DisplayInterface::BtnOn();
-    DisplayInterface::BtnOff();
+    DisplayInterface::BtnVitesseNonAppuye();
+    DisplayInterface::BtnModesNonAppuye();
+    DisplayInterface::BtnFermer();
+    /*DisplayInterface::BtnOn();
+    DisplayInterface::BtnOff();*/
     
 
 }
