@@ -27,9 +27,9 @@ int flag_protection = 0;
 int flagStepper = 0;
 int flagServo = 0;
 
-float dutyCycleCoude = 0.100;
-float dutyCyclePoignet = 0.125;
-float dutyCyclePince = 0.125;
+float dutyCycleCoude = 0.100;     //Min = 0.03   Max = 0.125
+float dutyCyclePoignet = 0.125;   //Min = 0.025   Max = 0.115
+float dutyCyclePince = 0.125;     //Fermer = 0.025 =    Ouvrir = 0.125 = 
 
 enum etat
 {
@@ -62,8 +62,25 @@ int main()
   etat etat_actuel = depart;
   while (1)
   {
-    
-    switch (etat_actuel)
+
+    for (int i = 0; i < 750; i++)
+    {
+      stepPinC = 1;
+      thread_sleep_for(2);
+      stepPinC = 0;
+      thread_sleep_for(2);
+    }
+    //thread_sleep_for(1000);
+    ServoCoude.write(0.03);
+    thread_sleep_for(750);
+    ServoPoignet.write(0.09);
+    thread_sleep_for(500);
+    ServoPince.write(0.12);
+    thread_sleep_for(500);
+    ServoPince.write(0.08);
+    while (1);
+
+    /*switch (etat_actuel)
     {
     case depart:
       /*for (int i = 0; i < 650; i++)
@@ -72,10 +89,10 @@ int main()
         thread_sleep_for(2);
         stepPinC = 0;
         thread_sleep_for(2);
-      }*/
+      }
 
       // thread_sleep_for(100);
-      
+
       // thread_sleep_for(100);
       ServoCoude.write(dutyCycleCoude);
       thread_sleep_for(1000);
@@ -234,6 +251,6 @@ int main()
           ServoPince.write(dutyCyclePince);
         }
         break;*/
-    }
+    //}
   }
 }
