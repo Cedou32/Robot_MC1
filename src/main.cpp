@@ -29,7 +29,7 @@ int flagServo = 0;
 
 float dutyCycleCoude = 0.03;   // Min = 0.03   Max = 0.125
 float dutyCyclePoignet = 0.09; // Min = 0.025   Max = 0.115
-float dutyCyclePince = 0.08;   // Fermer = 0.025 =    Ouvrir = 0.125 =
+float dutyCyclePince = 0.08;   // Fermer = 0.08 =    Ouvrir = 0.125 
 
 enum etat
 {
@@ -58,6 +58,8 @@ int main()
   buffer[4] = 100;
   buffer[5] = 100;
   buffer[6] = 100;
+  buffer[7] = 100;
+
   pc.set_baud(115200);
   etat etat_actuel = depart;
   while (1)
@@ -87,11 +89,11 @@ int main()
       break;
     case attente_trame:
 
-      while (pc.readable() == 0)
+      if (pc.readable() == 1)
       {
+        etat_actuel = mouvement_moteur;
       }
       LED = 0;
-      etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
       if (pc.readable())
@@ -226,9 +228,9 @@ int main()
         {
           dutyCyclePince += 0.00005;
         }
-        if (dutyCyclePince < 0.05)
+        if (dutyCyclePince < 0.08)
         {
-          dutyCyclePince = 0.05;
+          dutyCyclePince = 0.08;
         }
         else if (dutyCyclePince > 0.125)
         {
