@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "random": "cpp"
+        "random": "cpp",
+        "mstd_atomic": "cpp",
+        "mstd_iterator": "cpp",
+        "array": "cpp",
+        "string": "cpp",
+        "string_view": "cpp"
     }
 }
