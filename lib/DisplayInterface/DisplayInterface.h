@@ -63,6 +63,7 @@ public:
     void LogoOff();
 
     void Menu();
+    void FermerMenu();
     void Vitesse();
     void Modes();
     void Libre();
@@ -72,7 +73,8 @@ public:
     void Vitesse1();
     void Vitesse2();
     void Vitesse3();
-    void Fin();
+    void Choisir();
+    void SortirEtat();
 
 
     void Test(uint8_t variable);

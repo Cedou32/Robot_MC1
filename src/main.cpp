@@ -18,8 +18,8 @@ AnalogIn GaucheY(PA_1);
 AnalogIn Batt(PA_4);
 //******Pins Numeriques*******//
 // Push button
-InterruptIn SW1(PA_3);
-InterruptIn SW2(PB_15);
+DigitalIn SW1(PA_3);
+DigitalIn SW2(PB_15);
 // LEDS
 DigitalOut LED(PC_13);
 //******Variables Globales******//
@@ -60,7 +60,7 @@ void VerifBatterie()
   compteur = compteur + 1;
   flagBatterie = true;
 }
-void FermerPinceRise()
+/*void FermerPinceRise()
 {
   LED = 1;
   Fermer.start();
@@ -81,15 +81,15 @@ void OuvrirPinceFall()
 {
   LED = 0;
   Ouvrir.stop();
-}
+}*/
 int main()
 {
   // Attacher la fonction
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
-  SW1.rise(&FermerPinceRise);
+  /*SW1.rise(&FermerPinceRise);
   SW2.rise(&OuvrirPinceRise);
   SW1.fall(&FermerPinceFall);
-  SW2.fall(&OuvrirPinceFall);
+  SW2.fall(&OuvrirPinceFall);*/
 
   // Indication des valeurs de securite de la trame
   trameBras[0] = '#';
@@ -138,7 +138,7 @@ int main()
       }
       else if (flagLibre && flagSelection)
       {
-        etat = lectureLibre;
+        etat = lectureLibre; 
       }
       // etat = mvtRobot;
 
@@ -165,41 +165,42 @@ int main()
       break;
     case lectureLibre:
 
-      if (Fermer.read_ms() - previousFermer >= 25)
+      /*if (Fermer.read_ms() - previousFermer >= 25)
       {
-        valeurPince += 5;
-        if (valeurPince >= 255)
-        {
-          valeurPince = 255;
-        }
-        trameBras[8] = valeurPince;
+        trameBras[8] = 2;
         previousFermer = Fermer.read_ms();
         pc.write(trameBras, sizeof(trameBras));
       }
 
       if (Ouvrir.read_ms() - previousOuvert >= 25)
       {
-        valeurPince -= 5;
-        if (valeurPince <= 0)
-        {
-          valeurPince = 0;
-        }
-        trameBras[8] = valeurPince;
+        trameBras[8] = 1;
         previousOuvert = Ouvrir.read_ms();
         pc.write(trameBras, sizeof(trameBras));
+      }*/
+
+      if (SW1 == 1 && SW2 == 0){
+        trameBras[8] = 1;
+      } else if (SW2 == 1 && SW1 == 0){
+        trameBras[8] = 2;
+      } else {
+        trameBras[8] = 0;
       }
 
       // Lecture et transmission de la valeur des joysticks
-      trameBras[9] = DroitX.read_u16() * 0.00389106;
-      trameBras[10] = DroitY.read_u16() * 0.00389106;
-      trameBras[11] = GaucheY.read_u16() * 0.00389106;
-      trameBras[12] = GaucheX.read_u16() * 0.00389106;
+      
+      trameBras[9] = DroitX.read_u16() * 0.00389106;    //Base
+      trameBras[10] = GaucheY.read_u16() * 0.00389106;   //Coude
+      trameBras[11] = DroitY.read_u16() * 0.00389106;  //Poignet
+      trameBras[12] = GaucheX.read_u16() * 0.00389106;  //Epaule
+      pc.write(trameBras, sizeof(trameBras));
+      thread_sleep_for(100);
 
-      if (trameBras[9] > 170 || trameBras[9] < 85 || trameBras[10] > 170 || trameBras[10] < 85 || trameBras[11] > 170 || trameBras[11] < 85 || trameBras[12] > 170 || trameBras[12] < 85)
+      /*if (trameBras[9] > 170 || trameBras[9] < 85 || trameBras[10] > 170 || trameBras[10] < 85 || trameBras[11] > 170 || trameBras[11] < 85 || trameBras[12] > 170 || trameBras[12] < 85)
       {
         flagEnvoiLibre = true;
         pc.write(trameBras, sizeof(trameBras));
-        // thread_sleep_for(100);
+        thread_sleep_for(100);
       }
       else if (flagEnvoiLibre == true)
       {
@@ -209,7 +210,7 @@ int main()
         trameBras[11] = 100;
         trameBras[12] = 100;
         pc.write(trameBras, sizeof(trameBras));
-      }
+      }*/
       etat = attente;
       break;
     // Controle du robot
@@ -236,8 +237,12 @@ int main()
       etat = attente;
       break;
     case menu:
-      Ecran.Menu();
-      flagMenu = true; // activer le flag du bouton
+      flagMenu = !flagMenu; // activer le flag du bouton
+      if (flagMenu == true){
+        Ecran.Menu();
+      } else if (flagMenu == false){
+        Ecran.FermerMenu();
+      }
       etat = attente;
       break;
     case vitesse:
@@ -297,7 +302,7 @@ int main()
       etat = attente;
       break;
     case fermer:
-      Ecran.Fin();
+      Ecran.Fermer();
       trameBras[4] = 1;
       // pc.write(trameBras, sizeof(trameBras));
       //  baisser les flags
@@ -308,7 +313,7 @@ int main()
       etat = attente;
       break;
     case ok:
-      Ecran.Fin();
+      Ecran.Choisir();
       trameBras[4] = 0;
       // pc.write(trameBras, sizeof(trameBras));
       //  baisser les

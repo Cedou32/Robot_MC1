@@ -8,7 +8,7 @@
 
 EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu, bool flagVitesse, bool flagModes)
 {
-    if (positionX >= 210 && positionX <= 310 && positionY >= 10 && positionY <= 40 && !flagMenu)
+    if (positionX >= 210 && positionX <= 310 && positionY >= 10 && positionY <= 40)
     {
         return menu;
     }

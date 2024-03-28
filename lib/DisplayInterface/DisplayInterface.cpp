@@ -212,7 +212,7 @@ void DisplayInterface::BtnDebogageAppuye()
     TFT.locate(225, 115);
     TFT.printf("Debogage");
 }
-
+/////////////////////////////////////////////////////
 void DisplayInterface::FermerVitesse()
 {
     TFT.fillrect(120, 50, 200, 70, Black);
@@ -338,7 +338,7 @@ void DisplayInterface::Batterie(int8_t batterie)
 void DisplayInterface::Fermer()
 {
     TFT.fillrect(10, 50, 200, 70, Black);
-    //TFT.fillrect(240, 210, 310, 230, Black);
+    TFT.fillrect(240, 210, 310, 230, Black);
     TFT.fillrect(240, 180, 310, 200, Black);
     TFT.fillrect(10, 80, 90, 100, Black);
     TFT.fillrect(120, 80, 210, 100, Black);
@@ -362,12 +362,18 @@ void DisplayInterface::Menu()
     DisplayInterface::BtnMenuAppuye();
     DisplayInterface::BtnVitesseNonAppuye();
     DisplayInterface::BtnModesNonAppuye();
-    DisplayInterface::BtnFermer();
+    //DisplayInterface::BtnFermer();
     /*DisplayInterface::BtnOn();
     DisplayInterface::BtnOff();*/
-    
-
 }
+
+void DisplayInterface::FermerMenu()
+{
+    DisplayInterface::Fermer();
+    DisplayInterface::BtnMenuNonAppuye();
+    DisplayInterface::LogoOn();
+}
+
 
 void DisplayInterface::Vitesse()
 {
@@ -447,11 +453,18 @@ void DisplayInterface::Vitesse3()
     DisplayInterface::BtnVitesse3Appuye();
     DisplayInterface::BtnChoisir();
 }
-void DisplayInterface::Fin()
+void DisplayInterface::SortirEtat()
 {
     DisplayInterface::Fermer();
     DisplayInterface::BtnMenuNonAppuye();
     DisplayInterface::LogoOn();
+}
+void DisplayInterface::Choisir()
+{
+    DisplayInterface::Fermer();
+    DisplayInterface::BtnMenuNonAppuye();
+    DisplayInterface::BtnFermer();
+    //DisplayInterface::LogoOn();
 }
 
 void DisplayInterface::LogoOn()
