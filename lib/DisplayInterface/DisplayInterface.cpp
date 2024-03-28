@@ -345,6 +345,7 @@ void DisplayInterface::Fermer()
     TFT.fillrect(220, 80, 310, 100, Black);
     TFT.fillrect(220, 110, 310, 130, Black);
     TFT.fillrect(120, 110, 210, 130, Black);
+    //DisplayInterface::LogoOn();
 }
 
 void DisplayInterface::Test(uint8_t variable)

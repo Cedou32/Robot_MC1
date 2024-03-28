@@ -138,7 +138,7 @@ int main()
       }
       else if (flagLibre && flagSelection)
       {
-        etat = lectureLibre; 
+        etat = lectureLibre;
       }
       // etat = mvtRobot;
 
@@ -179,20 +179,25 @@ int main()
         pc.write(trameBras, sizeof(trameBras));
       }*/
 
-      if (SW1 == 1 && SW2 == 0){
+      if (SW1 == 1 && SW2 == 0)
+      {
         trameBras[8] = 1;
-      } else if (SW2 == 1 && SW1 == 0){
+      }
+      else if (SW2 == 1 && SW1 == 0)
+      {
         trameBras[8] = 2;
-      } else {
+      }
+      else
+      {
         trameBras[8] = 0;
       }
 
       // Lecture et transmission de la valeur des joysticks
-      
-      trameBras[9] = DroitX.read_u16() * 0.00389106;    //Base
-      trameBras[10] = GaucheY.read_u16() * 0.00389106;   //Coude
-      trameBras[11] = DroitY.read_u16() * 0.00389106;  //Poignet
-      trameBras[12] = GaucheX.read_u16() * 0.00389106;  //Epaule
+
+      trameBras[9] = DroitX.read_u16() * 0.00389106;   // Base
+      trameBras[10] = GaucheY.read_u16() * 0.00389106; // Coude
+      trameBras[11] = DroitY.read_u16() * 0.00389106;  // Poignet
+      trameBras[12] = GaucheX.read_u16() * 0.00389106; // Epaule
       pc.write(trameBras, sizeof(trameBras));
       thread_sleep_for(100);
 
@@ -238,9 +243,12 @@ int main()
       break;
     case menu:
       flagMenu = !flagMenu; // activer le flag du bouton
-      if (flagMenu == true){
+      if (flagMenu == true)
+      {
         Ecran.Menu();
-      } else if (flagMenu == false){
+      }
+      else if (flagMenu == false)
+      {
         Ecran.FermerMenu();
       }
       etat = attente;
@@ -290,22 +298,22 @@ int main()
       etat = attente;
       break;
     case selectVitesse1:
+      trameBras[4] = 1;
       Ecran.Vitesse1();
       etat = attente;
       break;
     case selectVitesse2:
+      trameBras[4] = 2;
       Ecran.Vitesse2();
       etat = attente;
       break;
     case selectVitesse3:
+      trameBras[4] = 3;
       Ecran.Vitesse3();
       etat = attente;
       break;
     case fermer:
-      Ecran.Fermer();
-      trameBras[4] = 1;
-      // pc.write(trameBras, sizeof(trameBras));
-      //  baisser les flags
+      Ecran.SortirEtat();
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
@@ -313,10 +321,8 @@ int main()
       etat = attente;
       break;
     case ok:
+      pc.write(trameBras, sizeof(trameBras));
       Ecran.Choisir();
-      trameBras[4] = 0;
-      // pc.write(trameBras, sizeof(trameBras));
-      //  baisser les
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
