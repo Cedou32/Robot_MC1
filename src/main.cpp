@@ -18,8 +18,8 @@ AnalogIn GaucheY(PA_1);
 AnalogIn Batt(PA_4);
 //******Pins Numeriques*******//
 // Push button
-DigitalIn SW1(PA_3);
-DigitalIn SW2(PB_15);
+InterruptIn SW1(PA_3);
+InterruptIn SW2(PB_15);
 // LEDS
 DigitalOut LED(PC_13);
 //******Variables Globales******//
@@ -30,14 +30,20 @@ uint8_t compteur = 0;
 // Variables contenant les coordonnees d'un appui
 uint16_t positionX;
 uint16_t positionY;
+// Temps d'appui boutons
+long currentFermer = 0, previousFermer = 0;
+long currentOuvert = 0, previousOuvert = 0;
+uint8_t valeurPince = 130;
 // Flags
 bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
 bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
 bool flagModes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
+bool flagLibre = false, flagEtendu = false, flagDebug = false, flagEnregistrement = false;
+bool flagSelection = false;
+bool flagEnvoiLibre = false;
 // Trames
-uint8_t trameBras[10];
-uint8_t trameDonees[10];
+uint8_t trameBras[15];
 //******Machine a etat******//
 // Declaration de la variable etat
 uint8_t etat = demarrage;
@@ -46,22 +52,51 @@ DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk
 TouchScreen Touch(TouchXp, TouchXn, TouchYp, TouchYn);
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 Ticker InterruptionBatterie;
+Timer Ouvrir;
+Timer Fermer;
 //******Fonctions pour les interruptions******//
 void VerifBatterie()
 {
   compteur = compteur + 1;
   flagBatterie = true;
 }
+void FermerPinceRise()
+{
+  LED = 1;
+  Fermer.start();
+  Ouvrir.stop(); // Arrêter le timer Ouvrir
+}
+void OuvrirPinceRise()
+{
+  LED = 1;
+  Ouvrir.start();
+  Fermer.stop(); // Arrêter le timer Fermer
+}
+void FermerPinceFall()
+{
+  LED = 0;
+  Fermer.stop();
+}
+void OuvrirPinceFall()
+{
+  LED = 0;
+  Ouvrir.stop();
+}
 int main()
 {
   // Attacher la fonction
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
+  SW1.rise(&FermerPinceRise);
+  SW2.rise(&OuvrirPinceRise);
+  SW1.fall(&FermerPinceFall);
+  SW2.fall(&OuvrirPinceFall);
+
   // Indication des valeurs de securite de la trame
   trameBras[0] = '#';
   trameBras[1] = '@';
   trameBras[2] = '+';
-  trameBras[8] = '?';
-  trameBras[9] = '%';
+  trameBras[13] = '?';
+  trameBras[14] = '%';
   pc.set_baud(115200); // instancier baud-rate pour la communication BT
   while (1)
   {
@@ -90,7 +125,7 @@ int main()
       break;
     // attente d'un appui
     case attente:
-      /*if (Touch.Touch_detect())
+      if (Touch.Touch_detect())
       {
         positionX = Touch.getX(); // prendre la valeur de l'axe X
         positionY = Touch.getY(); // prendre la valeur de l'axe Y
@@ -100,9 +135,12 @@ int main()
       {
         flagBatterie = false;
         etat = battery;
-      }*/
-
-      etat = mvtRobot;
+      }
+      else if (flagLibre && flagSelection)
+      {
+        etat = lectureLibre;
+      }
+      // etat = mvtRobot;
 
       break;
     case battery:
@@ -125,13 +163,58 @@ int main()
       }
       etat = attente;
       break;
+    case lectureLibre:
+
+      if (Fermer.read_ms() - previousFermer >= 25)
+      {
+        valeurPince += 5;
+        if (valeurPince >= 255)
+        {
+          valeurPince = 255;
+        }
+        trameBras[8] = valeurPince;
+        previousFermer = Fermer.read_ms();
+        pc.write(trameBras, sizeof(trameBras));
+      }
+
+      if (Ouvrir.read_ms() - previousOuvert >= 25)
+      {
+        valeurPince -= 5;
+        if (valeurPince <= 0)
+        {
+          valeurPince = 0;
+        }
+        trameBras[8] = valeurPince;
+        previousOuvert = Ouvrir.read_ms();
+        pc.write(trameBras, sizeof(trameBras));
+      }
+
+      // Lecture et transmission de la valeur des joysticks
+      trameBras[9] = DroitX.read_u16() * 0.00389106;
+      trameBras[10] = DroitY.read_u16() * 0.00389106;
+      trameBras[11] = GaucheY.read_u16() * 0.00389106;
+      trameBras[12] = GaucheX.read_u16() * 0.00389106;
+
+      if (trameBras[9] > 170 || trameBras[9] < 85 || trameBras[10] > 170 || trameBras[10] < 85 || trameBras[11] > 170 || trameBras[11] < 85 || trameBras[12] > 170 || trameBras[12] < 85)
+      {
+        flagEnvoiLibre = true;
+        pc.write(trameBras, sizeof(trameBras));
+        // thread_sleep_for(100);
+      }
+      else if (flagEnvoiLibre == true)
+      {
+        flagEnvoiLibre = false;
+        trameBras[9] = 100;
+        trameBras[10] = 100;
+        trameBras[11] = 100;
+        trameBras[12] = 100;
+        pc.write(trameBras, sizeof(trameBras));
+      }
+      etat = attente;
+      break;
     // Controle du robot
     case mvtRobot:
-      // Lecture et transmission de la valeur des joysticks
-      trameBras[3] = DroitX.read_u16() * 0.00389106;
-      trameBras[4] = DroitY.read_u16() * 0.00389106;
-      trameBras[5] = GaucheY.read_u16() * 0.00389106;
-      trameBras[6] = GaucheX.read_u16() * 0.00389106;
+
       pc.write(trameBras, sizeof(trameBras));
       thread_sleep_for(100);
       etat = attente;
@@ -170,18 +253,34 @@ int main()
       etat = attente;
       break;
     case libre:
+      flagLibre = true;
+      flagEtendu = false;
+      flagDebug = false;
+      flagEnregistrement = false;
       Ecran.Libre();
       etat = attente;
       break;
     case enregistrer:
+      flagLibre = false;
+      flagEtendu = false;
+      flagDebug = false;
+      flagEnregistrement = true;
       Ecran.Enregistrer();
       etat = attente;
       break;
     case etendu:
+      flagLibre = false;
+      flagEtendu = true;
+      flagDebug = false;
+      flagEnregistrement = false;
       Ecran.Etendu();
       etat = attente;
       break;
     case debogage:
+      flagLibre = false;
+      flagEtendu = false;
+      flagDebug = true;
+      flagEnregistrement = false;
       Ecran.Debogage();
       etat = attente;
       break;
@@ -199,18 +298,24 @@ int main()
       break;
     case fermer:
       Ecran.Fin();
-      // baisser les flags
+      trameBras[4] = 1;
+      // pc.write(trameBras, sizeof(trameBras));
+      //  baisser les flags
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
+      flagSelection = false;
       etat = attente;
       break;
     case ok:
       Ecran.Fin();
-      // baisser les
+      trameBras[4] = 0;
+      // pc.write(trameBras, sizeof(trameBras));
+      //  baisser les
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
+      flagSelection = true;
       etat = attente;
       break;
     }

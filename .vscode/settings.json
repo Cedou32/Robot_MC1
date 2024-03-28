@@ -5,6 +5,8 @@
         "type_traits": "cpp",
         "condition_variable": "cpp",
         "future": "cpp",
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "random": "cpp",
+        "optional": "cpp"
     }
 }
