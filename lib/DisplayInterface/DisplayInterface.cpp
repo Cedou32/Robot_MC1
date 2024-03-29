@@ -55,7 +55,7 @@ void DisplayInterface::BtnVitesseNonAppuye()
 {
     TFT.rect(10, 50, 90, 70, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Green);
+    TFT.foreground(DarkCyan);
     TFT.locate(25, 55);
     TFT.printf("Vitesse");
 }
@@ -127,7 +127,7 @@ void DisplayInterface::BtnModesNonAppuye()
 {
     TFT.rect(10, 80, 90, 100, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Orange);
+    TFT.foreground(DarkCyan);
     TFT.locate(25, 85);
     TFT.printf("Modes");
 }
@@ -215,12 +215,12 @@ void DisplayInterface::BtnDebogageAppuye()
 /////////////////////////////////////////////////////
 void DisplayInterface::FermerVitesse()
 {
-    TFT.fillrect(120, 50, 200, 70, Black);
+    TFT.fillrect(120, 50, 200, 70, LightGrey);
 }
 
 void DisplayInterface::FermerMode()
 {
-    TFT.fillrect(120, 80, 310, 130, Black);
+    TFT.fillrect(120, 80, 310, 130, LightGrey);
 }
 
 void DisplayInterface::BtnFermer()
@@ -337,14 +337,14 @@ void DisplayInterface::Batterie(int8_t batterie)
 
 void DisplayInterface::Fermer()
 {
-    TFT.fillrect(10, 50, 200, 70, Black);
-    TFT.fillrect(240, 210, 310, 230, Black);
-    TFT.fillrect(240, 180, 310, 200, Black);
-    TFT.fillrect(10, 80, 90, 100, Black);
-    TFT.fillrect(120, 80, 210, 100, Black);
-    TFT.fillrect(220, 80, 310, 100, Black);
-    TFT.fillrect(220, 110, 310, 130, Black);
-    TFT.fillrect(120, 110, 210, 130, Black);
+    TFT.fillrect(10, 50, 200, 70, LightGrey);
+    TFT.fillrect(240, 210, 310, 230, LightGrey);
+    TFT.fillrect(240, 180, 310, 200, LightGrey);
+    TFT.fillrect(10, 80, 90, 100, LightGrey);
+    TFT.fillrect(120, 80, 210, 100, LightGrey);
+    TFT.fillrect(220, 80, 310, 100, LightGrey);
+    TFT.fillrect(220, 110, 310, 130, LightGrey);
+    TFT.fillrect(120, 110, 210, 130, LightGrey);
     //DisplayInterface::LogoOn();
 }
 
@@ -824,7 +824,7 @@ void DisplayInterface::LogoOn()
 }
 void DisplayInterface::LogoOff()
 {
-    TFT.fillrect(70, 10, 200, 120, Black);
-    TFT.fillrect(70, 120, 250, 230, Black);
+    TFT.fillrect(70, 10, 200, 120, LightGrey);
+    TFT.fillrect(70, 120, 250, 230, LightGrey);
 
 }
