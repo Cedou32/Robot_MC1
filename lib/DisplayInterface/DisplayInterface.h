@@ -10,6 +10,7 @@
 #include "SPI_TFT_ILI9341.h"
 #include "Arial12x12.h"
 #include "Arial24x23.h"
+#include "GraphicsDisplay.h"
 
 class DisplayInterface {
 public:

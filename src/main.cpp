@@ -60,28 +60,7 @@ void VerifBatterie()
   compteur = compteur + 1;
   flagBatterie = true;
 }
-/*void FermerPinceRise()
-{
-  LED = 1;
-  Fermer.start();
-  Ouvrir.stop(); // Arrêter le timer Ouvrir
-}
-void OuvrirPinceRise()
-{
-  LED = 1;
-  Ouvrir.start();
-  Fermer.stop(); // Arrêter le timer Fermer
-}
-void FermerPinceFall()
-{
-  LED = 0;
-  Fermer.stop();
-}
-void OuvrirPinceFall()
-{
-  LED = 0;
-  Ouvrir.stop();
-}*/
+
 int main()
 {
   // Attacher la fonction
