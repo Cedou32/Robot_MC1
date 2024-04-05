@@ -28,7 +28,7 @@ void DisplayInterface::BtnOff()
 
 void DisplayInterface::Demarrage()
 {
-    TFT.background(LightGrey);
+    TFT.background(White);
     TFT.cls();
     TFT.set_orientation(3);
     TFT.rect(0, 0, 319, 240, Black);
@@ -36,7 +36,8 @@ void DisplayInterface::Demarrage()
 
 void DisplayInterface::BtnMenuNonAppuye()
 {
-    TFT.rect(210, 10, 310, 40, DarkGrey);
+    TFT.rect(210, 10, 310, 40, Black);
+    TFT.rect(209, 9, 311, 41, Black);
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(Black);
     TFT.locate(220, 15);
@@ -46,181 +47,191 @@ void DisplayInterface::BtnMenuNonAppuye()
 void DisplayInterface::BtnMenuAppuye()
 {
     TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(DarkGrey);   
+    TFT.foreground(DarkGrey);
     TFT.locate(220, 15);
     TFT.printf("Menu");
 }
 
 void DisplayInterface::BtnVitesseNonAppuye()
 {
-    TFT.rect(10, 50, 90, 70, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkCyan);
-    TFT.locate(25, 55);
+    TFT.rect(10, 70, 130, 100, Black);
+    TFT.rect(9, 69, 131, 101, Black);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(12, 75);
     TFT.printf("Vitesse");
 }
 
 void DisplayInterface::BtnVitesseAppuye()
 {
-    TFT.rect(10, 50, 90, 70, DarkGrey);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(25, 55);
+    TFT.rect(10, 70, 130, 100, LightGrey);
+    TFT.rect(9, 69, 131, 101, LightGrey);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(12, 75);
     TFT.printf("Vitesse");
 }
 
 void DisplayInterface::BtnVitesse1NonAppuye()
 {
-    TFT.rect(120, 50, 140, 70, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Red);
-    TFT.locate(127, 57);
+    TFT.rect(145, 70, 175, 100, Black);
+    //TFT.rect(144, 69, 176, 101, Black);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(150, 75);
     TFT.printf("1");
 }
 
 void DisplayInterface::BtnVitesse2NonAppuye()
 {
-    TFT.rect(150, 50, 170, 70, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Red);
-    TFT.locate(157, 57);
+    TFT.rect(185, 70, 215, 100, Black);
+    //TFT.rect(184, 69, 216, 101, Black);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(190, 75);
     TFT.printf("2");
 }
 
 void DisplayInterface::BtnVitesse3NonAppuye()
 {
-    TFT.rect(180, 50, 200, 70, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Red);
-    TFT.locate(187, 57);
+    TFT.rect(225, 70, 255, 100, Black);
+    //TFT.rect(224, 69, 256, 101, Black);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(230, 75);
     TFT.printf("3");
 }
 
 void DisplayInterface::BtnVitesse1Appuye()
 {
-    TFT.rect(120, 50, 140, 70, DarkGrey);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(127, 57);
+    TFT.rect(145, 70, 175, 100, LightGrey);
+    //TFT.rect(144, 69, 176, 101, LightGrey);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(150, 75);
     TFT.printf("1");
 }
 
 void DisplayInterface::BtnVitesse2Appuye()
 {
-    TFT.rect(150, 50, 170, 70, DarkGrey);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(157, 57);
+    TFT.rect(185, 70, 215, 100, LightGrey);
+    //TFT.rect(184, 69, 216, 101, LightGrey);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(190, 75);
     TFT.printf("2");
 }
 
 void DisplayInterface::BtnVitesse3Appuye()
 {
-    TFT.rect(180, 50, 200, 70, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(187, 57);
+    TFT.rect(225, 70, 255, 100, LightGrey);
+    //TFT.rect(224, 69, 256, 101, LightGrey);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(230, 75);
     TFT.printf("3");
 }
 
 void DisplayInterface::BtnModesNonAppuye()
 {
-    TFT.rect(10, 80, 90, 100, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkCyan);
-    TFT.locate(25, 85);
+    TFT.rect(10, 120, 130, 150, Black);
+    TFT.rect(9, 119, 131, 151, Black);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(15, 125);
     TFT.printf("Modes");
 }
 
 void DisplayInterface::BtnModesAppuye()
 {
-    TFT.rect(10, 80, 90, 100, DarkGrey);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(25, 85);
+    TFT.rect(10, 120, 130, 150, LightGrey);
+    TFT.rect(9, 119, 131, 151, LightGrey);
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(15, 125);
     TFT.printf("Modes");
 }
 
 void DisplayInterface::BtnLibreNonAppuye()
 {
-    TFT.rect(120, 80, 210, 100, Black);
+    TFT.rect(20, 160, 110, 180, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Green);
-    TFT.locate(140, 85);
+    TFT.foreground(Black);
+    TFT.locate(40, 165);
     TFT.printf("Libre");
 }
 
 void DisplayInterface::BtnLibreAppuye()
 {
-    TFT.rect(120, 80, 210, 100, DarkGrey);
+    TFT.rect(20, 160, 110, 180, LightGrey);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(140, 85);
+    TFT.foreground(LightGrey);
+    TFT.locate(40, 165);
     TFT.printf("Libre");
 }
 
 void DisplayInterface::BtnEnregistrerNonAppuye()
 {
-    TFT.rect(220, 80, 310, 100, Black);
+    TFT.rect(120, 160, 210, 180, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Green);
-    TFT.locate(225, 85);
+    TFT.foreground(Black);
+    TFT.locate(125, 165);
     TFT.printf("Enregistrer");
 }
 
 void DisplayInterface::BtnEnregistrerAppuye()
 {
-    TFT.rect(220, 80, 310, 100, DarkGrey);
+    TFT.rect(120, 160, 210, 180, LightGrey);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(225, 85);
+    TFT.foreground(LightGrey);
+    TFT.locate(125, 165);
     TFT.printf("Enregistrer");
 }
 
 void DisplayInterface::BtnEtenduNonAppuye()
 {
-    TFT.rect(120, 110, 210, 130, Black);
+    TFT.rect(20, 190, 110, 210, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Green);
-    TFT.locate(140, 115);
+    TFT.foreground(Black);
+    TFT.locate(40, 195);
     TFT.printf("Etendu");
 }
 
 void DisplayInterface::BtnEtenduAppuye()
 {
-    TFT.rect(120, 110, 210, 130, DarkGrey);
+    TFT.rect(20, 190, 110, 210, LightGrey);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(140, 115);
+    TFT.foreground(LightGrey);
+    TFT.locate(40, 195);
     TFT.printf("Etendu");
 }
 
 void DisplayInterface::BtnDebogageNonAppuye()
 {
-    TFT.rect(220, 110, 310, 130, Black);
+    TFT.rect(120, 190, 210, 210, Black);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Green);
-    TFT.locate(225, 115);
+    TFT.foreground(Black);
+    TFT.locate(125, 195);
     TFT.printf("Debogage");
 }
 
 void DisplayInterface::BtnDebogageAppuye()
 {
-    TFT.rect(220, 110, 310, 130, DarkGrey);
+    TFT.rect(120, 190, 210, 210, LightGrey);
     TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(DarkGrey);
-    TFT.locate(225, 115);
+    TFT.foreground(LightGrey);
+    TFT.locate(125, 195);
     TFT.printf("Debogage");
 }
 /////////////////////////////////////////////////////
 void DisplayInterface::FermerVitesse()
 {
-    TFT.fillrect(120, 50, 200, 70, LightGrey);
+    TFT.fillrect(144, 69, 256, 101, White);
 }
 
 void DisplayInterface::FermerMode()
 {
-    TFT.fillrect(120, 80, 310, 130, LightGrey);
+    TFT.fillrect(20, 160, 210, 210, White);
 }
 
 void DisplayInterface::BtnFermer()
@@ -337,15 +348,16 @@ void DisplayInterface::Batterie(int8_t batterie)
 
 void DisplayInterface::Fermer()
 {
-    TFT.fillrect(10, 50, 200, 70, LightGrey);
-    TFT.fillrect(240, 210, 310, 230, LightGrey);
-    TFT.fillrect(240, 180, 310, 200, LightGrey);
-    TFT.fillrect(10, 80, 90, 100, LightGrey);
-    TFT.fillrect(120, 80, 210, 100, LightGrey);
-    TFT.fillrect(220, 80, 310, 100, LightGrey);
-    TFT.fillrect(220, 110, 310, 130, LightGrey);
-    TFT.fillrect(120, 110, 210, 130, LightGrey);
-    //DisplayInterface::LogoOn();
+    TFT.fillrect(9, 69, 131, 101, White);
+    TFT.fillrect(144, 69, 256, 101, White);
+    TFT.fillrect(9, 119, 131, 151, White);
+    TFT.fillrect(20, 160, 210, 210, White);
+    //btn fermer
+    TFT.fillrect(240, 210, 310, 230, White);
+    //btn ok
+    TFT.fillrect(240, 180, 310, 200, White);
+
+    // DisplayInterface::LogoOn();
 }
 
 void DisplayInterface::Test(uint8_t variable)
@@ -363,7 +375,7 @@ void DisplayInterface::Menu()
     DisplayInterface::BtnMenuAppuye();
     DisplayInterface::BtnVitesseNonAppuye();
     DisplayInterface::BtnModesNonAppuye();
-    //DisplayInterface::BtnFermer();
+    // DisplayInterface::BtnFermer();
     /*DisplayInterface::BtnOn();
     DisplayInterface::BtnOff();*/
 }
@@ -374,7 +386,6 @@ void DisplayInterface::FermerMenu()
     DisplayInterface::BtnMenuNonAppuye();
     DisplayInterface::LogoOn();
 }
-
 
 void DisplayInterface::Vitesse()
 {
@@ -465,19 +476,19 @@ void DisplayInterface::Choisir()
     DisplayInterface::Fermer();
     DisplayInterface::BtnMenuNonAppuye();
     DisplayInterface::BtnFermer();
-    //DisplayInterface::LogoOn();
+    // DisplayInterface::LogoOn();
 }
 
 void DisplayInterface::LogoOn()
 {
-    //Base
+    // Base
     TFT.line(70, 225, 250, 225, Black);
     TFT.line(95, 224, 225, 224, Black);
     TFT.line(96, 223, 224, 223, Black);
     TFT.line(97, 222, 223, 222, Black);
     TFT.line(98, 221, 222, 221, Black);
 
-    //Grosse base
+    // Grosse base
     TFT.line(99, 217, 222, 217, Black);
     TFT.line(100, 216, 221, 216, Black);
     TFT.line(100, 215, 221, 215, Black);
@@ -567,7 +578,7 @@ void DisplayInterface::LogoOn()
     TFT.line(139, 141, 244, 141, Black);
     TFT.line(140, 140, 244, 140, Black);
 
-    //Support Base
+    // Support Base
     TFT.line(163, 200, 189, 200, Black);
     TFT.fillrect(185, 170, 189, 190, Black);
     TFT.line(163, 199, 189, 199, Black);
@@ -627,8 +638,8 @@ void DisplayInterface::LogoOn()
     TFT.line(194, 155, 212, 155, Black);
     TFT.fillrect(151, 148, 241, 154, Black);
 
-    //rectangle+table au dessu de base
-      
+    // rectangle+table au dessu de base
+
     TFT.line(199, 135, 237, 135, Black);
     TFT.line(200, 134, 237, 134, Black);
     TFT.line(202, 133, 236, 133, Black);
@@ -661,6 +672,267 @@ void DisplayInterface::LogoOn()
     TFT.line(152, 105, 157, 105, Black);
     TFT.line(153, 104, 156, 104, Black);
 
+    // 1ere articulation
+    TFT.line(112, 153, 120, 153, Black);
+    TFT.line(106, 152, 121, 152, Black);
+    TFT.line(105, 151, 122, 151, Black);
+    TFT.line(104, 150, 123, 150, Black);
+    TFT.line(103, 149, 124, 149, Black);
+    TFT.line(101, 148, 125, 148, Black);
+    TFT.line(100, 147, 125, 147, Black);
+    TFT.line(99, 146, 126, 146, Black);
+    TFT.line(98, 145, 108, 145, Black);
+    TFT.line(116, 145, 127, 145, Black);
+    TFT.line(97, 144, 106, 144, Black);
+    TFT.line(117, 144, 128, 144, Black);
+    TFT.line(97, 143, 103, 143, Black);
+    TFT.line(118, 143, 128, 143, Black);
+    TFT.line(96, 142, 102, 142, Black);
+    TFT.line(119, 142, 129, 142, Black);
+    TFT.line(95, 141, 102, 141, Black);
+    TFT.line(120, 141, 130, 141, Black);
+    TFT.line(95, 140, 101, 140, Black);
+    TFT.line(121, 140, 130, 140, Black);
+    TFT.line(94, 139, 100, 139, Black);
+    TFT.line(121, 139, 130, 139, Black);
+    TFT.line(94, 138, 100, 138, Black);
+    TFT.line(122, 138, 130, 138, Black);
+    TFT.line(94, 137, 100, 137, Black);
+    TFT.line(123, 137, 130, 137, Black);
+    TFT.line(93, 136, 99, 136, Black);
+    TFT.line(123, 136, 130, 136, Black);
+    TFT.line(93, 135, 99, 135, Black);
+    TFT.line(123, 135, 130, 135, Black);
+    TFT.line(93, 134, 99, 134, Black);
+    TFT.line(123, 134, 130, 134, Black);
+    TFT.line(93, 133, 99, 133, Black);
+    TFT.line(123, 133, 130, 133, Black);
+    TFT.line(93, 132, 99, 132, Black);
+    TFT.line(123, 132, 130, 132, Black);
+    TFT.line(92, 131, 99, 131, Black);
+    TFT.line(123, 131, 130, 131, Black);
+    TFT.line(92, 130, 99, 130, Black);
+    TFT.line(123, 130, 130, 130, Black);
+    TFT.line(92, 129, 99, 129, Black);
+    TFT.line(123, 129, 130, 129, Black);
+    TFT.line(92, 128, 100, 128, Black);
+    TFT.line(122, 128, 130, 128, Black);
+    TFT.line(92, 127, 100, 127, Black);
+    TFT.line(121, 127, 130, 127, Black);
+    TFT.line(92, 126, 101, 126, Black);
+    TFT.line(121, 126, 129, 126, Black);
+    TFT.line(92, 125, 103, 125, Black);
+    TFT.line(120, 125, 128, 125, Black);
+    TFT.line(92, 124, 103, 124, Black);
+    TFT.line(118, 124, 128, 124, Black);
+    TFT.line(93, 123, 104, 123, Black);
+    TFT.line(117, 123, 128, 123, Black);
+    TFT.line(94, 122, 106, 122, Black);
+    TFT.line(115, 122, 128, 122, Black);
+    TFT.line(94, 121, 127, 121, Black);
+    TFT.line(95, 120, 126, 120, Black);
+    TFT.line(96, 119, 125, 119, Black);
+    TFT.line(97, 118, 124, 118, Black);
+    TFT.line(98, 117, 123, 117, Black);
+    TFT.line(99, 116, 122, 116, Black);
+    TFT.line(100, 115, 121, 115, Black);
+    TFT.line(101, 114, 117, 114, Black);
+    TFT.line(102, 113, 114, 113, Black);
+    TFT.line(103, 112, 112, 112, Black);
+    TFT.line(104, 111, 110, 111, Black);
+    // boule centrale
+    TFT.line(109, 142, 113, 142, Black);
+    TFT.line(108, 141, 115, 141, Black);
+    TFT.line(106, 140, 116, 140, Black);
+    TFT.line(105, 139, 117, 139, Black);
+    TFT.line(105, 138, 118, 138, Black);
+    TFT.line(104, 137, 118, 137, Black);
+    TFT.line(104, 136, 119, 136, Black);
+    TFT.line(103, 135, 120, 135, Black);
+    TFT.line(103, 134, 120, 134, Black);
+    TFT.line(103, 133, 120, 133, Black);
+    TFT.line(103, 132, 120, 132, Black);
+    TFT.line(103, 131, 119, 131, Black);
+    TFT.line(104, 130, 119, 130, Black);
+    TFT.line(104, 129, 118, 129, Black);
+    TFT.line(105, 128, 118, 128, Black);
+    TFT.line(106, 127, 116, 127, Black);
+    TFT.line(107, 126, 115, 126, Black);
+    TFT.line(108, 125, 114, 125, Black);
+    TFT.line(109, 124, 113, 124, Black);
+
+    // bras
+    TFT.line(89, 121, 90, 121, Black);
+    TFT.line(89, 120, 91, 120, Black);
+    TFT.line(88, 119, 92, 119, Black);
+    TFT.line(88, 118, 93, 118, Black);
+    TFT.line(88, 117, 94, 117, Black);
+    TFT.line(87, 116, 95, 116, Black);
+    TFT.line(86, 115, 96, 115, Black);
+    TFT.line(86, 114, 97, 114, Black);
+    TFT.line(86, 113, 98, 113, Black);
+    TFT.line(85, 112, 99, 112, Black);
+    TFT.line(85, 111, 100, 111, Black);
+    TFT.line(85, 110, 101, 110, Black);
+    TFT.line(116, 110, 118, 110, Black);
+    TFT.line(84, 109, 102, 109, Black);
+    TFT.line(115, 109, 117, 109, Black);
+    TFT.line(84, 108, 103, 108, Black);
+    TFT.line(111, 108, 116, 108, Black);
+    TFT.line(83, 107, 116, 107, Black);
+    TFT.line(83, 106, 115, 106, Black);
+    TFT.line(83, 105, 115, 105, Black);
+    TFT.line(82, 104, 114, 104, Black);
+    TFT.line(82, 103, 114, 103, Black);
+    TFT.line(81, 102, 113, 102, Black);
+    TFT.line(81, 101, 113, 101, Black);
+    TFT.line(81, 100, 112, 100, Black);
+    TFT.line(80, 99, 112, 99, Black);
+    TFT.line(80, 98, 111, 98, Black);
+    TFT.line(80, 97, 111, 97, Black);
+    TFT.line(80, 96, 90, 96, Black);
+    TFT.line(95, 96, 110, 96, Black);
+    TFT.line(80, 95, 90, 95, Black);
+    TFT.line(96, 95, 110, 95, Black);
+    TFT.line(79, 94, 88, 94, Black);
+    TFT.line(98, 94, 109, 94, Black);
+    TFT.line(79, 93, 85, 93, Black);
+    TFT.line(100, 93, 108, 93, Black);
+    TFT.line(79, 92, 84, 92, Black);
+    TFT.line(101, 92, 108, 92, Black);
+    TFT.line(78, 91, 83, 91, Black);
+    TFT.line(102, 91, 107, 91, Black);
+    TFT.line(78, 90, 80, 90, Black);
+    TFT.line(104, 90, 107, 90, Black);
+    TFT.line(78, 89, 79, 89, Black);
+    TFT.line(105, 89, 106, 89, Black);
+
+    // Articulation 2
+    TFT.line(91, 92, 94, 92, Black);
+    TFT.line(90, 91, 95, 91, Black);
+    TFT.line(90, 90, 96, 90, Black);
+    TFT.line(88, 89, 98, 89, Black);
+    TFT.line(85, 88, 101, 88, Black);
+    TFT.line(84, 87, 102, 87, Black);
+    TFT.line(82, 86, 103, 86, Black);
+    TFT.line(81, 85, 104, 85, Black);
+    TFT.line(81, 84, 105, 84, Black);
+    TFT.line(79, 83, 89, 83, Black);
+    TFT.line(95, 83, 105, 83, Black);
+    TFT.line(79, 82, 87, 82, Black);
+    TFT.line(97, 82, 106, 82, Black);
+    TFT.line(79, 81, 86, 81, Black);
+    TFT.line(98, 81, 106, 81, Black);
+    TFT.line(79, 80, 85, 80, Black);
+    TFT.line(99, 80, 108, 80, Black);
+    TFT.line(78, 79, 84, 79, Black);
+    TFT.line(101, 79, 108, 79, Black);
+    TFT.line(78, 78, 83, 78, Black);
+    TFT.line(101, 78, 108, 78, Black);
+    TFT.line(78, 77, 83, 77, Black);
+    TFT.line(101, 77, 108, 77, Black);
+    TFT.line(78, 76, 83, 76, Black);
+    TFT.line(102, 76, 108, 76, Black);
+    TFT.line(78, 75, 83, 75, Black);
+    TFT.line(103, 75, 108, 75, Black);
+    TFT.line(78, 74, 83, 74, Black);
+    TFT.line(103, 74, 108, 74, Black);
+    TFT.line(78, 73, 83, 73, Black);
+    TFT.line(103, 73, 108, 73, Black);
+    TFT.line(78, 72, 83, 72, Black);
+    TFT.line(103, 72, 108, 72, Black);
+    TFT.line(78, 71, 83, 71, Black);
+    TFT.line(103, 71, 108, 71, Black);
+    TFT.line(78, 70, 83, 70, Black);
+    TFT.line(102, 70, 108, 70, Black);
+    TFT.line(78, 69, 84, 69, Black);
+    TFT.line(102, 69, 108, 69, Black);
+    TFT.line(78, 68, 84, 68, Black);
+    TFT.line(101, 68, 108, 68, Black);
+    TFT.line(79, 67, 85, 67, Black);
+    TFT.line(100, 67, 108, 67, Black);
+    TFT.line(80, 66, 86, 66, Black);
+    TFT.line(99, 66, 107, 66, Black);
+    TFT.line(80, 65, 87, 65, Black);
+    TFT.line(97, 65, 107, 65, Black);
+    TFT.line(81, 64, 89, 64, Black);
+    TFT.line(96, 64, 106, 64, Black);
+    TFT.line(81, 63, 105, 63, Black);
+    TFT.line(82, 62, 104, 62, Black);
+    TFT.line(83, 61, 104, 61, Black);
+    TFT.line(84, 60, 103, 60, Black);
+    TFT.line(85, 59, 102, 59, Black);
+    TFT.line(87, 58, 100, 58, Black);
+    // Boule centrale
+    TFT.line(91, 80, 94, 80, Black);
+    TFT.line(89, 79, 96, 79, Black);
+    TFT.line(88, 78, 97, 78, Black);
+    TFT.line(88, 77, 98, 77, Black);
+    TFT.line(87, 76, 98, 76, Black);
+    TFT.line(87, 75, 99, 75, Black);
+    TFT.line(87, 74, 99, 74, Black);
+    TFT.line(87, 73, 99, 73, Black);
+    TFT.line(87, 72, 99, 72, Black);
+    TFT.line(87, 71, 98, 71, Black);
+    TFT.line(88, 70, 98, 70, Black);
+    TFT.line(88, 69, 97, 69, Black);
+    TFT.line(89, 68, 96, 68, Black);
+    TFT.line(91, 67, 94, 67, Black);
+
+    // Avant bras
+    TFT.line(111, 68, 112, 68, Black);
+    TFT.line(111, 67, 113, 67, Black);
+    TFT.line(111, 66, 114, 66, Black);
+    TFT.line(111, 65, 116, 65, Black);
+    TFT.line(110, 64, 118, 64, Black);
+    TFT.line(109, 63, 120, 63, Black);
+    TFT.line(108, 62, 121, 62, Black);
+    TFT.line(107, 61, 123, 61, Black);
+    TFT.line(106, 60, 125, 60, Black);
+    TFT.line(105, 59, 127, 59, Black);
+    TFT.line(105, 58, 130, 58, Black);
+    TFT.line(105, 57, 130, 57, Black);
+    TFT.line(105, 56, 132, 56, Black);
+    TFT.line(106, 55, 133, 55, Black);
+    TFT.line(107, 54, 135, 54, Black);
+    TFT.line(108, 53, 137, 53, Black);
+    TFT.line(110, 52, 140, 52, Black);
+    TFT.line(111, 51, 142, 51, Black);
+    TFT.line(112, 50, 144, 50, Black);
+    TFT.line(113, 49, 144, 49, Black);
+    TFT.line(114, 48, 146, 48, Black);
+    TFT.line(115, 47, 150, 47, Black);
+    TFT.line(116, 46, 152, 46, Black);
+    TFT.line(117, 45, 154, 45, Black);
+    TFT.line(118, 44, 155, 44, Black);
+    TFT.line(119, 43, 155, 43, Black);
+    TFT.line(120, 42, 156, 42, Black);
+    TFT.line(121, 41, 156, 41, Black);
+    TFT.line(122, 40, 157, 40, Black);
+    TFT.line(122, 39, 157, 39, Black);
+    TFT.line(123, 38, 158, 38, Black);
+    TFT.line(124, 37, 158, 37, Black);
+    TFT.line(125, 36, 158, 36, Black);
+    TFT.line(126, 35, 158, 35, Black);
+    TFT.line(127, 34, 159, 34, Black);
+    TFT.line(128, 33, 160, 33, Black);
+    TFT.line(129, 32, 160, 32, Black);
+    TFT.line(130, 31, 160, 31, Black);
+    TFT.line(131, 30, 160, 30, Black);
+    TFT.line(132, 29, 159, 29, Black);
+    TFT.line(132, 28, 158, 28, Black);
+    TFT.line(133, 27, 157, 27, Black);
+    TFT.line(134, 26, 157, 26, Black);
+    TFT.line(135, 25, 156, 25, Black);
+    TFT.line(135, 24, 155, 24, Black);
+    TFT.line(136, 23, 155, 23, Black);
+    TFT.line(137, 22, 154, 22, Black);
+    TFT.line(138, 21, 154, 21, Black);
+    TFT.line(142, 20, 153, 20, Black);
+    TFT.line(146, 19, 153, 19, Black);
+    TFT.line(149, 18, 152, 18, Black);
+
+    // Pince
     TFT.line(172, 105, 173, 105, Black);
     TFT.line(172, 104, 173, 104, Black);
     TFT.line(171, 103, 174, 103, Black);
@@ -824,7 +1096,6 @@ void DisplayInterface::LogoOn()
 }
 void DisplayInterface::LogoOff()
 {
-    TFT.fillrect(70, 10, 200, 120, LightGrey);
-    TFT.fillrect(70, 120, 250, 230, LightGrey);
-
+    TFT.fillrect(70, 10, 200, 120, White);
+    TFT.fillrect(70, 120, 250, 230, White);
 }
