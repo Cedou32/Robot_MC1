@@ -17,6 +17,7 @@ PwmOut ServoPince(PC_6);
 
 Ticker InterruptionServo;
 Ticker InterruptionStepper;
+Ticker InterruptionStepper2;
 
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
@@ -51,10 +52,48 @@ void VerifStepper()
   flagStepper = 1;
 }
 
+void ConfigVitesseStepperBase(uint8_t valeur_joystick)
+{
+  // Stepper base
+  if (valeur_joystick >= 85 && valeur_joystick <= 170)
+  {
+    stepPinB = 0;
+  }
+  else if (valeur_joystick >= 0 && valeur_joystick < 85)
+  {
+    dirPinB = 0;
+    stepPinB = !stepPinB;
+  }
+  else if (valeur_joystick >= 170 && valeur_joystick <= 270)
+  {
+    dirPinB = 1;
+    stepPinB = !stepPinB;
+  }
+}
+
+void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
+{
+  // Stepper base
+  if (valeur_joystick >= 85 && valeur_joystick <= 170)
+  {
+    stepPinC = 0;
+  }
+  else if (valeur_joystick >= 0 && valeur_joystick < 85)
+  {
+    dirPinC = 0;
+    stepPinC = !stepPinC;
+  }
+  else if (valeur_joystick >= 170 && valeur_joystick <= 270)
+  {
+    dirPinC = 1;
+    stepPinC = !stepPinC;
+  }
+}
+
 int main()
 {
   InterruptionServo.attach(&VerifServo, 0.001);
-  InterruptionStepper.attach(&VerifStepper, 0.002);
+  InterruptionStepper.attach(&VerifStepper, 0.001);
 
   data[5] = 100;
   data[6] = 100;
@@ -73,9 +112,9 @@ int main()
       for (int i = 0; i < 750; i++)
       {
         stepPinC = 1;
-        thread_sleep_for(2);
+        thread_sleep_for(1);
         stepPinC = 0;
-        thread_sleep_for(2);
+        thread_sleep_for(1);
       }
       // thread_sleep_for(1000);
       ServoCoude.write(0.03);
@@ -124,14 +163,21 @@ int main()
           memset(data, 100, 10);
         }
 
-        //choix des vitesses
-        if (data[1] == 3){
+        // choix des vitesses
+        if (data[1] == 3)
+        {
           vitesse = 0.00005;
-        }else if (data[1] == 2){
+        }
+        else if (data[1] == 2)
+        {
           vitesse = 0.000025;
-        }else if (data[1] == 1){
+        }
+        else if (data[1] == 1)
+        {
           vitesse = 0.00001;
-        }else {
+        }
+        else
+        {
           vitesse = 0.00005;
         }
         // LED = int(data[7]);
@@ -139,42 +185,12 @@ int main()
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
-
       if (flagStepper == 1)
       {
         flagStepper = 0;
-        // Stepper base
-        if (data[6] >= 85 && data[6] <= 170)
-        {
-          stepPinB = 0;
-        }
-        else if (data[6] >= 0 && data[6] < 85)
-        {
-          dirPinB = 0;
-          stepPinB = !stepPinB;
-        }
-        else if (data[6] >= 170 && data[6] <= 270)
-        {
-          dirPinB = 1;
-          stepPinB = !stepPinB;
-        }
-        // Stepper épaule
-        if (data[9] >= 85 && data[9] <= 170)
-        {
-          stepPinC = 0;
-        }
-        else if (data[9] >= 0 && data[9] < 85)
-        {
-          dirPinC = 0;
-          stepPinC = !stepPinC;
-        }
-        else if (data[9] >= 170 && data[9] <= 270)
-        {
-          dirPinC = 1;
-          stepPinC = !stepPinC;
-        }
+        ConfigVitesseStepperEpaule(data[9]);
+        ConfigVitesseStepperBase(data[6]);
       }
-
       if (flagServo == 1)
       {
         flagServo = 0;
