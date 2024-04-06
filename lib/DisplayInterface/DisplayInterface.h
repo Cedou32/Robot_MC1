@@ -49,11 +49,23 @@ public:
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
 
+    
+    void AffichageV1(); 
+    void AffichageV2(); 
+    void AffichageV3(); 
+
+    void AffichageLibre();
+    void AffichageEnregistrer();
+    void AffichageDemo();
+    void AffichageDebug();
+
+    void FermerAffichage();
+
     void FermerVitesse();
     void FermerMode();
 
     
-    void BtnFermer();
+    //void BtnFermer();
     void BtnChoisir();
     void BtnBatterie(int8_t batterie, uint8_t ligne);
     void BatterieInteractif(int8_t batterie, int8_t last_batterie, uint8_t ligne, uint8_t last_ligne);

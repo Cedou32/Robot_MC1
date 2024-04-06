@@ -37,7 +37,8 @@ uint8_t valeurPince = 130;
 // Flags
 bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
 bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
-bool flagModes = false;   // flag pour indiquer si le bouton "Modes" a ete appuye
+uint8_t flagV = 0;
+bool flagModes = false; // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
 bool flagLibre = false, flagEtendu = false, flagDebug = false, flagEnregistrement = false;
 bool flagSelection = false;
@@ -224,7 +225,9 @@ int main()
       flagMenu = !flagMenu; // activer le flag du bouton
       if (flagMenu == true)
       {
+        //Ecran.FermerAffichage();
         Ecran.Menu();
+        
       }
       else if (flagMenu == false)
       {
@@ -277,31 +280,52 @@ int main()
       etat = attente;
       break;
     case selectVitesse1:
+      flagV = 1;
       trameBras[4] = 1;
       Ecran.Vitesse1();
       etat = attente;
       break;
     case selectVitesse2:
+      flagV = 2;
       trameBras[4] = 2;
       Ecran.Vitesse2();
       etat = attente;
       break;
     case selectVitesse3:
+      flagV = 3;
       trameBras[4] = 3;
       Ecran.Vitesse3();
       etat = attente;
       break;
-    case fermer:
+    /*case fermer:
       Ecran.SortirEtat();
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
       flagSelection = false;
       etat = attente;
-      break;
+      break;*/
     case ok:
       pc.write(trameBras, sizeof(trameBras));
       Ecran.Choisir();
+
+      if (flagV == 1){
+        Ecran.AffichageV1();
+      } else if(flagV == 2){
+        Ecran.AffichageV2();
+      }else if(flagV == 3){
+        Ecran.AffichageV3();
+      }
+      if (flagLibre == true){
+        Ecran.AffichageLibre();
+      } else if (flagEtendu == true){
+        Ecran.AffichageDemo();
+      } else if (flagDebug == true){
+        Ecran.AffichageDebug();
+      } else if (flagEnregistrement == true){
+        Ecran.AffichageEnregistrer();
+      }
+
       flagMenu = false;
       flagVitesse = false;
       flagModes = false;
