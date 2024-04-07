@@ -17,7 +17,6 @@ PwmOut ServoPince(PC_6);
 
 Ticker InterruptionServo;
 Ticker InterruptionStepper;
-Timeout FlashLed;
 
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
@@ -54,78 +53,99 @@ void VerifServo()
 void VerifStepper()
 {
   flagStepper += 1;
-  if (flagVitesseStepper == 1)
-  {
+  if (flagVitesseStepper == 1){
+    if (flagStepper > 14)
+    {
+      flagStepper = 14;
+    }
+  } else if (flagVitesseStepper == 2){
+    if (flagStepper > 13)
+    {
+      flagStepper = 13;
+    }
+  } else if (flagVitesseStepper == 3){
+    if (flagStepper > 12)
+    {
+      flagStepper = 12;
+    }
+  } else if (flagVitesseStepper == 4){
+    if (flagStepper > 11)
+    {
+      flagStepper = 11;
+    }
+  } else if (flagVitesseStepper == 5){
+    if (flagStepper > 10)
+    {
+      flagStepper = 10;
+    }
+  } else if (flagVitesseStepper == 6){
+    if (flagStepper > 9)
+    {
+      flagStepper = 9;
+    }
+  } else if (flagVitesseStepper == 7){
+    if (flagStepper > 8)
+    {
+      flagStepper = 8;
+    }
+  } else if (flagVitesseStepper == 8){
+    if (flagStepper > 7)
+    {
+      flagStepper = 7;
+    }
+  } else if (flagVitesseStepper == 9){
     if (flagStepper > 6)
     {
       flagStepper = 6;
     }
-  }
-  else if (flagVitesseStepper == 2)
-  {
-    if (flagStepper > 4)
+  } else if (flagVitesseStepper == 10){
+    if (flagStepper > 5)
     {
-      flagStepper = 4;
+      flagStepper = 5;
     }
-  }
-  else if (flagVitesseStepper == 3)
-  {
-    if (flagStepper > 2)
-    {
-      flagStepper = 2;
-    }
-  }
+  } 
 }
 
 void ConfigVitesseStepperBase(uint8_t valeur_joystick)
 {
   // Stepper base
-  if (valeur_joystick >= 85 && valeur_joystick <= 170)
+  if (valeur_joystick >= 120 && valeur_joystick <= 135)
   {
     stepPinB = 0;
   }
-  else if (valeur_joystick >= 0 && valeur_joystick < 85)
+  else if (valeur_joystick >= 0 && valeur_joystick < 120)
   {
     dirPinB = 0;
-    stepPinB = !stepPinB;
   }
-  else if (valeur_joystick >= 170 && valeur_joystick <= 270)
+  else if (valeur_joystick >= 120 && valeur_joystick <= 255)
   {
     dirPinB = 1;
-    stepPinB = !stepPinB;
   }
+  stepPinB = !stepPinB;
 }
 
 void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
 {
   // Stepper base
-  if (valeur_joystick >= 85 && valeur_joystick <= 170)
+  if (valeur_joystick >= 120 && valeur_joystick <= 135)
   {
     stepPinC = 0;
   }
-  else if (valeur_joystick >= 0 && valeur_joystick < 85)
+  else if (valeur_joystick >= 0 && valeur_joystick < 120)
   {
     dirPinC = 0;
-    stepPinC = !stepPinC;
   }
-  else if (valeur_joystick >= 170 && valeur_joystick <= 270)
+  else if (valeur_joystick >= 120 && valeur_joystick <= 255)
   {
     dirPinC = 1;
-    stepPinC = !stepPinC;
   }
+  stepPinC = !stepPinC;
 }
-
-/*void Flip()
-{
-  LED = !LED;
-  FlashLed.attach(&Flip, 0.5);
-}*/
 
 int main()
 {
   InterruptionServo.attach(&VerifServo, 0.001);
-  InterruptionStepper.attach(&VerifStepper, 0.0005);
-  // FlashLed.attach(&Flip, 0.5);
+  InterruptionStepper.attach(&VerifStepper, 0.0003);
 
   data[5] = 100;
   data[6] = 100;
@@ -140,7 +160,7 @@ int main()
     switch (etat_actuel)
     {
     case depart:
-      // LED = 1;
+      LED = 1;
       for (int i = 0; i < 750; i++)
       {
         stepPinC = 1;
@@ -195,56 +215,93 @@ int main()
           memset(data, 100, 10);
         }
 
-        // choix des vitesses
-
-        if (data[1] == 3)
-        {
-          flagVitesseStepper = 3;
-        }
-        else if (data[1] == 2)
-        {
-          flagVitesseStepper = 2;
-        }
-        else if (data[1] == 1)
-        {
-          flagVitesseStepper = 1;
-        }
-        else
-        {
-          vitesse = 0.00005;
-        }
         // LED = int(data[7]);
       }
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
-      if (flagVitesseStepper == 1)
+      if ((data[9] >= 135 && data[9] < 147) || (data[9] >= 108 && data[9] < 120) )
       {
+        flagVitesseStepper = 1;
+        if (flagStepper == 14)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 147 && data[9] < 159) || (data[9] >= 96 && data[9] < 108) )
+      {
+        flagVitesseStepper = 2;
+        if (flagStepper == 13)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 159 && data[9] < 171) || (data[9] >= 84 && data[9] < 96) )
+      {
+        flagVitesseStepper = 3;
+        if (flagStepper == 12)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 171 && data[9] < 183) || (data[9] >= 72 && data[9] < 84) )
+      {
+        flagVitesseStepper = 4;
+        if (flagStepper == 11)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 183 && data[9] < 195) || (data[9] >= 60 && data[9] < 72) )
+      {
+        flagVitesseStepper = 5;
+        if (flagStepper == 10)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 195 && data[9] < 207) || (data[9] >= 48 && data[9] < 60) )
+      {
+        flagVitesseStepper = 6;
+        if (flagStepper == 9)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 207 && data[9] < 219) || (data[9] >= 36 && data[9] < 48) )
+      {
+        flagVitesseStepper = 7;
+        if (flagStepper == 8)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 219 && data[9] < 231) || (data[9] >= 24 && data[9] < 36) )
+      {
+        flagVitesseStepper = 8;
+        if (flagStepper == 7)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+        }
+      } else if ((data[9] >= 231 && data[9] < 243) || (data[9] >= 12 && data[9] < 24) )
+      {
+        flagVitesseStepper = 9;
         if (flagStepper == 6)
         {
           flagStepper = 0;
           ConfigVitesseStepperEpaule(data[9]);
-          ConfigVitesseStepperBase(data[6]);
         }
-      }
-      else if (flagVitesseStepper == 2)
+      } else if ((data[9] >= 243) || (data[9] >= 0 && data[9] < 12) )
       {
-        if (flagStepper == 4)
+        flagVitesseStepper = 10;
+        if (flagStepper == 5)
         {
           flagStepper = 0;
           ConfigVitesseStepperEpaule(data[9]);
-          ConfigVitesseStepperBase(data[6]);
         }
-      }
-      else if (flagVitesseStepper == 3)
-      {
-        if (flagStepper == 2)
-        {
-          flagStepper = 0;
-          ConfigVitesseStepperEpaule(data[9]);
-          ConfigVitesseStepperBase(data[6]);
-        }
-      }
+      } 
+    
       if (flagServo == 1)
       {
         flagServo = 0;
