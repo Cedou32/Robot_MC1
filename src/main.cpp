@@ -54,21 +54,21 @@ void VerifStepperEpaule()
 {
   flagStepperEpaule += 1;
   if (flagVitesseStepperEpaule == 1){
-    if (flagStepperEpaule > 14)
+    if (flagStepperEpaule > 6)
     {
-      flagStepperEpaule = 14;
+      flagStepperEpaule = 6;
     }
   } else if (flagVitesseStepperEpaule == 2){
-    if (flagStepperEpaule > 13)
+    if (flagStepperEpaule > 4)
     {
-      flagStepperEpaule = 13;
+      flagStepperEpaule = 4;
     }
   } else if (flagVitesseStepperEpaule == 3){
-    if (flagStepperEpaule > 12)
+    if (flagStepperEpaule > 2)
     {
-      flagStepperEpaule = 12;
+      flagStepperEpaule = 2;
     }
-  } else if (flagVitesseStepperEpaule == 4){
+  } /*else if (flagVitesseStepperEpaule == 4){
     if (flagStepperEpaule > 11)
     {
       flagStepperEpaule = 11;
@@ -103,28 +103,28 @@ void VerifStepperEpaule()
     {
       flagStepperEpaule = 5;
     }
-  } 
+  } */
 }
 
 void VerifStepperBase()
 {
   flagStepperBase += 1;
   if (flagVitesseStepperBase == 1){
-    if (flagStepperBase > 14)
+    if (flagStepperBase > 6)
     {
-      flagStepperBase = 14;
+      flagStepperBase = 6;
     }
   } else if (flagVitesseStepperBase == 2){
-    if (flagStepperBase > 13)
+    if (flagStepperBase > 4)
     {
-      flagStepperBase = 13;
+      flagStepperBase = 4;
     }
   } else if (flagVitesseStepperBase == 3){
-    if (flagStepperBase > 12)
+    if (flagStepperBase > 2)
     {
-      flagStepperBase = 12;
+      flagStepperBase = 2;
     }
-  } else if (flagVitesseStepperBase == 4){
+  } /*else if (flagVitesseStepperBase == 4){
     if (flagStepperBase > 11)
     {
       flagStepperBase = 11;
@@ -159,7 +159,7 @@ void VerifStepperBase()
     {
       flagStepperBase = 5;
     }
-  } 
+  } */
 }
 
 void ConfigVitesseStepperBase(uint8_t valeur_joystick)
@@ -201,8 +201,8 @@ void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
 int main()
 {
   InterruptionServo.attach(&VerifServo, 0.001);
-  InterruptionStepperEpaule.attach(&VerifStepperEpaule, 0.0003);
-  InterruptionStepperBase.attach(&VerifStepperBase, 0.0003);
+  InterruptionStepperEpaule.attach(&VerifStepperEpaule, 0.0005);
+  InterruptionStepperBase.attach(&VerifStepperBase, 0.0005);
 
   data[5] = 100;
   data[6] = 100;
@@ -277,31 +277,31 @@ int main()
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
-      if ((data[9] >= 135 && data[9] < 147) || (data[9] >= 108 && data[9] < 120) )
+      if ((data[9] >= 135 && data[9] < 175) || (data[9] >= 80 && data[9] < 120) )
       {
         flagVitesseStepperEpaule = 1;
-        if (flagStepperEpaule == 14)
+        if (flagStepperEpaule == 6)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 147 && data[9] < 159) || (data[9] >= 96 && data[9] < 108) )
+      } else if ((data[9] >= 175 && data[9] < 215) || (data[9] >= 40 && data[9] < 80) )
       {
         flagVitesseStepperEpaule = 2;
-        if (flagStepperEpaule == 13)
+        if (flagStepperEpaule == 4)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 159 && data[9] < 171) || (data[9] >= 84 && data[9] < 96) )
+      } else if ((data[9] >= 215 && data[9] <= 255) || (data[9] >= 0 && data[9] < 40) )
       {
         flagVitesseStepperEpaule = 3;
-        if (flagStepperEpaule == 12)
+        if (flagStepperEpaule == 2)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 171 && data[9] < 183) || (data[9] >= 72 && data[9] < 84) )
+      } /*else if ((data[9] >= 171 && data[9] < 183) || (data[9] >= 72 && data[9] < 84) )
       {
         flagVitesseStepperEpaule = 4;
         if (flagStepperEpaule == 11)
@@ -357,33 +357,33 @@ int main()
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } 
+      } */
 
-      if ((data[6] >= 135 && data[6] < 147) || (data[6] >= 108 && data[6] < 120) )
+      if ((data[6] >= 135 && data[6] < 175) || (data[6] >= 80 && data[6] < 120) )
       {
         flagVitesseStepperBase = 1;
-        if (flagStepperBase == 14)
+        if (flagStepperBase == 6)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 147 && data[6] < 159) || (data[6] >= 96 && data[6] < 108) )
+      } else if ((data[6] >= 175 && data[6] < 215) || (data[6] >= 40 && data[6] < 10808) )
       {
         flagVitesseStepperBase = 2;
-        if (flagStepperBase == 13)
+        if (flagStepperBase == 4)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 159 && data[6] < 171) || (data[6] >= 84 && data[6] < 96) )
+      } else if ((data[6] >= 215 && data[6] <= 255) || (data[6] >= 0 && data[6] < 40) )
       {
         flagVitesseStepperBase = 3;
-        if (flagStepperBase == 12)
+        if (flagStepperBase == 2)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 171 && data[6] < 183) || (data[6] >= 72 && data[6] < 84) )
+      } /*else if ((data[6] >= 171 && data[6] < 183) || (data[6] >= 72 && data[6] < 84) )
       {
         flagVitesseStepperBase = 4;
         if (flagStepperBase == 11)
@@ -439,7 +439,7 @@ int main()
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      }
+      }*/
     
       if (flagServo == 1)
       {
@@ -450,11 +450,11 @@ int main()
         }
         else if (data[8] >= 0 && data[8] < 85)
         {
-          dutyCycleCoude -= vitesse;
+          dutyCycleCoude -= 0.000005;
         }
         else if (data[8] >= 170 && data[8] <= 255)
         {
-          dutyCycleCoude += vitesse;
+          dutyCycleCoude += 0.000005;
         }
         if (dutyCycleCoude < 0.03)
         {
@@ -471,11 +471,11 @@ int main()
         }
         else if (data[7] >= 0 && data[7] < 85)
         {
-          dutyCyclePoignet -= vitesse;
+          dutyCyclePoignet -= 0.000005;
         }
         else if (data[7] >= 170 && data[7] <= 255)
         {
-          dutyCyclePoignet += vitesse;
+          dutyCyclePoignet += 0.000005;
         }
         if (dutyCyclePoignet < 0.025)
         {
@@ -492,11 +492,11 @@ int main()
         }
         else if (data[5] == 1)
         {
-          dutyCyclePince -= vitesse;
+          dutyCyclePince -= 0.000005;
         }
         else if (data[5] == 2)
         {
-          dutyCyclePince += vitesse;
+          dutyCyclePince += 0.000005;
         }
         if (dutyCyclePince < 0.08)
         {
