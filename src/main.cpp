@@ -17,7 +17,7 @@ PwmOut ServoPince(PC_6);
 
 Ticker InterruptionServo;
 Ticker InterruptionStepper;
-Ticker InterruptionStepper2;
+Timeout FlashLed;
 
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
@@ -27,10 +27,14 @@ uint8_t flagBT = 0;
 int flag_protection = 0;
 int flagStepper = 0;
 int flagServo = 0;
+uint8_t flagVitesseStepper = 0;
 
 float dutyCycleCoude = 0.03;   // Min = 0.03   Max = 0.125
 float dutyCyclePoignet = 0.09; // Min = 0.025   Max = 0.115
-float dutyCyclePince = 0.08;   // Fermer = 0.08 =    Ouvrir = 0.125
+float dutyCyclePince = 0.08;   // Fermer = 0.08     Ouvrir = 0.125
+
+float servoInterval = 0.001;
+float stepperInterval = 0.001;
 
 float vitesse = 0.0;
 
@@ -49,7 +53,28 @@ void VerifServo()
 
 void VerifStepper()
 {
-  flagStepper = 1;
+  flagStepper += 1;
+  if (flagVitesseStepper == 1)
+  {
+    if (flagStepper > 6)
+    {
+      flagStepper = 6;
+    }
+  }
+  else if (flagVitesseStepper == 2)
+  {
+    if (flagStepper > 4)
+    {
+      flagStepper = 4;
+    }
+  }
+  else if (flagVitesseStepper == 3)
+  {
+    if (flagStepper > 2)
+    {
+      flagStepper = 2;
+    }
+  }
 }
 
 void ConfigVitesseStepperBase(uint8_t valeur_joystick)
@@ -90,10 +115,17 @@ void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
   }
 }
 
+/*void Flip()
+{
+  LED = !LED;
+  FlashLed.attach(&Flip, 0.5);
+}*/
+
 int main()
 {
   InterruptionServo.attach(&VerifServo, 0.001);
-  InterruptionStepper.attach(&VerifStepper, 0.001);
+  InterruptionStepper.attach(&VerifStepper, 0.0005);
+  // FlashLed.attach(&Flip, 0.5);
 
   data[5] = 100;
   data[6] = 100;
@@ -108,7 +140,7 @@ int main()
     switch (etat_actuel)
     {
     case depart:
-      LED = 1;
+      // LED = 1;
       for (int i = 0; i < 750; i++)
       {
         stepPinC = 1;
@@ -164,17 +196,18 @@ int main()
         }
 
         // choix des vitesses
+
         if (data[1] == 3)
         {
-          vitesse = 0.00005;
+          flagVitesseStepper = 3;
         }
         else if (data[1] == 2)
         {
-          vitesse = 0.000025;
+          flagVitesseStepper = 2;
         }
         else if (data[1] == 1)
         {
-          vitesse = 0.00001;
+          flagVitesseStepper = 1;
         }
         else
         {
@@ -185,11 +218,32 @@ int main()
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
-      if (flagStepper == 1)
+      if (flagVitesseStepper == 1)
       {
-        flagStepper = 0;
-        ConfigVitesseStepperEpaule(data[9]);
-        ConfigVitesseStepperBase(data[6]);
+        if (flagStepper == 6)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+          ConfigVitesseStepperBase(data[6]);
+        }
+      }
+      else if (flagVitesseStepper == 2)
+      {
+        if (flagStepper == 4)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+          ConfigVitesseStepperBase(data[6]);
+        }
+      }
+      else if (flagVitesseStepper == 3)
+      {
+        if (flagStepper == 2)
+        {
+          flagStepper = 0;
+          ConfigVitesseStepperEpaule(data[9]);
+          ConfigVitesseStepperBase(data[6]);
+        }
       }
       if (flagServo == 1)
       {
