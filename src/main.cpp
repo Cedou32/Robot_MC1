@@ -36,7 +36,6 @@ long currentOuvert = 0, previousOuvert = 0;
 uint8_t valeurPince = 130;
 // Flags
 bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
-bool flagVitesse = false; // flag pour indiquer si le bouton "Vitesse" a ete appuye
 uint8_t flagV = 0;
 bool flagModes = false; // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
@@ -144,21 +143,6 @@ int main()
       etat = attente;
       break;
     case lectureLibre:
-
-      /*if (Fermer.read_ms() - previousFermer >= 25)
-      {
-        trameBras[8] = 2;
-        previousFermer = Fermer.read_ms();
-        pc.write(trameBras, sizeof(trameBras));
-      }
-
-      if (Ouvrir.read_ms() - previousOuvert >= 25)
-      {
-        trameBras[8] = 1;
-        previousOuvert = Ouvrir.read_ms();
-        pc.write(trameBras, sizeof(trameBras));
-      }*/
-
       if (SW1 == 1 && SW2 == 0)
       {
         trameBras[8] = 1;
@@ -171,31 +155,13 @@ int main()
       {
         trameBras[8] = 0;
       }
-
       // Lecture et transmission de la valeur des joysticks
-
       trameBras[9] = DroitX.read_u16() * 0.00389106;   // Base
       trameBras[10] = GaucheY.read_u16() * 0.00389106; // Coude
       trameBras[11] = DroitY.read_u16() * 0.00389106;  // Poignet
       trameBras[12] = GaucheX.read_u16() * 0.00389106; // Epaule
       pc.write(trameBras, sizeof(trameBras));
       thread_sleep_for(100);
-
-      /*if (trameBras[9] > 170 || trameBras[9] < 85 || trameBras[10] > 170 || trameBras[10] < 85 || trameBras[11] > 170 || trameBras[11] < 85 || trameBras[12] > 170 || trameBras[12] < 85)
-      {
-        flagEnvoiLibre = true;
-        pc.write(trameBras, sizeof(trameBras));
-        thread_sleep_for(100);
-      }
-      else if (flagEnvoiLibre == true)
-      {
-        flagEnvoiLibre = false;
-        trameBras[9] = 100;
-        trameBras[10] = 100;
-        trameBras[11] = 100;
-        trameBras[12] = 100;
-        pc.write(trameBras, sizeof(trameBras));
-      }*/
       etat = attente;
       break;
     // Controle du robot
@@ -207,7 +173,7 @@ int main()
       break;
     // lorsque l'utilisateur appuie sur l'ecran
     case detectionAppui:
-      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagVitesse, flagModes);
+      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes);
       break;
     case LedOn:
       trameBras[7] = 1;
@@ -235,16 +201,9 @@ int main()
       }
       etat = attente;
       break;
-    case vitesse:
-      Ecran.Vitesse();
-      flagVitesse = true; // activer le flag du bouton
-      flagModes = false;
-      etat = attente;
-      break;
     case modes:
       Ecran.Modes();
       flagModes = true;
-      flagVitesse = false;
       etat = attente;
       break;
     case libre:
@@ -279,43 +238,10 @@ int main()
       Ecran.Debogage();
       etat = attente;
       break;
-    case selectVitesse1:
-      flagV = 1;
-      trameBras[4] = 1;
-      Ecran.Vitesse1();
-      etat = attente;
-      break;
-    case selectVitesse2:
-      flagV = 2;
-      trameBras[4] = 2;
-      Ecran.Vitesse2();
-      etat = attente;
-      break;
-    case selectVitesse3:
-      flagV = 3;
-      trameBras[4] = 3;
-      Ecran.Vitesse3();
-      etat = attente;
-      break;
-    /*case fermer:
-      Ecran.SortirEtat();
-      flagMenu = false;
-      flagVitesse = false;
-      flagModes = false;
-      flagSelection = false;
-      etat = attente;
-      break;*/
     case ok:
       pc.write(trameBras, sizeof(trameBras));
       Ecran.Choisir();
 
-      if (flagV == 1){
-        Ecran.AffichageV1();
-      } else if(flagV == 2){
-        Ecran.AffichageV2();
-      }else if(flagV == 3){
-        Ecran.AffichageV3();
-      }
       if (flagLibre == true){
         Ecran.AffichageLibre();
       } else if (flagEtendu == true){
@@ -327,7 +253,6 @@ int main()
       }
 
       flagMenu = false;
-      flagVitesse = false;
       flagModes = false;
       flagSelection = true;
       etat = attente;

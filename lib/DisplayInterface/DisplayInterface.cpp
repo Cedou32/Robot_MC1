@@ -52,85 +52,7 @@ void DisplayInterface::BtnMenuAppuye()
     TFT.printf("Menu");
 }
 
-void DisplayInterface::BtnVitesseNonAppuye()
-{
-    TFT.rect(20, 60, 140, 90, Black);
-    TFT.rect(19, 59, 141, 91, Black);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(22, 65);
-    TFT.printf("Vitesse");
-}
 
-void DisplayInterface::BtnVitesseAppuye()
-{
-    TFT.rect(20, 60, 140, 90, LightGrey);
-    TFT.rect(19, 59, 141, 91, LightGrey);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(LightGrey);
-    TFT.locate(22, 65);
-    TFT.printf("Vitesse");
-}
-
-void DisplayInterface::BtnVitesse1NonAppuye()
-{
-    TFT.rect(85, 110, 115, 140, Black);
-    // TFT.rect(144, 69, 176, 101, Black);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(90, 115);
-    TFT.printf("1");
-}
-
-void DisplayInterface::BtnVitesse2NonAppuye()
-{
-    TFT.rect(145, 110, 175, 140, Black);
-    // TFT.rect(184, 69, 216, 101, Black);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(150, 115);
-    TFT.printf("2");
-}
-
-void DisplayInterface::BtnVitesse3NonAppuye()
-{
-    TFT.rect(205, 110, 235, 140, Black);
-    // TFT.rect(224, 69, 256, 101, Black);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(210, 115);
-    TFT.printf("3");
-}
-
-void DisplayInterface::BtnVitesse1Appuye()
-{
-    TFT.rect(85, 110, 115, 140, LightGrey);
-    // TFT.rect(144, 69, 176, 101, LightGrey);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(LightGrey);
-    TFT.locate(90, 115);
-    TFT.printf("1");
-}
-
-void DisplayInterface::BtnVitesse2Appuye()
-{
-    TFT.rect(145, 110, 175, 140, LightGrey);
-    // TFT.rect(184, 69, 216, 101, LightGrey);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(LightGrey);
-    TFT.locate(150, 115);
-    TFT.printf("2");
-}
-
-void DisplayInterface::BtnVitesse3Appuye()
-{
-    TFT.rect(205, 110, 235, 140, LightGrey);
-    // TFT.rect(224, 69, 256, 101, LightGrey);
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(LightGrey);
-    TFT.locate(210, 115);
-    TFT.printf("3");
-}
 
 void DisplayInterface::BtnModesNonAppuye()
 {
@@ -232,27 +154,7 @@ void DisplayInterface::BtnDebogageAppuye()
     TFT.printf("Debug");
 }
 
-void DisplayInterface::AffichageV1()
-{
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(80, 80);
-    TFT.printf("Vitesse: 1");
-}
-void DisplayInterface::AffichageV2()
-{
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(80, 80);
-    TFT.printf("Vitesse: 2");
-}
-void DisplayInterface::AffichageV3()
-{
-    TFT.set_font((unsigned char *)Arial24x23);
-    TFT.foreground(Black);
-    TFT.locate(80, 80);
-    TFT.printf("Vitesse: 3");
-}
+
 
 void DisplayInterface::AffichageLibre()
 {
@@ -285,15 +187,10 @@ void DisplayInterface::AffichageDebug()
 
 void DisplayInterface::FermerAffichage()
 {
-    TFT.fillrect(80, 80, 300, 150, White);
+    TFT.fillrect(30, 80, 300, 150, White);
 }
 
-/////////////////////////////////////////////////////
-void DisplayInterface::FermerVitesse()
-{
-    // TFT.fillrect(19, 59, 141, 91, White);
-    TFT.fillrect(85, 110, 235, 140, White);
-}
+
 
 void DisplayInterface::FermerMode()
 {
@@ -439,7 +336,6 @@ void DisplayInterface::Menu()
     DisplayInterface::LogoOff();
     DisplayInterface::FermerAffichage();
     DisplayInterface::BtnMenuAppuye();
-    DisplayInterface::BtnVitesseNonAppuye();
     DisplayInterface::BtnModesNonAppuye();
     // DisplayInterface::BtnFermer();
     /*DisplayInterface::BtnOn();
@@ -453,20 +349,8 @@ void DisplayInterface::FermerMenu()
     DisplayInterface::LogoOn();
 }
 
-void DisplayInterface::Vitesse()
-{
-    DisplayInterface::FermerMode();
-    DisplayInterface::BtnModesNonAppuye();
-    DisplayInterface::BtnVitesseAppuye();
-    DisplayInterface::BtnVitesse1NonAppuye();
-    DisplayInterface::BtnVitesse2NonAppuye();
-    DisplayInterface::BtnVitesse3NonAppuye();
-}
-
 void DisplayInterface::Modes()
 {
-    DisplayInterface::FermerVitesse();
-    DisplayInterface::BtnVitesseNonAppuye();
     DisplayInterface::BtnModesAppuye();
     DisplayInterface::BtnLibreNonAppuye();
     DisplayInterface::BtnEnregistrerNonAppuye();
@@ -507,28 +391,6 @@ void DisplayInterface::Debogage()
     DisplayInterface::BtnEnregistrerNonAppuye();
     DisplayInterface::BtnEtenduNonAppuye();
     DisplayInterface::BtnDebogageAppuye();
-    DisplayInterface::BtnChoisir();
-}
-
-void DisplayInterface::Vitesse1()
-{
-    DisplayInterface::BtnVitesse1Appuye();
-    DisplayInterface::BtnVitesse2NonAppuye();
-    DisplayInterface::BtnVitesse3NonAppuye();
-    DisplayInterface::BtnChoisir();
-}
-void DisplayInterface::Vitesse2()
-{
-    DisplayInterface::BtnVitesse1NonAppuye();
-    DisplayInterface::BtnVitesse2Appuye();
-    DisplayInterface::BtnVitesse3NonAppuye();
-    DisplayInterface::BtnChoisir();
-}
-void DisplayInterface::Vitesse3()
-{
-    DisplayInterface::BtnVitesse1NonAppuye();
-    DisplayInterface::BtnVitesse2NonAppuye();
-    DisplayInterface::BtnVitesse3Appuye();
     DisplayInterface::BtnChoisir();
 }
 void DisplayInterface::SortirEtat()

@@ -21,11 +21,7 @@ enum EtatLib
     enregistrer,
     etendu,
     debogage,
-    selectVitesse1,
-    selectVitesse2,
-    selectVitesse3,
     ok,
-    fermer,
     mvtRobot,
     lectureLibre,
     battery,
@@ -36,7 +32,7 @@ enum EtatLib
 class TouchInterface
 {
 public:
-    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagVitesse, bool flagModes);
+    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes);
 };
 
 #endif

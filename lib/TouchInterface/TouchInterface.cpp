@@ -6,15 +6,11 @@
 
 #include "TouchInterface.h"
 
-EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu, bool flagVitesse, bool flagModes)
+EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes)
 {
     if (positionX >= 210 && positionX <= 310 && positionY >= 10 && positionY <= 40)
     {
         return menu;
-    }
-    else if (positionX >= 19 && positionX <= 141 && positionY >= 59 && positionY <= 91 && !flagVitesse)
-    {
-        return vitesse;
     }
     else if (positionX >= 179 && positionX <= 301 && positionY >= 59 && positionY <= 91)
     {
@@ -36,22 +32,6 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     {
         return debogage;
     }
-    else if (positionX >= 85 && positionX <= 115 && positionY >= 110 && positionY <= 140 && flagVitesse)
-    {
-        return selectVitesse1;
-    }
-    else if (positionX >= 145 && positionX <= 175 && positionY >= 110 && positionY <= 140 && flagVitesse)
-    {
-        return selectVitesse2;
-    }
-    else if (positionX >= 205 && positionX <= 235 && positionY >= 110 && positionY <= 140 && flagVitesse)
-    {
-        return selectVitesse3;
-    }
-    /*else if (positionX >= 240 && positionX <= 310 && positionY >= 210 && positionY <= 230)
-    {
-        return fermer;
-    }*/
     else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221)
     {
         return ok;

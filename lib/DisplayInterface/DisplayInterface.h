@@ -24,16 +24,6 @@ public:
     void BtnMenuNonAppuye();
     void BtnMenuAppuye();
 
-    void BtnVitesseNonAppuye();
-    void BtnVitesseAppuye();
-
-    void BtnVitesse1NonAppuye();
-    void BtnVitesse2NonAppuye();
-    void BtnVitesse3NonAppuye();
-    void BtnVitesse1Appuye();
-    void BtnVitesse2Appuye();
-    void BtnVitesse3Appuye();
-
     void BtnModesNonAppuye();
     void BtnModesAppuye();
 
@@ -49,11 +39,6 @@ public:
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
 
-    
-    void AffichageV1(); 
-    void AffichageV2(); 
-    void AffichageV3(); 
-
     void AffichageLibre();
     void AffichageEnregistrer();
     void AffichageDemo();
@@ -61,7 +46,6 @@ public:
 
     void FermerAffichage();
 
-    void FermerVitesse();
     void FermerMode();
 
     
@@ -77,15 +61,11 @@ public:
 
     void Menu();
     void FermerMenu();
-    void Vitesse();
     void Modes();
     void Libre();
     void Enregistrer();
     void Etendu();
     void Debogage();
-    void Vitesse1();
-    void Vitesse2();
-    void Vitesse3();
     void Choisir();
     void SortirEtat();
 
