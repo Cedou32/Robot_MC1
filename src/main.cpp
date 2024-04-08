@@ -35,7 +35,7 @@ long currentFermer = 0, previousFermer = 0;
 long currentOuvert = 0, previousOuvert = 0;
 uint8_t valeurPince = 130;
 // Flags
-bool flagMenu = false;    // flag pour indiquer si le bouton "Menu" a ete appuye
+bool flagMenu = false; // flag pour indiquer si le bouton "Menu" a ete appuye
 uint8_t flagV = 0;
 bool flagModes = false; // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
@@ -53,7 +53,7 @@ DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk
 TouchScreen Touch(TouchXp, TouchXn, TouchYp, TouchYn);
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 Ticker InterruptionBatterie;
-Timeout c;
+Ticker InterruptionEnregistrement;
 //******Fonctions pour les interruptions******//
 void VerifBatterie()
 {
@@ -61,18 +61,18 @@ void VerifBatterie()
   flagBatterie = true;
 }
 
-void FinEnregistrement(){
-  LED = 0;
+void FinEnregistrement()
+{
+  LED = !LED;
   flagfin = true;
+  InterruptionEnregistrement.detach();
   flagEnregistrement = false;
-  etat = finenregistrement;
 }
 
 int main()
 {
   // Attacher la fonction
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
-  
 
   // Indication des valeurs de securite de la trame
   trameBras[0] = '#';
@@ -123,8 +123,12 @@ int main()
       {
         etat = lectureLibre;
       }
-      else if (flagEnregistrement && !flagfin){
+      else if (flagEnregistrement && !flagfin)
+      {
         etat = lectureLibre;
+      } else if(!flagEnregistrement && flagfin){
+        
+        etat = finenregistrement;
       }
       // etat = mvtRobot;
       break;
@@ -197,9 +201,8 @@ int main()
       flagMenu = !flagMenu; // activer le flag du bouton
       if (flagMenu == true)
       {
-        //Ecran.FermerAffichage();
+        // Ecran.FermerAffichage();
         Ecran.Menu();
-        
       }
       else if (flagMenu == false)
       {
@@ -251,30 +254,38 @@ int main()
       Ecran.FermerBtnDemarrer();
       LED = 1;
       flagfin = false;
-      InterruptionBatterie.attach(&FinEnregistrement, 10.0);
+      InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
 
       etat = attente;
       break;
-    
+
     case finenregistrement:
+      flagfin = false;
       Ecran.FinEnregistrement();
       etat = attente;
       break;
 
     case ok:
-      
+
       Ecran.Choisir();
 
-      if (flagLibre == true){
+      if (flagLibre == true)
+      {
         Ecran.AffichageLibre();
         trameBras[3] = 1;
-      } else if (flagEtendu == true){
+      }
+      else if (flagEtendu == true)
+      {
         trameBras[3] = 2;
         Ecran.AffichageDemo();
-      } else if (flagDebug == true){
+      }
+      else if (flagDebug == true)
+      {
         trameBras[3] = 3;
         Ecran.AffichageDebug();
-      } else if (flagEnregistrement == true){
+      }
+      else if (flagEnregistrement == true)
+      {
         trameBras[3] = 4;
         Ecran.AffichageEnregistrer();
       }
