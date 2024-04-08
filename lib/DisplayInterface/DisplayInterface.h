@@ -39,6 +39,11 @@ public:
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
 
+    void BtnDemarrerNonAppuye();
+    void BtnDemarrerAppuye();
+    void FermerBtnDemarrer();
+    void FinEnregistrement();
+
     void AffichageLibre();
     void AffichageEnregistrer();
     void AffichageDemo();
