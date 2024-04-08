@@ -207,11 +207,11 @@ int main()
   InterruptionServo.attach(&VerifServo, 0.001);
   InterruptionStepperBase.attach(&VerifStepperBase, 0.0002);
 
-  data[5] = 100;
-  data[6] = 100;
-  data[7] = 100;
-  data[8] = 100;
-  data[9] = 100;
+  data[5] = 125;
+  data[6] = 125;
+  data[7] = 125;
+  data[8] = 125;
+  data[9] = 125;
 
   pc.set_baud(115200);
   etat etat_actuel = depart;
@@ -275,11 +275,11 @@ int main()
         }
         else
         {
-          memset(data, 100, 10);
+          memset(data, 125, 10);
         }
 
         // LED = int(data[7]);
-      }
+      } 
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
