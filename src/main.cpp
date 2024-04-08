@@ -437,16 +437,71 @@ int main()
       {
         flagServo = 0;
         // Code du servo Coude
-        if (data[8] >= 85 && data[8] <= 170)
+        if ((data[8] >= 135 && data[8] < 160) || (data[8] >= 95 && data[8] < 120))
         {
+          if (data[8] >= 135 && data[8] < 160)
+          {
+            dutyCycleCoude += 0.00001;
+          }
+          else if (data[8] >= 95 && data[8] < 120)
+          {
+            dutyCycleCoude -= 0.00001;
+          }
         }
-        else if (data[8] >= 0 && data[8] < 85)
+        else if ((data[8] >= 160 && data[8] < 185) || (data[8] >= 70 && data[8] < 95))
         {
-          dutyCycleCoude -= 0.00005;
+          if (data[8] >= 160 && data[8] < 185)
+          {
+            dutyCycleCoude += 0.00002;
+          }
+          else if (data[8] >= 70 && data[8] < 95)
+          {
+            dutyCycleCoude -= 0.00002;
+          }
         }
-        else if (data[8] >= 170 && data[8] <= 255)
+        else if ((data[8] >= 185 && data[8] < 210) || (data[8] >= 45 && data[8] < 70))
         {
-          dutyCycleCoude += 0.00005;
+          if (data[8] >= 185 && data[8] < 210)
+          {
+            dutyCycleCoude += 0.00003;
+          }
+          else if (data[8] >= 45 && data[8] < 70)
+          {
+            dutyCycleCoude -= 0.00003;
+          }
+        }
+        else if ((data[8] >= 210 && data[8] < 230) || (data[8] >= 25 && data[8] < 45))
+        {
+          if (data[8] >= 210 && data[8] < 230)
+          {
+            dutyCycleCoude += 0.00004;
+          }
+          else if (data[8] >= 25 && data[8] < 45)
+          {
+            dutyCycleCoude -= 0.00004;
+          }
+        }
+        else if ((data[8] >= 230 && data[8] < 250) || (data[8] >= 5 && data[8] < 25))
+        {
+          if (data[8] >= 230 && data[8] < 250)
+          {
+            dutyCycleCoude += 0.00005;
+          }
+          else if (data[8] >= 5 && data[8] < 25)
+          {
+            dutyCycleCoude -= 0.00005;
+          }
+        }
+        else if ((data[8] >= 250 && data[8] <= 255) || (data[8] >= 0 && data[8] < 5))
+        {
+          if (data[8] >= 250 && data[8] <= 255)
+          {
+            dutyCycleCoude += 0.00006;
+          }
+          else if (data[8] >= 0 && data[8] < 5)
+          {
+            dutyCycleCoude -= 0.00006;
+          }
         }
         if (dutyCycleCoude < 0.03)
         {
@@ -457,25 +512,81 @@ int main()
           dutyCycleCoude = 0.125;
         }
         ServoCoude.write(dutyCycleCoude);
+
         // Code du servo Poignet
-        if (data[7] >= 85 && data[7] <= 170)
+        if ((data[7] >= 135 && data[7] < 160) || (data[7] >= 95 && data[7] < 120))
         {
+          if (data[7] >= 135 && data[7] < 160)
+          {
+            dutyCyclePoignet += 0.00001;
+          }
+          else if (data[7] >= 95 && data[7] < 120)
+          {
+            dutyCyclePoignet -= 0.00001;
+          }
         }
-        else if (data[7] >= 0 && data[7] < 85)
+        else if ((data[7] >= 160 && data[7] < 185) || (data[7] >= 70 && data[7] < 95))
         {
-          dutyCyclePoignet -= 0.00005;
+          if (data[7] >= 160 && data[7] < 185)
+          {
+            dutyCyclePoignet += 0.00002;
+          }
+          else if (data[7] >= 70 && data[7] < 95)
+          {
+            dutyCyclePoignet -= 0.00002;
+          }
         }
-        else if (data[7] >= 170 && data[7] <= 255)
+        else if ((data[7] >= 185 && data[7] < 210) || (data[7] >= 45 && data[7] < 70))
         {
-          dutyCyclePoignet += 0.00005;
+          if (data[7] >= 185 && data[7] < 210)
+          {
+            dutyCyclePoignet += 0.00003;
+          }
+          else if (data[7] >= 45 && data[7] < 70)
+          {
+            dutyCyclePoignet -= 0.00003;
+          }
         }
-        if (dutyCyclePoignet < 0.025)
+        else if ((data[7] >= 210 && data[7] < 230) || (data[7] >= 25 && data[7] < 45))
         {
-          dutyCyclePoignet = 0.025;
+          if (data[7] >= 210 && data[7] < 230)
+          {
+            dutyCyclePoignet += 0.00004;
+          }
+          else if (data[7] >= 25 && data[7] < 45)
+          {
+            dutyCyclePoignet -= 0.00004;
+          }
         }
-        else if (dutyCyclePoignet > 0.115)
+        else if ((data[7] >= 230 && data[7] < 250) || (data[7] >= 5 && data[7] < 25))
         {
-          dutyCyclePoignet = 0.115;
+          if (data[7] >= 230 && data[7] < 250)
+          {
+            dutyCyclePoignet += 0.00005;
+          }
+          else if (data[7] >= 5 && data[7] < 25)
+          {
+            dutyCyclePoignet -= 0.00005;
+          }
+        }
+        else if ((data[7] >= 250 && data[7] <= 255) || (data[7] >= 0 && data[7] < 5))
+        {
+          if (data[7] >= 250 && data[7] <= 255)
+          {
+            dutyCyclePoignet += 0.00006;
+          }
+          else if (data[7] >= 0 && data[7] < 5)
+          {
+            dutyCyclePoignet -= 0.00006;
+          }
+        }
+        if (dutyCyclePoignet < 0.03)
+        {
+          dutyCyclePoignet = 0.03;
+        }
+        else if (dutyCyclePoignet > 0.125)
+        {
+          dutyCyclePoignet = 0.125;
         }
         ServoPoignet.write(dutyCyclePoignet);
         // Code du servo Pince
