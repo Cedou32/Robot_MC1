@@ -50,44 +50,13 @@ void VerifServo()
   flagServo = 1;
 }
 
-void VerifStepperEpaule()
+/*void VerifStepperEpaule()
 {
-  flagStepperEpaule += 1;
-  if (flagVitesseStepperEpaule == 1){
-    if (flagStepperEpaule > 6)
-    {
-      flagStepperEpaule = 6;
-    }
-  } else if (flagVitesseStepperEpaule == 2){
-    if (flagStepperEpaule > 4)
-    {
-      flagStepperEpaule = 4;
-    }
-  } else if (flagVitesseStepperEpaule == 3){
-    if (flagStepperEpaule > 2)
-    {
-      flagStepperEpaule = 2;
-    }
-  } /*else if (flagVitesseStepperEpaule == 4){
-    if (flagStepperEpaule > 11)
-    {
-      flagStepperEpaule = 11;
-    }
-  } else if (flagVitesseStepperEpaule == 5){
-    if (flagStepperEpaule > 10)
-    {
-      flagStepperEpaule = 10;
-    }
-  } else if (flagVitesseStepperEpaule == 6){
-    if (flagStepperEpaule > 9)
-    {
-      flagStepperEpaule = 9;
-    }
-  } else if (flagVitesseStepperEpaule == 7){
+   else if (flagVitesseStepperEpaule == 7){
     if (flagStepperEpaule > 8)
     {
       flagStepperEpaule = 8;
-    } 
+    }
   } else if (flagVitesseStepperEpaule == 8){
     if (flagStepperEpaule > 7)
     {
@@ -103,63 +72,98 @@ void VerifStepperEpaule()
     {
       flagStepperEpaule = 5;
     }
-  } */
-}
+  }
+}*/
 
 void VerifStepperBase()
 {
+  flagStepperEpaule += 1;
+  if (flagVitesseStepperEpaule == 1)
+  {
+    if (flagStepperEpaule > 20)
+    {
+      flagStepperEpaule = 20;
+    }
+  }
+  else if (flagVitesseStepperEpaule == 2)
+  {
+    if (flagStepperEpaule > 17)
+    {
+      flagStepperEpaule = 17;
+    }
+  }
+  else if (flagVitesseStepperEpaule == 3)
+  {
+    if (flagStepperEpaule > 14)
+    {
+      flagStepperEpaule = 14;
+    }
+  }
+  else if (flagVitesseStepperEpaule == 4)
+  {
+    if (flagStepperEpaule > 11)
+    {
+      flagStepperEpaule = 11;
+    }
+  }
+  else if (flagVitesseStepperEpaule == 5)
+  {
+    if (flagStepperEpaule > 8)
+    {
+      flagStepperEpaule = 8;
+    }
+  }
+  else if (flagVitesseStepperEpaule == 6)
+  {
+    if (flagStepperEpaule > 5)
+    {
+      flagStepperEpaule = 5;
+    }
+  }
+
   flagStepperBase += 1;
-  if (flagVitesseStepperBase == 1){
-    if (flagStepperBase > 6)
+  if (flagVitesseStepperBase == 1)
+  {
+    if (flagStepperBase > 20)
     {
-      flagStepperBase = 6;
+      flagStepperBase = 20;
     }
-  } else if (flagVitesseStepperBase == 2){
-    if (flagStepperBase > 4)
+  }
+  else if (flagVitesseStepperBase == 2)
+  {
+    if (flagStepperBase > 17)
     {
-      flagStepperBase = 4;
+      flagStepperBase = 17;
     }
-  } else if (flagVitesseStepperBase == 3){
-    if (flagStepperBase > 2)
+  }
+  else if (flagVitesseStepperBase == 3)
+  {
+    if (flagStepperBase > 14)
     {
-      flagStepperBase = 2;
+      flagStepperBase = 14;
     }
-  } /*else if (flagVitesseStepperBase == 4){
+  }
+  else if (flagVitesseStepperBase == 4)
+  {
     if (flagStepperBase > 11)
     {
       flagStepperBase = 11;
     }
-  } else if (flagVitesseStepperBase == 5){
-    if (flagStepperBase > 10)
-    {
-      flagStepperBase = 10;
-    }
-  } else if (flagVitesseStepperBase == 6){
-    if (flagStepperBase > 9)
-    {
-      flagStepperBase = 9;
-    }
-  } else if (flagVitesseStepperBase == 7){
+  }
+  else if (flagVitesseStepperBase == 5)
+  {
     if (flagStepperBase > 8)
     {
       flagStepperBase = 8;
     }
-  } else if (flagVitesseStepperBase == 8){
-    if (flagStepperBase > 7)
-    {
-      flagStepperBase = 7;
-    }
-  } else if (flagVitesseStepperBase == 9){
-    if (flagStepperBase > 6)
-    {
-      flagStepperBase = 6;
-    }
-  } else if (flagVitesseStepperBase == 10){
+  }
+  else if (flagVitesseStepperBase == 6)
+  {
     if (flagStepperBase > 5)
     {
       flagStepperBase = 5;
     }
-  } */
+  }
 }
 
 void ConfigVitesseStepperBase(uint8_t valeur_joystick)
@@ -201,8 +205,7 @@ void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
 int main()
 {
   InterruptionServo.attach(&VerifServo, 0.001);
-  InterruptionStepperEpaule.attach(&VerifStepperEpaule, 0.0005);
-  InterruptionStepperBase.attach(&VerifStepperBase, 0.0005);
+  InterruptionStepperBase.attach(&VerifStepperBase, 0.0002);
 
   data[5] = 100;
   data[6] = 100;
@@ -234,6 +237,9 @@ int main()
       thread_sleep_for(500);
       ServoPince.write(0.08);
       thread_sleep_for(500);
+
+      // stepPinC = 0;
+      // stepPinB = 0;
 
       etat_actuel = lecture_trame;
       break;
@@ -277,31 +283,38 @@ int main()
       etat_actuel = mouvement_moteur;
       break;
     case mouvement_moteur:
-      if ((data[9] >= 135 && data[9] < 175) || (data[9] >= 80 && data[9] < 120) )
+      if (data[9] >= 120 && data[9] <= 135)
+      {
+        stepPinC = 0;
+      }
+      if ((data[9] >= 135 && data[9] < 160) || (data[9] >= 95 && data[9] < 120))
       {
         flagVitesseStepperEpaule = 1;
-        if (flagStepperEpaule == 6)
+        if (flagStepperEpaule == 20)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 175 && data[9] < 215) || (data[9] >= 40 && data[9] < 80) )
+      }
+      else if ((data[9] >= 160 && data[9] < 185) || (data[9] >= 70 && data[9] < 95))
       {
         flagVitesseStepperEpaule = 2;
-        if (flagStepperEpaule == 4)
+        if (flagStepperEpaule == 17)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 215 && data[9] <= 255) || (data[9] >= 0 && data[9] < 40) )
+      }
+      else if ((data[9] >= 185 && data[9] < 210) || (data[9] >= 45 && data[9] < 70))
       {
         flagVitesseStepperEpaule = 3;
-        if (flagStepperEpaule == 2)
+        if (flagStepperEpaule == 14)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } /*else if ((data[9] >= 171 && data[9] < 183) || (data[9] >= 72 && data[9] < 84) )
+      }
+      else if ((data[9] >= 210 && data[9] < 230) || (data[9] >= 25 && data[9] < 45))
       {
         flagVitesseStepperEpaule = 4;
         if (flagStepperEpaule == 11)
@@ -309,81 +322,58 @@ int main()
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 183 && data[9] < 195) || (data[9] >= 60 && data[9] < 72) )
+      }
+      else if ((data[9] >= 230 && data[9] < 250) || (data[9] >= 5 && data[9] < 25))
       {
         flagVitesseStepperEpaule = 5;
-        if (flagStepperEpaule == 10)
-        {
-          flagStepperEpaule = 0;
-          ConfigVitesseStepperEpaule(data[9]);
-        }
-      } else if ((data[9] >= 195 && data[9] < 207) || (data[9] >= 48 && data[9] < 60) )
-      {
-        flagVitesseStepperEpaule = 6;
-        if (flagStepperEpaule == 9)
-        {
-          flagStepperEpaule = 0;
-          ConfigVitesseStepperEpaule(data[9]);
-        }
-      } else if ((data[9] >= 207 && data[9] < 219) || (data[9] >= 36 && data[9] < 48) )
-      {
-        flagVitesseStepperEpaule = 7;
         if (flagStepperEpaule == 8)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } else if ((data[9] >= 219 && data[9] < 231) || (data[9] >= 24 && data[9] < 36) )
+      }
+      else if ((data[9] >= 250 && data[9] <= 255) || (data[9] >= 0 && data[9] < 5))
       {
-        flagVitesseStepperEpaule = 8;
-        if (flagStepperEpaule == 7)
-        {
-          flagStepperEpaule = 0;
-          ConfigVitesseStepperEpaule(data[9]);
-        }
-      } else if ((data[9] >= 231 && data[9] < 243) || (data[9] >= 12 && data[9] < 24) )
-      {
-        flagVitesseStepperEpaule = 9;
-        if (flagStepperEpaule == 6)
-        {
-          flagStepperEpaule = 0;
-          ConfigVitesseStepperEpaule(data[9]);
-        }
-      } else if ((data[9] >= 243) || (data[9] >= 0 && data[9] < 12) )
-      {
-        flagVitesseStepperEpaule = 10;
+        flagVitesseStepperEpaule = 6;
         if (flagStepperEpaule == 5)
         {
           flagStepperEpaule = 0;
           ConfigVitesseStepperEpaule(data[9]);
         }
-      } */
+      }
 
-      if ((data[6] >= 135 && data[6] < 175) || (data[6] >= 80 && data[6] < 120) )
+      if (data[6] >= 120 && data[6] <= 135)
+      {
+        stepPinB = 0;
+      }
+      if ((data[6] >= 135 && data[6] < 160) || (data[6] >= 95 && data[6] < 120))
       {
         flagVitesseStepperBase = 1;
-        if (flagStepperBase == 6)
+        if (flagStepperBase == 20)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 175 && data[6] < 215) || (data[6] >= 40 && data[6] < 10808) )
+      }
+      else if ((data[6] >= 160 && data[6] < 185) || (data[6] >= 70 && data[6] < 95))
       {
         flagVitesseStepperBase = 2;
-        if (flagStepperBase == 4)
+        if (flagStepperBase == 17)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 215 && data[6] <= 255) || (data[6] >= 0 && data[6] < 40) )
+      }
+      else if ((data[6] >= 185 && data[6] < 210) || (data[6] >= 45 && data[6] < 70))
       {
         flagVitesseStepperBase = 3;
-        if (flagStepperBase == 2)
+        if (flagStepperBase == 14)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } /*else if ((data[6] >= 171 && data[6] < 183) || (data[6] >= 72 && data[6] < 84) )
+      }
+      else if ((data[6] >= 210 && data[6] < 230) || (data[6] >= 25 && data[6] < 45))
       {
         flagVitesseStepperBase = 4;
         if (flagStepperBase == 11)
@@ -391,23 +381,25 @@ int main()
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 183 && data[6] < 195) || (data[6] >= 60 && data[6] < 72) )
+      }
+      else if ((data[6] >= 230 && data[6] < 250) || (data[6] >= 5 && data[6] < 25))
       {
         flagVitesseStepperBase = 5;
-        if (flagStepperBase == 10)
+        if (flagStepperBase == 8)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 195 && data[6] < 207) || (data[6] >= 48 && data[6] < 60) )
+      }
+      else if ((data[6] >= 250 && data[6] <= 255) || (data[6] >= 0 && data[6] < 5))
       {
         flagVitesseStepperBase = 6;
-        if (flagStepperBase == 9)
+        if (flagStepperBase == 5)
         {
           flagStepperBase = 0;
           ConfigVitesseStepperBase(data[6]);
         }
-      } else if ((data[6] >= 207 && data[96] < 219) || (data[6] >= 36 && data[6] < 48) )
+      } /*else if ((data[6] >= 207 && data[96] < 219) || (data[6] >= 36 && data[6] < 48) )
       {
         flagVitesseStepperBase = 7;
         if (flagStepperBase == 8)
@@ -440,7 +432,7 @@ int main()
           ConfigVitesseStepperBase(data[6]);
         }
       }*/
-    
+
       if (flagServo == 1)
       {
         flagServo = 0;
@@ -450,11 +442,11 @@ int main()
         }
         else if (data[8] >= 0 && data[8] < 85)
         {
-          dutyCycleCoude -= 0.000005;
+          dutyCycleCoude -= 0.00005;
         }
         else if (data[8] >= 170 && data[8] <= 255)
         {
-          dutyCycleCoude += 0.000005;
+          dutyCycleCoude += 0.00005;
         }
         if (dutyCycleCoude < 0.03)
         {
@@ -471,11 +463,11 @@ int main()
         }
         else if (data[7] >= 0 && data[7] < 85)
         {
-          dutyCyclePoignet -= 0.000005;
+          dutyCyclePoignet -= 0.00005;
         }
         else if (data[7] >= 170 && data[7] <= 255)
         {
-          dutyCyclePoignet += 0.000005;
+          dutyCyclePoignet += 0.00005;
         }
         if (dutyCyclePoignet < 0.025)
         {
@@ -492,11 +484,11 @@ int main()
         }
         else if (data[5] == 1)
         {
-          dutyCyclePince -= 0.000005;
+          dutyCyclePince -= 0.00005;
         }
         else if (data[5] == 2)
         {
-          dutyCyclePince += 0.000005;
+          dutyCyclePince += 0.00005;
         }
         if (dutyCyclePince < 0.08)
         {
