@@ -3,11 +3,13 @@
 #include "TouchScreen.h"
 #include "DisplayInterface.h"
 #include "TouchInterface.h"
+
 // Pins pour l'interface tactile
 #define TouchXp PC_3
 #define TouchYp PC_2
 #define TouchXn PC_1
 #define TouchYn PC_0
+
 //******Pins Analogiques*******//
 // Joysticks
 AnalogIn DroitX(PB_1);
@@ -16,12 +18,14 @@ AnalogIn GaucheX(PA_0);
 AnalogIn GaucheY(PA_1);
 // Batterie
 AnalogIn Batt(PA_4);
+
 //******Pins Numeriques*******//
 // Push button
 DigitalIn SW1(PA_3);
 DigitalIn SW2(PB_15);
 // LEDS
 DigitalOut LED(PC_13);
+
 //******Variables Globales******//
 // Variables pour la verification de la tension de la batterie
 int8_t batterie, prevBatterie;
@@ -30,66 +34,68 @@ uint8_t compteur = 0;
 // Variables contenant les coordonnees d'un appui
 uint16_t positionX;
 uint16_t positionY;
-// Temps d'appui boutons
-long currentFermer = 0, previousFermer = 0;
-long currentOuvert = 0, previousOuvert = 0;
-uint8_t valeurPince = 130;
 // Flags
-bool flagMenu = false; // flag pour indiquer si le bouton "Menu" a ete appuye
-uint8_t flagV = 0;
+bool flagMenu = false;  // flag pour indiquer si le bouton "Menu" a ete appuye
 bool flagModes = false; // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
-bool flagLibre = false, flagEtendu = false, flagDebug = false, flagEnregistrement = false;
-bool flagSelection = false;
-bool flagEnvoiLibre = false;
-bool flagfin = false;
+uint8_t flagSelectionMode = 0; // flag pour indiquer la selection du mode
+bool flagSelection = false;    // flag pour dire qu'une selection a ete faite
+bool flagFinEnregistrement = false;
 // Trames
-uint8_t trameBras[15];
+uint8_t data[15];
+
 //******Machine a etat******//
 // Declaration de la variable etat
-uint8_t etat = demarrage;
+uint8_t etat = caseDemarrage;
+
 //******Declaration des objets******//
 DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk, cs, reset, dc
 TouchScreen Touch(TouchXp, TouchXn, TouchYp, TouchYn);
 BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communication série sur la carte Nucleo STM32F072RB
 Ticker InterruptionBatterie;
 Ticker InterruptionEnregistrement;
+
 //******Fonctions pour les interruptions******//
+// Verification du niveau de la batterie
 void VerifBatterie()
 {
   compteur = compteur + 1;
   flagBatterie = true;
 }
 
+// fonction qui arrete l'enregistrement
 void FinEnregistrement()
 {
   LED = !LED;
-  flagfin = true;
+  flagFinEnregistrement = true;
   InterruptionEnregistrement.detach();
-  flagEnregistrement = false;
+  flagSelectionMode == 0;
 }
 
 int main()
 {
-  // Attacher la fonction
+  // Attacher la fonction de lecture de la batterie
   InterruptionBatterie.attach(&VerifBatterie, 0.01);
 
   // Indication des valeurs de securite de la trame
-  trameBras[0] = '#';
-  trameBras[1] = '@';
-  trameBras[2] = '+';
-  trameBras[13] = '?';
-  trameBras[14] = '%';
+  data[0] = '#';
+  data[1] = '@';
+  data[2] = '+';
+  data[13] = '?';
+  data[14] = '%';
+
   pc.set_baud(115200); // instancier baud-rate pour la communication BT
+
   while (1)
   {
     switch (etat)
     {
     // initialisation de l'ecran d'acceuil
-    case demarrage:
-      Ecran.Demarrage();
-      Ecran.LogoOn();
-      // verification du niveau de la batterie au demarrage
+    case caseDemarrage:
+      Ecran.Initialisation(); // Initialisation de l'ecran
+      Ecran.LogoOn();         // Afficher logo
+
+      // Lecture tension de la batterie
       batterie = (Batt.read_u16() * (100.0 / 40000.0));
       ligne = batterie * 0.43 + 11;
       if (batterie > 100)
@@ -100,39 +106,48 @@ int main()
       {
         batterie = 0;
       }
+
       // afficher l'icone de la batteire
-      Ecran.BtnBatterie(batterie, ligne);
+      Ecran.IconeBatterie(batterie, ligne);
       // afficher le bouton menu
       Ecran.BtnMenuNonAppuye();
-      etat = attente;
+      etat = caseAttente;
       break;
+
     // attente d'un appui
-    case attente:
+    case caseAttente:
       if (Touch.Touch_detect())
       {
         positionX = Touch.getX(); // prendre la valeur de l'axe X
         positionY = Touch.getY(); // prendre la valeur de l'axe Y
-        etat = detectionAppui;
+        etat = caseDetectionAppui;
       }
       else if (flagBatterie == true)
       {
         flagBatterie = false;
-        etat = battery;
+        etat = caseBatterie;
       }
-      else if (flagLibre && flagSelection)
+      else if (flagSelectionMode == 1 && flagSelection) //Mode libre choisi
       {
-        etat = lectureLibre;
+        etat = caseEnvoiPosition;
       }
-      else if (flagEnregistrement && !flagfin)
+      else if (flagSelectionMode == 4 && !flagFinEnregistrement)
       {
-        etat = lectureLibre;
-      } else if(!flagEnregistrement && flagfin){
-        
-        etat = finenregistrement;
+        etat = caseEnvoiPosition;
       }
-      // etat = mvtRobot;
+      else if (flagSelectionMode == 0 && flagFinEnregistrement)
+      {
+
+        etat = caseFinEnregistrement;
+      }
       break;
-    case battery:
+
+    // lorsque l'utilisateur appuie sur l'ecran
+    case caseDetectionAppui:
+      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagSelectionMode);
+      break;
+
+    case caseBatterie:
       // lecture du niveau de la batterie et mise a jour de l'icone
       batterie = (Batt.read_u16() * (100.0 / 40000.0));
       ligne = batterie * 0.43 + 11;
@@ -150,151 +165,133 @@ int main()
         prevBatterie = batterie;
         prevLigne = ligne;
       }
-      etat = attente;
+      etat = caseAttente;
       break;
-    case lectureLibre:
-      if (SW1 == 1 && SW2 == 0)
-      {
-        trameBras[8] = 1;
-      }
-      else if (SW2 == 1 && SW1 == 0)
-      {
-        trameBras[8] = 2;
-      }
-      else
-      {
-        trameBras[8] = 0;
-      }
-      // Lecture et transmission de la valeur des joysticks
-      trameBras[9] = DroitX.read_u16() * 0.00389106;   // Base
-      trameBras[10] = GaucheY.read_u16() * 0.00389106; // Coude
-      trameBras[11] = DroitY.read_u16() * 0.00389106;  // Poignet
-      trameBras[12] = GaucheX.read_u16() * 0.00389106; // Epaule
-      pc.write(trameBras, sizeof(trameBras));
-      thread_sleep_for(100);
-      etat = attente;
-      break;
-    // Controle du robot
-    case mvtRobot:
 
-      pc.write(trameBras, sizeof(trameBras));
-      thread_sleep_for(100);
-      etat = attente;
-      break;
-    // lorsque l'utilisateur appuie sur l'ecran
-    case detectionAppui:
-      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagEnregistrement);
-      break;
-    case LedOn:
-      trameBras[7] = 1;
-      pc.write(trameBras, sizeof(trameBras));
-      thread_sleep_for(100);
-      etat = attente;
-      break;
-    case LedOff:
-      trameBras[7] = 0;
-      pc.write(trameBras, sizeof(trameBras));
-      thread_sleep_for(100);
-      etat = attente;
-      break;
-    case menu:
+    case caseMenu:
       flagMenu = !flagMenu; // activer le flag du bouton
       if (flagMenu == true)
       {
-        // Ecran.FermerAffichage();
         Ecran.Menu();
       }
       else if (flagMenu == false)
       {
         Ecran.FermerMenu();
       }
-      etat = attente;
+      etat = caseAttente;
       break;
-    case modes:
+
+    case caseModes:
       Ecran.Modes();
       flagModes = true;
-      etat = attente;
+      etat = caseAttente;
       break;
-    case libre:
-      flagLibre = true;
-      flagEtendu = false;
-      flagDebug = false;
-      flagEnregistrement = false;
+
+    case caseLibre:
+      flagSelectionMode = 1;
       Ecran.Libre();
-      etat = attente;
+      etat = caseAttente;
       break;
-    case enregistrer:
-      flagLibre = false;
-      flagEtendu = false;
-      flagDebug = false;
-      flagEnregistrement = true;
-      Ecran.Enregistrer();
-      etat = attente;
+
+    case caseDemo:
+      flagSelectionMode = 2;
+      Ecran.Demo();
+      etat = caseAttente;
       break;
-    case etendu:
-      flagLibre = false;
-      flagEtendu = true;
-      flagDebug = false;
-      flagEnregistrement = false;
-      Ecran.Etendu();
-      etat = attente;
-      break;
-    case debogage:
-      flagLibre = false;
-      flagEtendu = false;
-      flagDebug = true;
-      flagEnregistrement = false;
+
+    case caseDebogage:
+      flagSelectionMode = 3;
       Ecran.Debogage();
-      etat = attente;
+      etat = caseAttente;
       break;
 
-    case enregistrement:
-      Ecran.BtnDemarrerAppuye();
-      thread_sleep_for(250);
-      Ecran.FermerBtnDemarrer();
-      LED = 1;
-      flagfin = false;
-      InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
-
-      etat = attente;
+    case caseEnregistrer:
+      flagSelectionMode = 4;
+      Ecran.Enregistrer();
+      etat = caseAttente;
       break;
 
-    case finenregistrement:
-      flagfin = false;
-      Ecran.FinEnregistrement();
-      etat = attente;
-      break;
-
-    case ok:
-
+    case caseSelection:
       Ecran.Choisir();
-
-      if (flagLibre == true)
+      switch (flagSelectionMode)
       {
+      case 1:
         Ecran.AffichageLibre();
-        trameBras[3] = 1;
-      }
-      else if (flagEtendu == true)
-      {
-        trameBras[3] = 2;
+        data[3] = 1;
+        break;
+      case 2:
+        data[3] = 2;
         Ecran.AffichageDemo();
-      }
-      else if (flagDebug == true)
-      {
-        trameBras[3] = 3;
+        break;
+      case 3:
+        data[3] = 3;
         Ecran.AffichageDebug();
-      }
-      else if (flagEnregistrement == true)
-      {
-        trameBras[3] = 4;
+        break;
+      case 4:
+        data[3] = 4;
         Ecran.AffichageEnregistrer();
+        break;
       }
-      pc.write(trameBras, sizeof(trameBras));
+      pc.write(data, sizeof(data));
 
       flagMenu = false;
       flagModes = false;
       flagSelection = true;
-      etat = attente;
+      etat = caseAttente;
+      break;
+
+    case caseEnvoiPosition:
+      if (SW1 == 1 && SW2 == 0)
+      {
+        data[8] = 1;
+      }
+      else if (SW2 == 1 && SW1 == 0)
+      {
+        data[8] = 2;
+      }
+      else
+      {
+        data[8] = 0;
+      }
+      // Lecture et transmission de la valeur des joysticks
+      data[9] = DroitX.read_u16() * 0.00389106;   // Base
+      data[10] = GaucheY.read_u16() * 0.00389106; // Coude
+      data[11] = DroitY.read_u16() * 0.00389106;  // Poignet
+      data[12] = GaucheX.read_u16() * 0.00389106; // Epaule
+      pc.write(data, sizeof(data));
+      thread_sleep_for(100);
+      etat = caseAttente;
+      break;
+
+    case caseEnregistrement:
+      Ecran.BtnDemarrerAppuye();
+      thread_sleep_for(250);
+      Ecran.FermerBtnDemarrer();
+      LED = 1;
+      flagFinEnregistrement = false;
+      InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
+
+      etat = caseAttente;
+      break;
+
+    case caseFinEnregistrement:
+      flagFinEnregistrement = false;
+      Ecran.FinEnregistrement();
+      etat = caseAttente;
+      break;
+
+    case LedOn:
+      data[7] = 1;
+      pc.write(data, sizeof(data));
+      thread_sleep_for(100);
+      etat = caseAttente;
+      break;
+
+    case LedOff:
+      data[7] = 0;
+      pc.write(data, sizeof(data));
+      thread_sleep_for(100);
+      etat = caseAttente;
       break;
     }
   }

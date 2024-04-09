@@ -19,25 +19,24 @@ public:
     void BtnOn();
     void BtnOff();
     
-    void Demarrage();
+    void Initialisation();
 
     void BtnMenuNonAppuye();
     void BtnMenuAppuye();
 
     void BtnModesNonAppuye();
     void BtnModesAppuye();
-
+    
     void BtnLibreNonAppuye();
     void BtnLibreAppuye();
-
     void BtnEnregistrerNonAppuye();
     void BtnEnregistrerAppuye();
-
     void BtnEtenduNonAppuye();
     void BtnEtenduAppuye();
-
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
+
+    void BtnChoisir();
 
     void BtnDemarrerNonAppuye();
     void BtnDemarrerAppuye();
@@ -49,33 +48,27 @@ public:
     void AffichageDemo();
     void AffichageDebug();
 
-    void FermerAffichage();
-
-    void FermerMode();
-
-    
-    //void BtnFermer();
-    void BtnChoisir();
-    void BtnBatterie(int8_t batterie, uint8_t ligne);
+    void IconeBatterie(int8_t batterie, uint8_t ligne);
     void BatterieInteractif(int8_t batterie, int8_t last_batterie, uint8_t ligne, uint8_t last_ligne);
     void BatteryLow();
-    void Batterie(int8_t batterie);
-    void Fermer();
-    void LogoOn();
-    void LogoOff();
+
+    void EffacerEcran();
 
     void Menu();
     void FermerMenu();
+
     void Modes();
     void Libre();
     void Enregistrer();
-    void Etendu();
+    void Demo();
     void Debogage();
-    void Choisir();
-    void SortirEtat();
 
+    void Choisir();
 
     void Test(uint8_t variable);
+
+    void LogoOn();
+    void LogoOff();
 
 private:
     SPI_TFT_ILI9341 TFT;

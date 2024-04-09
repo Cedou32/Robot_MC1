@@ -16,7 +16,6 @@ void DisplayInterface::BtnOn()
     TFT.locate(75, 110);
     TFT.printf("ON");
 }
-
 void DisplayInterface::BtnOff()
 {
     TFT.rect(190, 100, 260, 140, Black);
@@ -26,7 +25,7 @@ void DisplayInterface::BtnOff()
     TFT.printf("OFF");
 }
 
-void DisplayInterface::Demarrage()
+void DisplayInterface::Initialisation()
 {
     TFT.background(White);
     TFT.cls();
@@ -43,7 +42,6 @@ void DisplayInterface::BtnMenuNonAppuye()
     TFT.locate(220, 15);
     TFT.printf("Menu");
 }
-
 void DisplayInterface::BtnMenuAppuye()
 {
     TFT.set_font((unsigned char *)Arial24x23);
@@ -51,8 +49,6 @@ void DisplayInterface::BtnMenuAppuye()
     TFT.locate(220, 15);
     TFT.printf("Menu");
 }
-
-
 
 void DisplayInterface::BtnModesNonAppuye()
 {
@@ -63,7 +59,6 @@ void DisplayInterface::BtnModesNonAppuye()
     TFT.locate(185, 65);
     TFT.printf("Modes");
 }
-
 void DisplayInterface::BtnModesAppuye()
 {
     TFT.rect(180, 60, 300, 90, LightGrey);
@@ -83,7 +78,6 @@ void DisplayInterface::BtnLibreNonAppuye()
     TFT.locate(60, 112);
     TFT.printf("Libre");
 }
-
 void DisplayInterface::BtnLibreAppuye()
 {
     TFT.rect(50, 110, 150, 135, LightGrey);
@@ -93,7 +87,6 @@ void DisplayInterface::BtnLibreAppuye()
     TFT.locate(60, 112);
     TFT.printf("Libre");
 }
-
 void DisplayInterface::BtnEnregistrerNonAppuye()
 {
     TFT.rect(170, 110, 270, 135, Black);
@@ -103,7 +96,6 @@ void DisplayInterface::BtnEnregistrerNonAppuye()
     TFT.locate(175, 112);
     TFT.printf("Enreg");
 }
-
 void DisplayInterface::BtnEnregistrerAppuye()
 {
     TFT.rect(170, 110, 270, 135, LightGrey);
@@ -113,7 +105,6 @@ void DisplayInterface::BtnEnregistrerAppuye()
     TFT.locate(175, 112);
     TFT.printf("Enreg");
 }
-
 void DisplayInterface::BtnEtenduNonAppuye()
 {
     TFT.rect(50, 145, 150, 170, Black);
@@ -123,7 +114,6 @@ void DisplayInterface::BtnEtenduNonAppuye()
     TFT.locate(60, 147);
     TFT.printf("Demo");
 }
-
 void DisplayInterface::BtnEtenduAppuye()
 {
     TFT.rect(50, 145, 150, 170, LightGrey);
@@ -133,7 +123,6 @@ void DisplayInterface::BtnEtenduAppuye()
     TFT.locate(60, 147);
     TFT.printf("Demo");
 }
-
 void DisplayInterface::BtnDebogageNonAppuye()
 {
     TFT.rect(170, 145, 270, 170, Black);
@@ -143,7 +132,6 @@ void DisplayInterface::BtnDebogageNonAppuye()
     TFT.locate(175, 147);
     TFT.printf("Debug");
 }
-
 void DisplayInterface::BtnDebogageAppuye()
 {
     TFT.rect(170, 145, 270, 170, LightGrey);
@@ -152,6 +140,16 @@ void DisplayInterface::BtnDebogageAppuye()
     TFT.foreground(LightGrey);
     TFT.locate(175, 147);
     TFT.printf("Debug");
+}
+
+void DisplayInterface::BtnChoisir()
+{
+    TFT.rect(240, 190, 310, 220, Black);
+    TFT.rect(239, 189, 311, 221, Black);
+    TFT.set_font((unsigned char *)Arial12x12);
+    TFT.foreground(Black);
+    TFT.locate(252, 200);
+    TFT.printf("Choisir");
 }
 
 void DisplayInterface::BtnDemarrerNonAppuye(){
@@ -163,7 +161,6 @@ void DisplayInterface::BtnDemarrerNonAppuye(){
     TFT.rect(85, 100, 235, 130, Black);
     TFT.rect(84, 99, 236, 131, Black);
 }
-
 void DisplayInterface::BtnDemarrerAppuye(){
     
     TFT.set_font((unsigned char *)Arial24x23);
@@ -213,38 +210,7 @@ void DisplayInterface::AffichageDebug()
     TFT.printf("Mode: Debug");
 }
 
-void DisplayInterface::FermerAffichage()
-{
-    TFT.fillrect(30, 60, 300, 150, White);
-}
-
-
-
-void DisplayInterface::FermerMode()
-{
-    TFT.fillrect(49, 109, 271, 171, White);
-}
-
-/*void DisplayInterface::BtnFermer()
-{
-    TFT.rect(240, 210, 310, 230, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Black);
-    TFT.locate(252, 215);
-    TFT.printf("Fermer");
-}*/
-
-void DisplayInterface::BtnChoisir()
-{
-    TFT.rect(240, 190, 310, 220, Black);
-    TFT.rect(239, 189, 311, 221, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Black);
-    TFT.locate(252, 200);
-    TFT.printf("Choisir");
-}
-
-void DisplayInterface::BtnBatterie(int8_t batterie, uint8_t ligne)
+void DisplayInterface::IconeBatterie(int8_t batterie, uint8_t ligne)
 {
     TFT.rect(10, 5, 50, 20, Black);
     TFT.rect(50, 10, 55, 15, Black);
@@ -275,7 +241,6 @@ void DisplayInterface::BtnBatterie(int8_t batterie, uint8_t ligne)
         TFT.fillrect(50, 11, ligne, 14, Green);
     }
 }
-
 void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie, uint8_t ligne, uint8_t last_ligne)
 {
     // uint8_t ligne = batterie * 0.43 + 11;
@@ -323,31 +288,87 @@ void DisplayInterface::BatterieInteractif(int8_t batterie, int8_t last_batterie,
         TFT.line(ligne, 11, ligne, 14, couleur);
     }
 }
-
 void DisplayInterface::BatteryLow()
 {
-    TFT.fillrect(10, 5, 55, 20, Black);
+    TFT.fillrect(10, 5, 55, 20, White);
 }
 
-void DisplayInterface::Batterie(int8_t batterie)
+void DisplayInterface::EffacerEcran()
 {
-    TFT.rect(240, 180, 310, 200, Black);
-    TFT.set_font((unsigned char *)Arial12x12);
-    TFT.foreground(Black);
-    TFT.locate(252, 185);
-    TFT.printf("%u", batterie);
-}
-
-void DisplayInterface::Fermer()
-{
-    // Btn Vitesse
-    TFT.fillrect(19, 59, 141, 91, White);
-    // Btn Mode
+    TFT.fillrect(10, 60, 320, 240, White);
+    /*// Btn Mode
     TFT.fillrect(179, 59, 301, 91, White);
     // La zone vitesses et modes
     TFT.fillrect(49, 109, 271, 171, White);
     // btn choisir
     TFT.fillrect(239, 189, 311, 221, White);
+    //message fin enregistrement
+    TFT.fillrect(20, 100, 320, 130, White);
+    //message afichage
+    TFT.fillrect(30, 60, 300, 150, White);*/
+
+}
+
+void DisplayInterface::Menu()
+{
+    DisplayInterface::LogoOff();
+    DisplayInterface::EffacerEcran();
+    DisplayInterface::BtnMenuAppuye();
+    DisplayInterface::BtnModesNonAppuye();
+}
+void DisplayInterface::FermerMenu()
+{
+    DisplayInterface::EffacerEcran();
+    DisplayInterface::BtnMenuNonAppuye();
+    DisplayInterface::LogoOn();
+}
+
+//Controler des appuies des modes
+void DisplayInterface::Modes()
+{
+    DisplayInterface::BtnModesAppuye();
+    DisplayInterface::BtnLibreNonAppuye();
+    DisplayInterface::BtnEnregistrerNonAppuye();
+    DisplayInterface::BtnEtenduNonAppuye();
+    DisplayInterface::BtnDebogageNonAppuye();
+}
+void DisplayInterface::Libre()
+{
+    DisplayInterface::BtnLibreAppuye();
+    DisplayInterface::BtnEnregistrerNonAppuye();
+    DisplayInterface::BtnEtenduNonAppuye();
+    DisplayInterface::BtnDebogageNonAppuye();
+    DisplayInterface::BtnChoisir();
+}
+void DisplayInterface::Enregistrer()
+{
+    DisplayInterface::BtnLibreNonAppuye();
+    DisplayInterface::BtnEnregistrerAppuye();
+    DisplayInterface::BtnEtenduNonAppuye();
+    DisplayInterface::BtnDebogageNonAppuye();
+    DisplayInterface::BtnChoisir();
+}
+void DisplayInterface::Demo()
+{
+    DisplayInterface::BtnLibreNonAppuye();
+    DisplayInterface::BtnEnregistrerNonAppuye();
+    DisplayInterface::BtnEtenduAppuye();
+    DisplayInterface::BtnDebogageNonAppuye();
+    DisplayInterface::BtnChoisir();
+}
+void DisplayInterface::Debogage()
+{
+    DisplayInterface::BtnLibreNonAppuye();
+    DisplayInterface::BtnEnregistrerNonAppuye();
+    DisplayInterface::BtnEtenduNonAppuye();
+    DisplayInterface::BtnDebogageAppuye();
+    DisplayInterface::BtnChoisir();
+}
+
+void DisplayInterface::Choisir()
+{
+    DisplayInterface::EffacerEcran();
+    DisplayInterface::BtnMenuNonAppuye();
 }
 
 void DisplayInterface::Test(uint8_t variable)
@@ -359,82 +380,12 @@ void DisplayInterface::Test(uint8_t variable)
     TFT.printf("Test %u", variable);
 }
 
-void DisplayInterface::Menu()
+void DisplayInterface::LogoOff()
 {
-    DisplayInterface::LogoOff();
-    DisplayInterface::FermerAffichage();
-    DisplayInterface::BtnMenuAppuye();
-    DisplayInterface::BtnModesNonAppuye();
-    // DisplayInterface::BtnFermer();
-    /*DisplayInterface::BtnOn();
-    DisplayInterface::BtnOff();*/
-}
+    TFT.fillrect(70, 10, 200, 80, White);
 
-void DisplayInterface::FermerMenu()
-{
-    DisplayInterface::Fermer();
-    DisplayInterface::BtnMenuNonAppuye();
-    DisplayInterface::LogoOn();
+    TFT.fillrect(70, 80, 250, 230, White);
 }
-
-void DisplayInterface::Modes()
-{
-    DisplayInterface::BtnModesAppuye();
-    DisplayInterface::BtnLibreNonAppuye();
-    DisplayInterface::BtnEnregistrerNonAppuye();
-    DisplayInterface::BtnEtenduNonAppuye();
-    DisplayInterface::BtnDebogageNonAppuye();
-}
-
-void DisplayInterface::Libre()
-{
-    DisplayInterface::BtnLibreAppuye();
-    DisplayInterface::BtnEnregistrerNonAppuye();
-    DisplayInterface::BtnEtenduNonAppuye();
-    DisplayInterface::BtnDebogageNonAppuye();
-    DisplayInterface::BtnChoisir();
-}
-
-void DisplayInterface::Enregistrer()
-{
-    DisplayInterface::BtnLibreNonAppuye();
-    DisplayInterface::BtnEnregistrerAppuye();
-    DisplayInterface::BtnEtenduNonAppuye();
-    DisplayInterface::BtnDebogageNonAppuye();
-    DisplayInterface::BtnChoisir();
-}
-
-void DisplayInterface::Etendu()
-{
-    DisplayInterface::BtnLibreNonAppuye();
-    DisplayInterface::BtnEnregistrerNonAppuye();
-    DisplayInterface::BtnEtenduAppuye();
-    DisplayInterface::BtnDebogageNonAppuye();
-    DisplayInterface::BtnChoisir();
-}
-
-void DisplayInterface::Debogage()
-{
-    DisplayInterface::BtnLibreNonAppuye();
-    DisplayInterface::BtnEnregistrerNonAppuye();
-    DisplayInterface::BtnEtenduNonAppuye();
-    DisplayInterface::BtnDebogageAppuye();
-    DisplayInterface::BtnChoisir();
-}
-void DisplayInterface::SortirEtat()
-{
-    DisplayInterface::Fermer();
-    DisplayInterface::BtnMenuNonAppuye();
-    DisplayInterface::LogoOn();
-}
-void DisplayInterface::Choisir()
-{
-    DisplayInterface::Fermer();
-    DisplayInterface::BtnMenuNonAppuye();
-    // DisplayInterface::BtnFermer();
-    //  DisplayInterface::LogoOn();
-}
-
 void DisplayInterface::LogoOn()
 {
     // Base
@@ -1049,10 +1000,4 @@ void DisplayInterface::LogoOn()
     TFT.line(170, 17, 174, 17, Black);
     TFT.line(171, 16, 174, 16, Black);
     TFT.line(172, 15, 173, 15, Black);
-}
-void DisplayInterface::LogoOff()
-{
-    TFT.fillrect(70, 10, 200, 80, White);
-
-    TFT.fillrect(70, 80, 250, 230, White);
 }

@@ -11,22 +11,20 @@
 
 enum EtatLib
 {
-    demarrage,
-    attente,
-    detectionAppui,
-    menu,
-    vitesse,
-    modes,
-    libre,
-    enregistrer,
-    etendu,
-    debogage,
-    enregistrement,
-    finenregistrement,
-    ok,
-    mvtRobot,
-    lectureLibre,
-    battery,
+    caseDemarrage,
+    caseAttente,
+    caseDetectionAppui,
+    caseBatterie,
+    caseMenu,
+    caseModes,
+    caseLibre,
+    caseDemo,
+    caseDebogage,
+    caseEnregistrer,
+    caseSelection,
+    caseEnvoiPosition,
+    caseEnregistrement,
+    caseFinEnregistrement,
     LedOn,
     LedOff
 };
@@ -34,7 +32,7 @@ enum EtatLib
 class TouchInterface
 {
 public:
-    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, bool flagEnregistremnent);
+    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent);
 };
 
 #endif
