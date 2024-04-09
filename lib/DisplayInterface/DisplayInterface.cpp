@@ -295,7 +295,7 @@ void DisplayInterface::BatteryLow()
 
 void DisplayInterface::EffacerEcran()
 {
-    TFT.fillrect(10, 60, 320, 240, White);
+    TFT.fillrect(10, 59, 320, 240, White);
     /*// Btn Mode
     TFT.fillrect(179, 59, 301, 91, White);
     // La zone vitesses et modes

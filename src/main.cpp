@@ -69,7 +69,7 @@ void FinEnregistrement()
   LED = !LED;
   flagFinEnregistrement = true;
   InterruptionEnregistrement.detach();
-  flagSelectionMode == 0;
+  flagSelectionMode = 0;
 }
 
 int main()
@@ -137,7 +137,6 @@ int main()
       }
       else if (flagSelectionMode == 0 && flagFinEnregistrement)
       {
-
         etat = caseFinEnregistrement;
       }
       break;
