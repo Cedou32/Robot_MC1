@@ -40,7 +40,7 @@ bool flagModes = false; // flag pour indiquer si le bouton "Modes" a ete appuye
 bool flagBatterie = false;
 uint8_t flagSelectionMode = 0; // flag pour indiquer la selection du mode
 bool flagSelection = false;    // flag pour dire qu'une selection a ete faite
-bool flagFinEnregistrement = false;
+bool flagEnregistrement = false;
 // Trames
 uint8_t data[15];
 
@@ -67,9 +67,9 @@ void VerifBatterie()
 void FinEnregistrement()
 {
   LED = !LED;
-  flagFinEnregistrement = true;
+  flagEnregistrement = false;
   InterruptionEnregistrement.detach();
-  flagSelectionMode = 0;
+  flagSelectionMode = 5;
 }
 
 int main()
@@ -131,11 +131,11 @@ int main()
       {
         etat = caseEnvoiPosition;
       }
-      else if (flagSelectionMode == 4 && !flagFinEnregistrement)
+      else if (flagSelectionMode == 4 && flagEnregistrement)
       {
         etat = caseEnvoiPosition;
       }
-      else if (flagSelectionMode == 0 && flagFinEnregistrement)
+      else if (flagSelectionMode == 5 && !flagEnregistrement)
       {
         etat = caseFinEnregistrement;
       }
@@ -267,15 +267,19 @@ int main()
       thread_sleep_for(250);
       Ecran.FermerBtnDemarrer();
       LED = 1;
-      flagFinEnregistrement = false;
+      flagEnregistrement = true;
       InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
-
+      data[4] = 1;
+      pc.write(data, sizeof(data));
       etat = caseAttente;
       break;
 
     case caseFinEnregistrement:
-      flagFinEnregistrement = false;
+      flagEnregistrement = false;
+      flagSelectionMode = 0;
       Ecran.FinEnregistrement();
+      data[4] = 0;
+      pc.write(data, sizeof(data));
       etat = caseAttente;
       break;
 
