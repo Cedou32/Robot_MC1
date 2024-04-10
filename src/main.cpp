@@ -18,6 +18,12 @@ PwmOut ServoPince(PC_6);
 Ticker InterruptionServo;
 Ticker InterruptionStepperEpaule, InterruptionStepperBase;
 
+SPI spi(PA_7, PA_6, PA_5); // mosi, miso, sck
+DigitalOut cs2(PC_4);
+DigitalOut cs3(PC_5);
+uint8_t ecriture[5];
+uint8_t lecture[5];
+
 char startMarker[] = "#@+";
 char endMarker[] = "?%";
 char currentChar;
@@ -36,7 +42,7 @@ float servoInterval = 0.001;
 float stepperInterval = 0.001;
 
 float vitesse = 0.0;
-uint16_t valeur_encodeur = 751;
+uint16_t valeur_encodeur = 750;
 uint8_t ancien_mode = 0;
 uint16_t resultat_encodeur = 0;
 
@@ -306,39 +312,7 @@ void MouvementMoteur(void)
       flagStepperBase = 0;
       ConfigVitesseStepperBase(data[6]);
     }
-  } /*else if ((data[6] >= 207 && data[96] < 219) || (data[6] >= 36 && data[6] < 48) )
-  {
-    flagVitesseStepperBase = 7;
-    if (flagStepperBase == 8)
-    {
-      flagStepperBase = 0;
-      ConfigVitesseStepperBase(data[6]);
-    }
-  } else if ((data[6] >= 219 && data[6] < 231) || (data[6] >= 24 && data[6] < 36) )
-  {
-    flagVitesseStepperBase = 8;
-    if (flagStepperBase == 7)
-    {
-      flagStepperBase = 0;
-      ConfigVitesseStepperBase(data[6]);
-    }
-  } else if ((data[6] >= 231 && data[6] < 243) || (data[6] >= 12 && data[6] < 24) )
-  {
-    flagVitesseStepperBase = 9;
-    if (flagStepperBase == 6)
-    {
-      flagStepperBase = 0;
-      ConfigVitesseStepperBase(data[6]);
-    }
-  } else if ((data[6] >= 243) || (data[6] >= 0 && data[6] < 12) )
-  {
-    flagVitesseStepperBase = 10;
-    if (flagStepperBase == 5)
-    {
-      flagStepperBase = 0;
-      ConfigVitesseStepperBase(data[6]);
-    }
-  }*/
+  }
 
   if (flagServo == 1)
   {
@@ -520,8 +494,79 @@ void MouvementMoteur(void)
   }
 }
 
+void EcritureEEPROM(uint8_t ecriture[])
+{
+  cs2 = 0;
+  spi.write(0x06);
+  cs2 = 1;
+
+  cs2 = 0;
+  spi.write(0x02);
+  spi.write(0x00);
+  spi.write(0x01);
+  spi.write(0x00);
+  for (int i = 0; i < sizeof(ecriture); i++)
+  {
+    spi.write(ecriture[i]);
+  }
+  cs2 = 1;
+
+  /*cs2 = 0;
+  spi.write(0x06);
+  cs2 = 1;
+
+  cs2 = 0;
+  spi.write(0x02);
+  spi.write(0x00);
+  spi.write(0x02);
+  spi.write(0x00);
+  for (int i = 250; i < 500; i++)
+  {
+    spi.write(ecriture[i]);
+  }
+  cs2 = 1;*/
+}
+
+void LectureEEPROM()
+{
+  cs2 = 0;         // Select EEPROM
+  spi.write(0x03); // Read command
+  spi.write(0x00);
+  spi.write(0x01);
+  spi.write(0x00);
+  for (int i = 0; i < 250; i++)
+  {
+    lecture[i] = spi.write(0);
+  }
+  cs2 = 1; // Deselect EEPROM
+
+  cs2 = 0;         // Select EEPROM
+  spi.write(0x03); // Read command
+  spi.write(0x00);
+  spi.write(0x02);
+  spi.write(0x00);
+  for (int i = 250; i < 500; i++)
+  {
+    lecture[i] = spi.write(0);
+  }
+  cs2 = 1;
+}
+
 int main()
 {
+
+  spi.format(8, 0);
+  spi.frequency(5000000);
+
+  /*for (int i = 0; i < 250; i++)
+  {
+    ecriture[i] = i;
+  }
+  for (int i = 250; i < 500; i++)
+  {
+    ecriture[i] = 500-i;
+  }*/
+
   InterruptionServo.attach(&VerifServo, 0.001);
   InterruptionStepperBase.attach(&VerifStepper, 0.0002);
 
@@ -538,8 +583,8 @@ int main()
     switch (etat_actuel)
     {
     case depart:
-      LED = 1;
-      for (int i = 0; i < valeur_encodeur; i++)
+      // LED = 1;
+      for (int i = 0; i <= valeur_encodeur; i++)
       {
         stepPinC = 1;
         thread_sleep_for(1);
@@ -595,61 +640,100 @@ int main()
       etat_actuel = detection_mode;
       break;
     case detection_mode:
-      if (data[0] == 1){
-        if(ancien_mode > 1){
+      if (data[0] == 1)
+      {
+        if (ancien_mode > 1)
+        {
           etat_actuel = retour_maison;
-        }else if (ancien_mode == 1){
+        }
+        else if (ancien_mode == 1)
+        {
           etat_actuel = libre;
-        }else if (ancien_mode == 0){
+        }
+        else if (ancien_mode == 0)
+        {
           etat_actuel = libre;
         }
         ancien_mode = 1;
-      }else if (data[0] == 2){
-        if(ancien_mode > 2 || ancien_mode < 2){
+      }
+      else if (data[0] == 2)
+      {
+        if (ancien_mode > 2 || ancien_mode < 2)
+        {
           etat_actuel = retour_maison;
-        }else if (ancien_mode == 2){
+        }
+        else if (ancien_mode == 2)
+        {
           etat_actuel = demo;
-        }else if (ancien_mode == 0){
+        }
+        else if (ancien_mode == 0)
+        {
           etat_actuel = demo;
         }
-        ancien_mode = 2;    
-      }else if (data[0] == 3){
-        if(ancien_mode > 3 || ancien_mode < 3){
+        ancien_mode = 2;
+      }
+      else if (data[0] == 3)
+      {
+        if (ancien_mode > 3 || ancien_mode < 3)
+        {
           etat_actuel = retour_maison;
-        }else if (ancien_mode == 3){
-          etat_actuel = deboguage;
-        }else if (ancien_mode == 0){
+        }
+        else if (ancien_mode == 3)
+        {
           etat_actuel = deboguage;
         }
-        ancien_mode = 3;    
-      }else if (data[0] == 4){
-        if(ancien_mode < 4){
+        else if (ancien_mode == 0)
+        {
+          etat_actuel = deboguage;
+        }
+        ancien_mode = 3;
+      }
+      else if (data[0] == 4)
+      {
+        if (ancien_mode < 4)
+        {
           etat_actuel = retour_maison;
-        }else if (ancien_mode == 4){
-          etat_actuel = enregistrement;
-        }else if (ancien_mode == 0){
+        }
+        else if (ancien_mode == 4)
+        {
           etat_actuel = enregistrement;
         }
-        ancien_mode = 4;   
-      }else{
+        else if (ancien_mode == 0)
+        {
+          etat_actuel = enregistrement;
+        }
+        ancien_mode = 4;
+      }
+      else
+      {
         etat_actuel = lecture_trame;
       }
-        break;
+      break;
     case libre:
       LED = 0;
       MouvementMoteur();
       etat_actuel = lecture_trame;
       break;
     case enregistrement:
-      LED = 0;
+      LED = !LED;
+      if (data[1] == 1)
+      {
+        MouvementMoteur();
+        
+      // ecriture[0] = int((dutyCyclePince * 2684.210526) - 80.526316);
+      // ecriture[1] = int((dutyCyclePoignet * 2833.333333) - 70.833333);
+      // ecriture[2] = int((dutyCycleCoude * 5666.666666) - 453.333333);
+      // EcritureEEPROM(ecriture);
+      }
+
       etat_actuel = lecture_trame;
       break;
     case demo:
-      LED = 0;  
+      LED = 0;
       break;
     case deboguage:
       LED = 0;
-      break;  
+      break;
     case retour_maison:
       LED = 1;
       resultat_encodeur = 751 - valeur_encodeur;
@@ -668,7 +752,7 @@ int main()
       ServoPince.write(0.12);
       thread_sleep_for(500);
       ServoPince.write(0.08);
-      thread_sleep_for(500); 
+      thread_sleep_for(500);
       break;
     }
   }
