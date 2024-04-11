@@ -19,8 +19,8 @@ Ticker InterruptionServo;
 Ticker InterruptionStepperEpaule, InterruptionStepperBase;
 
 SPI spi(PA_7, PA_6, PA_5); // mosi, miso, sck
-DigitalOut cs2(PC_4);
-DigitalOut cs3(PC_5);
+DigitalOut cs2(PC_4);   //CS U2
+DigitalOut cs3(PC_5);   //CS U3  
 uint8_t ecriture[5];
 uint8_t lecture[5];
 
@@ -42,9 +42,11 @@ float servoInterval = 0.001;
 float stepperInterval = 0.001;
 
 float vitesse = 0.0;
-uint16_t valeur_encodeur = 750;
+int16_t valeur_encodeur = 0;
 uint8_t ancien_mode = 0;
-uint16_t resultat_encodeur = 0;
+int16_t resultat_encodeur = 0;
+
+uint8_t buffer_encodeur [4];
 
 enum etat
 {
@@ -183,19 +185,19 @@ void ConfigVitesseStepperEpaule(uint8_t valeur_joystick)
   else if (valeur_joystick >= 0 && valeur_joystick < 120)
   {
     dirPinC = 0;
-    valeur_encodeur -= 1;
+    valeur_encodeur += 1;
   }
   else if (valeur_joystick >= 135 && valeur_joystick <= 255)
   {
     dirPinC = 1;
-    valeur_encodeur += 1;
+    valeur_encodeur -= 1;
   }
   stepPinC = !stepPinC;
 }
 
 void MouvementMoteur(void)
 {
-  //**********Servo Épaule************//
+  //**********Stepper Épaule************//
   if (data[9] >= 120 && data[9] <= 135)
   {
     stepPinC = 0;
@@ -254,7 +256,7 @@ void MouvementMoteur(void)
       ConfigVitesseStepperEpaule(data[9]);
     }
   }
-  //**********Servo Base************//
+  //**********Stepper 360************//
   if (data[6] >= 120 && data[6] <= 135)
   {
     stepPinB = 0;
@@ -496,6 +498,7 @@ void MouvementMoteur(void)
 
 void EcritureEEPROM(uint8_t ecriture[])
 {
+  LED = !LED;
   cs2 = 0;
   spi.write(0x06);
   cs2 = 1;
@@ -584,7 +587,7 @@ int main()
     {
     case depart:
       // LED = 1;
-      for (int i = 0; i <= valeur_encodeur; i++)
+      for (int i = 0; i <= 750; i++)
       {
         stepPinC = 1;
         thread_sleep_for(1);
@@ -658,7 +661,7 @@ int main()
       }
       else if (data[0] == 2)
       {
-        if (ancien_mode > 2 || ancien_mode < 2)
+        if (ancien_mode > 2 || (ancien_mode < 2 && ancien_mode > 0))
         {
           etat_actuel = retour_maison;
         }
@@ -674,7 +677,7 @@ int main()
       }
       else if (data[0] == 3)
       {
-        if (ancien_mode > 3 || ancien_mode < 3)
+        if (ancien_mode > 3 || (ancien_mode < 3 && ancien_mode > 0))
         {
           etat_actuel = retour_maison;
         }
@@ -690,7 +693,7 @@ int main()
       }
       else if (data[0] == 4)
       {
-        if (ancien_mode < 4)
+        if (ancien_mode < 4 && ancien_mode > 0)
         {
           etat_actuel = retour_maison;
         }
@@ -719,13 +722,15 @@ int main()
       if (data[1] == 1)
       {
         MouvementMoteur();
-        
-      // ecriture[0] = int((dutyCyclePince * 2684.210526) - 80.526316);
-      // ecriture[1] = int((dutyCyclePoignet * 2833.333333) - 70.833333);
-      // ecriture[2] = int((dutyCycleCoude * 5666.666666) - 453.333333);
-      // EcritureEEPROM(ecriture);
-      }
 
+        ecriture[0] = data[6];
+        ecriture[1] = data[7];
+        ecriture[2] = data[8];
+        ecriture[3] = data[9];
+        EcritureEEPROM(ecriture);
+      }/*else {
+        LectureEEPROM();
+      }*/
       etat_actuel = lecture_trame;
       break;
     case demo:
@@ -736,8 +741,14 @@ int main()
       break;
     case retour_maison:
       LED = 1;
-      resultat_encodeur = 751 - valeur_encodeur;
-      dirPinC = 1;
+      resultat_encodeur = (abs(valeur_encodeur)) / 2;
+
+      if (resultat_encodeur > 0){
+        dirPinC = 1;
+      }else if (resultat_encodeur < 0){
+        resultat_encodeur = resultat_encodeur;
+        dirPinC = 0;
+      }
       for (int i = 0; i < resultat_encodeur; i++)
       {
         stepPinC = 1;
@@ -753,6 +764,7 @@ int main()
       thread_sleep_for(500);
       ServoPince.write(0.08);
       thread_sleep_for(500);
+      etat_actuel = detection_mode;
       break;
     }
   }
