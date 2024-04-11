@@ -180,6 +180,27 @@ void DisplayInterface::FinEnregistrement(){
     TFT.printf("Enregistrement fini");
 }
 
+void DisplayInterface::BtnRejouerNonAppuye(){
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(Black);
+    TFT.locate(90, 104);
+    TFT.printf("Rejouer");
+    TFT.rect(85, 140, 235, 170, Black);
+    TFT.rect(84, 139, 236, 171, Black);
+}
+void DisplayInterface::BtnRejouerAppuye(){
+    TFT.set_font((unsigned char *)Arial24x23);
+    TFT.foreground(LightGrey);
+    TFT.locate(90, 104);
+    TFT.printf("Rejouer");
+    TFT.rect(85, 140, 235, 170, LightGrey);
+    TFT.rect(84, 139, 236, 171, LightGrey);
+}
+
+void DisplayInterface::FermerBtnRejouer(){
+    TFT.fillrect(84, 139, 236, 171, White);
+}
+
 void DisplayInterface::AffichageLibre()
 {
     TFT.set_font((unsigned char *)Arial24x23);
@@ -194,6 +215,7 @@ void DisplayInterface::AffichageEnregistrer()
     TFT.locate(30, 60);
     TFT.printf("Mode: Enregistrer");
     DisplayInterface::BtnDemarrerNonAppuye();
+    DisplayInterface::BtnRejouerNonAppuye();
 }
 void DisplayInterface::AffichageDemo()
 {

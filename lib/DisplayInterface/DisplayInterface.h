@@ -43,6 +43,10 @@ public:
     void FermerBtnDemarrer();
     void FinEnregistrement();
 
+    void BtnRejouerNonAppuye();
+    void BtnRejouerAppuye();
+    void FermerBtnRejouer();
+
     void AffichageLibre();
     void AffichageEnregistrer();
     void AffichageDemo();

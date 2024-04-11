@@ -36,6 +36,10 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     {
         return caseEnregistrement;
     }
+    else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171 && flagEnregistrement == 4)
+    {
+        return caseRejouer;
+    }
     else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221)
     {
         return caseSelection;

@@ -25,6 +25,7 @@ enum EtatLib
     caseEnvoiPosition,
     caseEnregistrement,
     caseFinEnregistrement,
+    caseRejouer,
     LedOn,
     LedOff
 };

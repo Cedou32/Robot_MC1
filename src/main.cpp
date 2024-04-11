@@ -283,6 +283,16 @@ int main()
       etat = caseAttente;
       break;
 
+    case caseRejouer:
+      Ecran.BtnRejouerAppuye();
+      thread_sleep_for(250);
+      Ecran.FermerBtnRejouer();
+      data[5] = 1;
+      pc.write(data, sizeof(data));
+      data[5] = 0;
+      etat = caseAttente;
+      break;
+
     case LedOn:
       data[7] = 1;
       pc.write(data, sizeof(data));
