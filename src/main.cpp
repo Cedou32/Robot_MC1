@@ -34,6 +34,7 @@ int flagStepperEpaule = 0, flagStepperBase = 0;
 int flagServo = 0;
 uint8_t flagVitesseStepperEpaule = 0, flagVitesseStepperBase = 0;
 
+
 float dutyCycleCoude = 0.03;   // Min = 0.03   Max = 0.125
 float dutyCyclePoignet = 0.09; // Min = 0.025   Max = 0.115
 float dutyCyclePince = 0.08;   // Fermer = 0.08     Ouvrir = 0.125
@@ -46,7 +47,11 @@ int16_t valeur_encodeur = 0;
 uint8_t ancien_mode = 0;
 int16_t resultat_encodeur = 0;
 
-uint8_t buffer_encodeur [4];
+//*****Enregistrement******//
+uint8_t buffer_enregsitrement [500];
+uint8_t flag_reception_trame = 0;
+uint8_t curseur_enregistrement = 0;
+uint8_t flag_10_sec_termine = 0;
 
 enum etat
 {
@@ -58,6 +63,7 @@ enum etat
   demo,
   deboguage,
   retour_maison,
+  rejouer_sequence,
   lecture_vitesse
 };
 
@@ -561,15 +567,6 @@ int main()
   spi.format(8, 0);
   spi.frequency(5000000);
 
-  /*for (int i = 0; i < 250; i++)
-  {
-    ecriture[i] = i;
-  }
-  for (int i = 250; i < 500; i++)
-  {
-    ecriture[i] = 500-i;
-  }*/
-
   InterruptionServo.attach(&VerifServo, 0.001);
   InterruptionStepperBase.attach(&VerifStepper, 0.0002);
 
@@ -620,6 +617,7 @@ int main()
         else if (currentChar == '+' && flag_protection == 2)
         {
           flag_protection++;
+          flag_reception_trame = 1;
           for (int i = 0; i <= 9; i++)
           {
             pc.read(&currentChar, 1);
@@ -718,26 +716,38 @@ int main()
       etat_actuel = lecture_trame;
       break;
     case enregistrement:
-      LED = !LED;
+      LED = 0;
       if (data[1] == 1)
       {
         MouvementMoteur();
-
-        ecriture[0] = data[6];
-        ecriture[1] = data[7];
-        ecriture[2] = data[8];
-        ecriture[3] = data[9];
-        EcritureEEPROM(ecriture);
-      }/*else {
-        LectureEEPROM();
-      }*/
-      etat_actuel = lecture_trame;
+        if (flag_reception_trame == 1){
+          buffer_enregsitrement[curseur_enregistrement] = data[5];
+          buffer_enregsitrement[curseur_enregistrement + 1] = data[6];
+          buffer_enregsitrement[curseur_enregistrement + 1] = data[7];
+          buffer_enregsitrement[curseur_enregistrement + 1] = data[8];
+          buffer_enregsitrement[curseur_enregistrement + 1] = data[9];
+          curseur_enregistrement += 1;
+          flag_reception_trame = 0;
+        }
+        flag_10_sec_termine = 1;
+        etat_actuel = lecture_trame;
+      }else if(flag_10_sec_termine == 1 && data[1] == 0){
+        flag_10_sec_termine = 0;
+        etat_actuel = rejouer_sequence;
+      }else if (data[1] == 0){
+        etat_actuel = lecture_trame;
+      }
       break;
     case demo:
       LED = 0;
       break;
     case deboguage:
       LED = 0;
+      break;
+    case rejouer_sequence:
+      LED = 0;
+      pc.write(buffer_enregsitrement,500);
+      while (1);
       break;
     case retour_maison:
       LED = 1;
