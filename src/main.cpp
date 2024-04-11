@@ -721,12 +721,22 @@ int main()
       {
         MouvementMoteur();
         if (flag_reception_trame == 1){
-          buffer_enregsitrement[curseur_enregistrement] = data[5];
+          buffer_enregsitrement[curseur_enregistrement] = 100;
+          curseur_enregistrement ++;
+          buffer_enregsitrement[curseur_enregistrement] = 125;
+          curseur_enregistrement ++;
+          buffer_enregsitrement[curseur_enregistrement] = 150;
+          curseur_enregistrement ++;
+          buffer_enregsitrement[curseur_enregistrement] = 150;
+          curseur_enregistrement ++;
+          buffer_enregsitrement[curseur_enregistrement] = 150;
+          curseur_enregistrement ++;
+          /*buffer_enregsitrement[curseur_enregistrement] = data[5];
           buffer_enregsitrement[curseur_enregistrement + 1] = data[6];
           buffer_enregsitrement[curseur_enregistrement + 1] = data[7];
           buffer_enregsitrement[curseur_enregistrement + 1] = data[8];
           buffer_enregsitrement[curseur_enregistrement + 1] = data[9];
-          curseur_enregistrement += 1;
+          curseur_enregistrement += 1;*/
           flag_reception_trame = 0;
         }
         flag_10_sec_termine = 1;
