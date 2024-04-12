@@ -183,7 +183,7 @@ void DisplayInterface::FinEnregistrement(){
 void DisplayInterface::BtnRejouerNonAppuye(){
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(Black);
-    TFT.locate(90, 104);
+    TFT.locate(90, 144);
     TFT.printf("Rejouer");
     TFT.rect(85, 140, 235, 170, Black);
     TFT.rect(84, 139, 236, 171, Black);
@@ -191,7 +191,7 @@ void DisplayInterface::BtnRejouerNonAppuye(){
 void DisplayInterface::BtnRejouerAppuye(){
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(LightGrey);
-    TFT.locate(90, 104);
+    TFT.locate(90, 144);
     TFT.printf("Rejouer");
     TFT.rect(85, 140, 235, 170, LightGrey);
     TFT.rect(84, 139, 236, 171, LightGrey);

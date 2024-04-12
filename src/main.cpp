@@ -290,7 +290,7 @@ int main()
       data[5] = 1;
       pc.write(data, sizeof(data));
       data[5] = 0;
-      etat = caseAttente;
+      etat = caseAttente; 
       break;
 
     case LedOn:
