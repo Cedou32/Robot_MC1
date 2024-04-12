@@ -51,6 +51,7 @@ uint8_t buffer_enregsitrement[500];
 uint8_t flag_reception_trame = 0;
 uint16_t curseur_enregistrement = 0;
 uint8_t flag_10_sec_termine = 0;
+uint8_t flag_rejouer_10sec = 0;
 
 //*****Libre******//
 bool flag_libre = 0;
@@ -72,6 +73,7 @@ enum etat
 void VerifServo()
 {
   flagServo = 1;
+  flag_rejouer_10sec += 1;
 }
 
 void VerifStepper()
@@ -724,7 +726,7 @@ int main()
       if (data[1] == 1)
       {
         MouvementMoteur();
-        /*if (flag_reception_trame == 1)
+        if (flag_reception_trame == 1)
         {
           buffer_enregsitrement[curseur_enregistrement] = data[5];
           curseur_enregistrement++;
@@ -738,7 +740,7 @@ int main()
           curseur_enregistrement++;
           flag_reception_trame = 0;
         }
-        flag_10_sec_termine = 1;*/
+        flag_10_sec_termine = 1;
         etat_actuel = lecture_trame;
       }
       else if (flag_10_sec_termine == 1 && data[2] == 1)
@@ -760,18 +762,26 @@ int main()
       etat_actuel = lecture_trame;
       break;
     case rejouer_sequence:
-      LED = 0;
+      LED = 1;
       pc.write(buffer_enregsitrement, 250);
-      for (uint16_t i = 250; i < 500; i++)
+      for (uint16_t i = 0; i < 100; i++)
       {
-        pc.write(&buffer_enregsitrement[i], 1);
+        data[5] = buffer_enregsitrement[i * 5];
+        data[6] = buffer_enregsitrement[(i * 5) + 1];
+        data[7] = buffer_enregsitrement[(i * 5) + 2];
+        data[8] = buffer_enregsitrement[(i * 5) + 3];
+        data[9] = buffer_enregsitrement[(i * 5) + 4];
+        flag_rejouer_10sec = 0;
+        while(flag_rejouer_10sec < 100){
+          MouvementMoteur();
+        }
+        flag_rejouer_10sec = 0;
       }
 
-      while (1)
-        ;
+      etat_actuel = lecture_trame;
       break;
     case retour_maison:
-      LED = 1;
+      LED = 0;
       if (valeur_encodeur > 0)
       {
         dirPinC = 1;
@@ -792,12 +802,15 @@ int main()
       }
       thread_sleep_for(1000);
       ServoCoude.write(0.03);
+      dutyCycleCoude = 0.03;
       thread_sleep_for(1000);
       ServoPoignet.write(0.09);
+      dutyCyclePoignet = 0.09;
       thread_sleep_for(1000);
       ServoPince.write(0.12);
       thread_sleep_for(1000);
       ServoPince.write(0.08);
+      dutyCyclePince = 0.08;
       thread_sleep_for(1000);
       if (data[2] == 1)
       {
