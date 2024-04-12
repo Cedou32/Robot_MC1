@@ -52,6 +52,9 @@ uint8_t flag_reception_trame = 0;
 uint16_t curseur_enregistrement = 0;
 uint8_t flag_10_sec_termine = 0;
 
+//*****Libre******//
+bool flag_libre = 0;
+
 enum etat
 {
   depart,
@@ -261,7 +264,7 @@ void MouvementMoteur(void)
       ConfigVitesseStepperEpaule(data[9]);
     }
   }
-  //**********Stepper 360************//
+  //**********Stepper 360************/
   if (data[6] >= 120 && data[6] <= 135)
   {
     stepPinB = 0;
@@ -324,7 +327,7 @@ void MouvementMoteur(void)
   if (flagServo == 1)
   {
     flagServo = 0;
-    //*********Servo Coude***********//
+    //*********Servo Coude//
     if ((data[8] >= 135 && data[8] < 160) || (data[8] >= 95 && data[8] < 120))
     {
       if (data[8] >= 135 && data[8] < 160)
@@ -401,7 +404,7 @@ void MouvementMoteur(void)
     }
     ServoCoude.write(dutyCycleCoude);
 
-    //**********Servo Poiget***********//
+    //**********Servo Poiget//
     if ((data[7] >= 135 && data[7] < 160) || (data[7] >= 95 && data[7] < 120))
     {
       if (data[7] >= 135 && data[7] < 160)
@@ -477,7 +480,7 @@ void MouvementMoteur(void)
       dutyCyclePoignet = 0.125;
     }
     ServoPoignet.write(dutyCyclePoignet);
-    //**********Servo Pince*********//
+    //**********Servo Pince//
     if (data[5] == 0)
     {
     }
@@ -590,14 +593,15 @@ int main()
         stepPinC = 0;
         thread_sleep_for(1);
       }
+      thread_sleep_for(1000);
       ServoCoude.write(0.03);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoPoignet.write(0.09);
-      thread_sleep_for(500);
+      thread_sleep_for(1000);
       ServoPince.write(0.12);
-      thread_sleep_for(500);
+      thread_sleep_for(1000);
       ServoPince.write(0.08);
-      thread_sleep_for(500);
+      thread_sleep_for(1000);
 
       etat_actuel = lecture_trame;
       break;
@@ -644,6 +648,7 @@ int main()
       {
         if (ancien_mode > 1)
         {
+          flag_libre = 1;
           etat_actuel = retour_maison;
         }
         else if (ancien_mode == 1)
@@ -711,6 +716,11 @@ int main()
       break;
     case libre:
       LED = 0;
+      if (flag_libre == 1)
+      {
+        flag_libre = 0;
+        thread_sleep_for(1000);
+      }
       MouvementMoteur();
       etat_actuel = lecture_trame;
       break;
@@ -736,10 +746,10 @@ int main()
         flag_10_sec_termine = 1;
         etat_actuel = lecture_trame;
       }
-      else if (flag_10_sec_termine == 1 && data[1] == 0)
+      else if (flag_10_sec_termine == 1 && data[2] == 1)
       {
         flag_10_sec_termine = 0;
-        etat_actuel = rejouer_sequence;
+        etat_actuel = retour_maison;
       }
       else if (data[1] == 0)
       {
@@ -748,33 +758,36 @@ int main()
       break;
     case demo:
       LED = 0;
+      etat_actuel = lecture_trame;
       break;
     case deboguage:
       LED = 0;
+      etat_actuel = lecture_trame;
       break;
     case rejouer_sequence:
       LED = 0;
       pc.write(buffer_enregsitrement, 250);
       for (uint16_t i = 250; i < 500; i++)
       {
-        pc.write(&buffer_enregsitrement[i],1);
+        pc.write(&buffer_enregsitrement[i], 1);
       }
 
-      while (1);
+      while (1)
+        ;
       break;
     case retour_maison:
       LED = 1;
-      resultat_encodeur = (abs(valeur_encodeur)) / 2;
-
-      if (resultat_encodeur > 0)
+      if (valeur_encodeur > 0)
+      {
+        dirPinC = 1;
+      }
+      else if (valeur_encodeur < 0)
       {
         dirPinC = 0;
       }
-      else if (resultat_encodeur < 0)
-      {
-        resultat_encodeur = resultat_encodeur;
-        dirPinC = 1;
-      }
+      resultat_encodeur = (abs(valeur_encodeur)) / 2;
+      valeur_encodeur = 0;
+
       for (int i = 0; i < resultat_encodeur; i++)
       {
         stepPinC = 1;
@@ -782,15 +795,23 @@ int main()
         stepPinC = 0;
         thread_sleep_for(1);
       }
+      thread_sleep_for(1000);
       ServoCoude.write(0.03);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoPoignet.write(0.09);
-      thread_sleep_for(500);
+      thread_sleep_for(1000);
       ServoPince.write(0.12);
-      thread_sleep_for(500);
+      thread_sleep_for(1000);
       ServoPince.write(0.08);
-      thread_sleep_for(500);
-      etat_actuel = detection_mode;
+      thread_sleep_for(1000);
+      if (data[2] == 1)
+      {
+        etat_actuel = rejouer_sequence;
+      }
+      else
+      {
+        etat_actuel = detection_mode;
+      }
       break;
     }
   }
