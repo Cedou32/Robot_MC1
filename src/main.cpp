@@ -19,8 +19,8 @@ Ticker InterruptionServo;
 Ticker InterruptionStepperEpaule, InterruptionStepperBase;
 
 SPI spi(PA_7, PA_6, PA_5); // mosi, miso, sck
-DigitalOut cs2(PC_4);   //CS U2
-DigitalOut cs3(PC_5);   //CS U3  
+DigitalOut cs2(PC_4);      // CS U2
+DigitalOut cs3(PC_5);      // CS U3
 uint8_t ecriture[5];
 uint8_t lecture[5];
 
@@ -33,7 +33,6 @@ int flag_protection = 0;
 int flagStepperEpaule = 0, flagStepperBase = 0;
 int flagServo = 0;
 uint8_t flagVitesseStepperEpaule = 0, flagVitesseStepperBase = 0;
-
 
 float dutyCycleCoude = 0.03;   // Min = 0.03   Max = 0.125
 float dutyCyclePoignet = 0.09; // Min = 0.025   Max = 0.115
@@ -48,9 +47,9 @@ uint8_t ancien_mode = 0;
 int16_t resultat_encodeur = 0;
 
 //*****Enregistrement******//
-uint8_t buffer_enregsitrement [500];
+uint8_t buffer_enregsitrement[500];
 uint8_t flag_reception_trame = 0;
-uint8_t curseur_enregistrement = 0;
+uint16_t curseur_enregistrement = 0;
 uint8_t flag_10_sec_termine = 0;
 
 enum etat
@@ -720,31 +719,30 @@ int main()
       if (data[1] == 1)
       {
         MouvementMoteur();
-        if (flag_reception_trame == 1){
-          buffer_enregsitrement[curseur_enregistrement] = 100;
-          curseur_enregistrement ++;
-          buffer_enregsitrement[curseur_enregistrement] = 125;
-          curseur_enregistrement ++;
-          buffer_enregsitrement[curseur_enregistrement] = 150;
-          curseur_enregistrement ++;
-          buffer_enregsitrement[curseur_enregistrement] = 150;
-          curseur_enregistrement ++;
-          buffer_enregsitrement[curseur_enregistrement] = 150;
-          curseur_enregistrement ++;
-          /*buffer_enregsitrement[curseur_enregistrement] = data[5];
-          buffer_enregsitrement[curseur_enregistrement + 1] = data[6];
-          buffer_enregsitrement[curseur_enregistrement + 1] = data[7];
-          buffer_enregsitrement[curseur_enregistrement + 1] = data[8];
-          buffer_enregsitrement[curseur_enregistrement + 1] = data[9];
-          curseur_enregistrement += 1;*/
+        if (flag_reception_trame == 1)
+        {
+          buffer_enregsitrement[curseur_enregistrement] = data[5];
+          curseur_enregistrement++;
+          buffer_enregsitrement[curseur_enregistrement] = data[6];
+          curseur_enregistrement++;
+          buffer_enregsitrement[curseur_enregistrement] = data[7];
+          curseur_enregistrement++;
+          buffer_enregsitrement[curseur_enregistrement] = data[8];
+          curseur_enregistrement++;
+          buffer_enregsitrement[curseur_enregistrement] = data[9];
+          curseur_enregistrement++;
           flag_reception_trame = 0;
         }
         flag_10_sec_termine = 1;
         etat_actuel = lecture_trame;
-      }else if(flag_10_sec_termine == 1 && data[1] == 0){
+      }
+      else if (flag_10_sec_termine == 1 && data[1] == 0)
+      {
         flag_10_sec_termine = 0;
         etat_actuel = rejouer_sequence;
-      }else if (data[1] == 0){
+      }
+      else if (data[1] == 0)
+      {
         etat_actuel = lecture_trame;
       }
       break;
@@ -756,18 +754,26 @@ int main()
       break;
     case rejouer_sequence:
       LED = 0;
-      pc.write(buffer_enregsitrement,500);
+      pc.write(buffer_enregsitrement, 250);
+      for (uint16_t i = 250; i < 500; i++)
+      {
+        pc.write(&buffer_enregsitrement[i],1);
+      }
+
       while (1);
       break;
     case retour_maison:
       LED = 1;
       resultat_encodeur = (abs(valeur_encodeur)) / 2;
 
-      if (resultat_encodeur > 0){
-        dirPinC = 1;
-      }else if (resultat_encodeur < 0){
-        resultat_encodeur = resultat_encodeur;
+      if (resultat_encodeur > 0)
+      {
         dirPinC = 0;
+      }
+      else if (resultat_encodeur < 0)
+      {
+        resultat_encodeur = resultat_encodeur;
+        dirPinC = 1;
       }
       for (int i = 0; i < resultat_encodeur; i++)
       {
