@@ -716,11 +716,6 @@ int main()
       break;
     case libre:
       LED = 0;
-      if (flag_libre == 1)
-      {
-        flag_libre = 0;
-        thread_sleep_for(1000);
-      }
       MouvementMoteur();
       etat_actuel = lecture_trame;
       break;
@@ -729,7 +724,7 @@ int main()
       if (data[1] == 1)
       {
         MouvementMoteur();
-        if (flag_reception_trame == 1)
+        /*if (flag_reception_trame == 1)
         {
           buffer_enregsitrement[curseur_enregistrement] = data[5];
           curseur_enregistrement++;
@@ -743,7 +738,7 @@ int main()
           curseur_enregistrement++;
           flag_reception_trame = 0;
         }
-        flag_10_sec_termine = 1;
+        flag_10_sec_termine = 1;*/
         etat_actuel = lecture_trame;
       }
       else if (flag_10_sec_termine == 1 && data[2] == 1)
