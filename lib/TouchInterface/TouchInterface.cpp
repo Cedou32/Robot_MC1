@@ -6,13 +6,13 @@
 
 #include "TouchInterface.h"
 
-EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistrement)
+EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagSelectionMode, uint8_t flagSelectionEnregistrement)
 {
-    if (positionX >= 210 && positionX <= 310 && positionY >= 10 && positionY <= 40)
+    if (positionX >= 209 && positionX <= 311 && positionY >= 9 && positionY <= 41)
     {
         return caseMenu;
     }
-    else if (positionX >= 179 && positionX <= 301 && positionY >= 59 && positionY <= 91)
+    else if (positionX >= 99 && positionX <= 221 && positionY >= 59 && positionY <= 91 && flagMenu == true)
     {
         return caseModes;
     }
@@ -32,15 +32,27 @@ EtatLib TouchInterface::detectBouton(int positionX, int positionY, bool flagMenu
     {
         return caseDebogage;
     }
-    else if (positionX >= 84 && positionX <= 236 && positionY >= 99 && positionY <= 131 && flagEnregistrement == 4)
+    else if (positionX >= 84 && positionX <= 236 && positionY >= 99 && positionY <= 131 && flagSelectionMode == 4 && flagSelectionEnregistrement > 0 && flagSelectionEnregistrement < 4)
     {
         return caseEnregistrement;
     }
-    else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171 && flagEnregistrement == 4)
+    else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171 && flagSelectionMode == 4 && flagSelectionEnregistrement > 0 && flagSelectionEnregistrement < 4)
     {
         return caseRejouer;
     }
-    else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221)
+    else if (positionX >= 69 && positionX <= 111 && positionY >= 129 && positionY <= 171 && flagSelectionMode == 4)
+    {
+        return caseEnregistrement1;
+    }
+    else if (positionX >= 139 && positionX <= 181 && positionY >= 129 && positionY <= 171 && flagSelectionMode == 4)
+    {
+        return caseEnregistrement2;
+    }
+    else if (positionX >= 209 && positionX <= 251 && positionY >= 129 && positionY <= 171 && flagSelectionMode == 4)
+    {
+        return caseEnregistrement3;
+    }
+    else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221 && flagSelectionMode > 0 && flagSelectionMode <5 && flagModes)
     {
         return caseSelection;
     }

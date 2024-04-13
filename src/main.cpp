@@ -41,6 +41,7 @@ bool flagBatterie = false;
 uint8_t flagSelectionMode = 0; // flag pour indiquer la selection du mode
 bool flagSelection = false;    // flag pour dire qu'une selection a ete faite
 bool flagEnregistrement = false;
+uint8_t flagSelectionEnregistrement = 0;
 // Trames
 uint8_t data[15];
 
@@ -127,7 +128,7 @@ int main()
         flagBatterie = false;
         etat = caseBatterie;
       }
-      else if (flagSelectionMode == 1 && flagSelection) //Mode libre choisi
+      else if (flagSelectionMode == 1 && flagSelection) // Mode libre choisi
       {
         etat = caseEnvoiPosition;
       }
@@ -143,7 +144,7 @@ int main()
 
     // lorsque l'utilisateur appuie sur l'ecran
     case caseDetectionAppui:
-      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagSelectionMode);
+      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagSelectionMode, flagSelectionEnregistrement);
       break;
 
     case caseBatterie:
@@ -283,6 +284,32 @@ int main()
       etat = caseAttente;
       break;
 
+    case caseEnregistrement1:
+      Ecran.BtnEnregistrement1Appuye();
+      thread_sleep_for(250);
+      Ecran.EffacerAffichageEnregistrement();
+      Ecran.BtnDemarrerNonAppuye();
+      Ecran.BtnRejouerNonAppuye();
+      flagSelectionEnregistrement = 1;
+      etat = caseAttente;
+      break;
+
+    case caseEnregistrement2:
+      Ecran.BtnEnregistrement2Appuye();
+      thread_sleep_for(250);
+      Ecran.EffacerAffichageEnregistrement();
+      flagSelectionEnregistrement = 2;
+      etat = caseAttente;
+      break;
+
+    case caseEnregistrement3:
+      Ecran.BtnEnregistrement3Appuye();
+      thread_sleep_for(250);
+      Ecran.EffacerAffichageEnregistrement();
+      flagSelectionEnregistrement = 3;
+      etat = caseAttente;
+      break;
+
     case caseRejouer:
       Ecran.BtnRejouerAppuye();
       thread_sleep_for(250);
@@ -290,7 +317,7 @@ int main()
       data[5] = 1;
       pc.write(data, sizeof(data));
       data[5] = 0;
-      etat = caseAttente; 
+      etat = caseAttente;
       break;
 
     case LedOn:

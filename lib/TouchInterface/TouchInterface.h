@@ -26,6 +26,9 @@ enum EtatLib
     caseEnregistrement,
     caseFinEnregistrement,
     caseRejouer,
+    caseEnregistrement1,
+    caseEnregistrement2,
+    caseEnregistrement3,
     LedOn,
     LedOff
 };
@@ -33,7 +36,7 @@ enum EtatLib
 class TouchInterface
 {
 public:
-    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent);
+    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent, uint8_t flagSelectionEnregistrement);
 };
 
 #endif

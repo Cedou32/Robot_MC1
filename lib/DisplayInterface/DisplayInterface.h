@@ -36,7 +36,17 @@ public:
     void BtnDebogageNonAppuye();
     void BtnDebogageAppuye();
 
-    void BtnChoisir();
+    void BtnEnregistrement1NonAppuye();
+    void BtnEnregistrement1Appuye();
+    void BtnEnregistrement2NonAppuye();
+    void BtnEnregistrement2Appuye();
+    void BtnEnregistrement3NonAppuye();
+    void BtnEnregistrement3Appuye();
+
+    void EffacerAffichageEnregistrement();
+
+    void BtnChoisirNonAppuye();
+    void BtnChoisirAppuye();
 
     void BtnDemarrerNonAppuye();
     void BtnDemarrerAppuye();
