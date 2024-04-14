@@ -8,35 +8,32 @@
 #define TOUCH_STATE_LIBRARY_H
 
 #include <mbed.h>
+#include <string>
 
 enum EtatLib
 {
-    caseDemarrage,
-    caseAttente,
-    caseDetectionAppui,
-    caseBatterie,
-    caseMenu,
-    caseModes,
-    caseLibre,
-    caseDemo,
-    caseDebogage,
-    caseEnregistrer,
-    caseSelection,
-    caseEnvoiPosition,
-    caseEnregistrement,
-    caseFinEnregistrement,
-    caseRejouer,
-    caseEnregistrement1,
-    caseEnregistrement2,
-    caseEnregistrement3,
-    LedOn,
-    LedOff
+    Demarrage,
+    Attente,
+    Batterie,
+    Menu,
+    Modes,
+    Libre,
+    Demo,
+    Debogage,
+    Enregistrer,
+    Selection,
+    TransmissionTrame,
+};
+
+struct StateInfo { // Déclaration de la structure
+    EtatLib etat;
+    std::string nom;
 };
 
 class TouchInterface
 {
 public:
-    static EtatLib detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent, uint8_t flagSelectionEnregistrement);
+    static StateInfo detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent, uint8_t flagSelectionEnregistrement);
 };
 
 #endif

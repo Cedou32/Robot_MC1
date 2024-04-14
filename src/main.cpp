@@ -47,7 +47,7 @@ uint8_t data[15];
 
 //******Machine a etat******//
 // Declaration de la variable etat
-uint8_t etat = caseDemarrage;
+// uint8_t etat = Demarrage;
 
 //******Declaration des objets******//
 DisplayInterface Ecran(PA_7, PA_6, PA_5, PA_8, PA_10, PA_9); // mosi, miso, sclk, cs, reset, dc
@@ -56,43 +56,31 @@ BufferedSerial pc(PB_6, PB_7); // USBTX et USBRX sont les broches de communicati
 Ticker InterruptionBatterie;
 Ticker InterruptionEnregistrement;
 
-//******Fonctions pour les interruptions******//
-// Verification du niveau de la batterie
-void VerifBatterie()
-{
-  compteur = compteur + 1;
-  flagBatterie = true;
-}
-
-// fonction qui arrete l'enregistrement
-void FinEnregistrement()
-{
-  LED = !LED;
-  flagEnregistrement = false;
-  InterruptionEnregistrement.detach();
-  flagSelectionMode = 5;
-}
+StateInfo info;
+EtatLib etat;
+std::string nomEtat;
 
 int main()
 {
-  // Attacher la fonction de lecture de la batterie
-  InterruptionBatterie.attach(&VerifBatterie, 0.01);
-
-  // Indication des valeurs de securite de la trame
-  data[0] = '#';
-  data[1] = '@';
-  data[2] = '+';
-  data[13] = '?';
-  data[14] = '%';
-
-  pc.set_baud(115200); // instancier baud-rate pour la communication BT
-
+  info.etat = Demarrage;
+  info.nom = "Demarrage";
   while (1)
   {
+    if (Touch.Touch_detect())
+    {
+      positionX = Touch.getX(); // prendre la valeur de l'axe X
+      positionY = Touch.getY(); // prendre la valeur de l'axe Y
+      info = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagSelectionMode, flagSelectionEnregistrement);
+      etat = info.etat;
+      nomEtat = info.nom;
+    }
+
+    if (nomEtat == "Menu"){
+      LED = !LED;
+    }
     switch (etat)
     {
-    // initialisation de l'ecran d'acceuil
-    case caseDemarrage:
+    case Demarrage:
       Ecran.Initialisation(); // Initialisation de l'ecran
       Ecran.LogoOn();         // Afficher logo
 
@@ -112,42 +100,10 @@ int main()
       Ecran.IconeBatterie(batterie, ligne);
       // afficher le bouton menu
       Ecran.BtnMenuNonAppuye();
-      etat = caseAttente;
+      etat = Attente;
       break;
 
-    // attente d'un appui
-    case caseAttente:
-      if (Touch.Touch_detect())
-      {
-        positionX = Touch.getX(); // prendre la valeur de l'axe X
-        positionY = Touch.getY(); // prendre la valeur de l'axe Y
-        etat = caseDetectionAppui;
-      }
-      else if (flagBatterie == true)
-      {
-        flagBatterie = false;
-        etat = caseBatterie;
-      }
-      else if (flagSelectionMode == 1 && flagSelection) // Mode libre choisi
-      {
-        etat = caseEnvoiPosition;
-      }
-      else if (flagSelectionMode == 4 && flagEnregistrement)
-      {
-        etat = caseEnvoiPosition;
-      }
-      else if (flagSelectionMode == 5 && !flagEnregistrement)
-      {
-        etat = caseFinEnregistrement;
-      }
-      break;
-
-    // lorsque l'utilisateur appuie sur l'ecran
-    case caseDetectionAppui:
-      etat = TouchInterface::detectBouton(positionX, positionY, flagMenu, flagModes, flagSelectionMode, flagSelectionEnregistrement);
-      break;
-
-    case caseBatterie:
+    case Batterie:
       // lecture du niveau de la batterie et mise a jour de l'icone
       batterie = (Batt.read_u16() * (100.0 / 40000.0));
       ligne = batterie * 0.43 + 11;
@@ -165,10 +121,29 @@ int main()
         prevBatterie = batterie;
         prevLigne = ligne;
       }
-      etat = caseAttente;
+      etat = Attente;
       break;
 
-    case caseMenu:
+    case Attente:
+      if (flagBatterie == true)
+      {
+        flagBatterie = false;
+        etat = Batterie;
+      }
+      else if (flagSelectionMode == 1 && flagSelection) // Mode libre choisi
+      {
+        etat = TransmissionTrame;
+      }
+      else if (flagSelectionMode == 4 && flagEnregistrement)
+      {
+        etat = TransmissionTrame;
+      }
+      else if (flagSelectionMode == 5 && !flagEnregistrement)
+      {
+        etat = TransmissionTrame;
+      }
+      break;
+    case Menu:
       flagMenu = !flagMenu; // activer le flag du bouton
       if (flagMenu == true)
       {
@@ -178,40 +153,42 @@ int main()
       {
         Ecran.FermerMenu();
       }
-      etat = caseAttente;
+      etat = Attente;
       break;
 
-    case caseModes:
+    case Modes:
+
       Ecran.Modes();
       flagModes = true;
-      etat = caseAttente;
+      etat = Attente;
       break;
+    case Libre:
 
-    case caseLibre:
       flagSelectionMode = 1;
       Ecran.Libre();
-      etat = caseAttente;
+      etat = Attente;
       break;
 
-    case caseDemo:
-      flagSelectionMode = 2;
-      Ecran.Demo();
-      etat = caseAttente;
-      break;
+    case Enregistrer:
 
-    case caseDebogage:
-      flagSelectionMode = 3;
-      Ecran.Debogage();
-      etat = caseAttente;
-      break;
-
-    case caseEnregistrer:
       flagSelectionMode = 4;
       Ecran.Enregistrer();
-      etat = caseAttente;
+      etat = Attente;
+      break;
+    case Demo:
+
+      flagSelectionMode = 2;
+      Ecran.Demo();
+      etat = Attente;
       break;
 
-    case caseSelection:
+    case Debogage:
+
+      flagSelectionMode = 3;
+      Ecran.Debogage();
+      etat = Attente;
+      break;
+    case Selection:
       Ecran.Choisir();
       switch (flagSelectionMode)
       {
@@ -237,10 +214,10 @@ int main()
       flagMenu = false;
       flagModes = false;
       flagSelection = true;
-      etat = caseAttente;
+      etat = Attente;
       break;
 
-    case caseEnvoiPosition:
+    case TransmissionTrame:
       if (SW1 == 1 && SW2 == 0)
       {
         data[8] = 1;
@@ -260,78 +237,7 @@ int main()
       data[12] = GaucheX.read_u16() * 0.00389106; // Epaule
       pc.write(data, sizeof(data));
       thread_sleep_for(100);
-      etat = caseAttente;
-      break;
-
-    case caseEnregistrement:
-      Ecran.BtnDemarrerAppuye();
-      thread_sleep_for(250);
-      Ecran.FermerBtnDemarrer();
-      LED = 1;
-      flagEnregistrement = true;
-      InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
-      data[4] = 1;
-      pc.write(data, sizeof(data));
-      etat = caseAttente;
-      break;
-
-    case caseFinEnregistrement:
-      flagEnregistrement = false;
-      flagSelectionMode = 0;
-      Ecran.FinEnregistrement();
-      data[4] = 0;
-      pc.write(data, sizeof(data));
-      etat = caseAttente;
-      break;
-
-    case caseEnregistrement1:
-      Ecran.BtnEnregistrement1Appuye();
-      thread_sleep_for(250);
-      Ecran.EffacerAffichageEnregistrement();
-      Ecran.BtnDemarrerNonAppuye();
-      Ecran.BtnRejouerNonAppuye();
-      flagSelectionEnregistrement = 1;
-      etat = caseAttente;
-      break;
-
-    case caseEnregistrement2:
-      Ecran.BtnEnregistrement2Appuye();
-      thread_sleep_for(250);
-      Ecran.EffacerAffichageEnregistrement();
-      flagSelectionEnregistrement = 2;
-      etat = caseAttente;
-      break;
-
-    case caseEnregistrement3:
-      Ecran.BtnEnregistrement3Appuye();
-      thread_sleep_for(250);
-      Ecran.EffacerAffichageEnregistrement();
-      flagSelectionEnregistrement = 3;
-      etat = caseAttente;
-      break;
-
-    case caseRejouer:
-      Ecran.BtnRejouerAppuye();
-      thread_sleep_for(250);
-      Ecran.FermerBtnRejouer();
-      data[5] = 1;
-      pc.write(data, sizeof(data));
-      data[5] = 0;
-      etat = caseAttente;
-      break;
-
-    case LedOn:
-      data[7] = 1;
-      pc.write(data, sizeof(data));
-      thread_sleep_for(100);
-      etat = caseAttente;
-      break;
-
-    case LedOff:
-      data[7] = 0;
-      pc.write(data, sizeof(data));
-      thread_sleep_for(100);
-      etat = caseAttente;
+      etat = Attente;
       break;
     }
   }
