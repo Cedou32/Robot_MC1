@@ -47,11 +47,18 @@ uint8_t ancien_mode = 0;
 int16_t resultat_encodeur = 0;
 
 //*****Enregistrement******//
-uint8_t buffer_enregsitrement[500];
-uint8_t flag_reception_trame = 0;
-uint16_t curseur_enregistrement = 0;
+uint8_t buffer_enregsitrement_1[500];
+uint8_t buffer_enregsitrement_2[500];
+uint8_t buffer_enregsitrement_3[500];
+
 uint8_t flag_10_sec_termine = 0;
 uint8_t flag_rejouer_10sec = 0;
+uint8_t flag_reception_trame = 0;
+uint8_t flag_enregistrement_1 = 0;
+uint8_t flag_enregistrement_2 = 0;
+uint8_t flag_enregistrement_3 = 0;
+
+uint16_t curseur_enregistrement = 0;
 
 //*****Libre******//
 bool flag_libre = 0;
@@ -725,29 +732,35 @@ int main()
       LED = 0;
       if (data[1] == 1)
       {
-        MouvementMoteur();
-        if (flag_reception_trame == 1)
+        if (data[2] == 1)
         {
-          buffer_enregsitrement[curseur_enregistrement] = data[5];
-          curseur_enregistrement++;
-          buffer_enregsitrement[curseur_enregistrement] = data[6];
-          curseur_enregistrement++;
-          buffer_enregsitrement[curseur_enregistrement] = data[7];
-          curseur_enregistrement++;
-          buffer_enregsitrement[curseur_enregistrement] = data[8];
-          curseur_enregistrement++;
-          buffer_enregsitrement[curseur_enregistrement] = data[9];
-          curseur_enregistrement++;
-          flag_reception_trame = 0;
+          flag_enregistrement_1 = 1;
+          MouvementMoteur();
+          if (flag_reception_trame == 1)
+          {
+            buffer_enregsitrement_1[curseur_enregistrement] = data[5];
+            curseur_enregistrement++;
+            buffer_enregsitrement_1[curseur_enregistrement] = data[6];
+            curseur_enregistrement++;
+            buffer_enregsitrement_1[curseur_enregistrement] = data[7];
+            curseur_enregistrement++;
+            buffer_enregsitrement_1[curseur_enregistrement] = data[8];
+            curseur_enregistrement++;
+            buffer_enregsitrement_1[curseur_enregistrement] = data[9];
+            curseur_enregistrement++;
+            flag_reception_trame = 0;
+          }
+          flag_10_sec_termine = 1;
         }
-        flag_10_sec_termine = 1;
+        if (flag_10_sec_termine == 1 &&  data[2] == 2)
+        {
+          LED = !LED;
+          flag_10_sec_termine = 0;
+          etat_actuel = retour_maison;
+        }
         etat_actuel = lecture_trame;
       }
-      else if (flag_10_sec_termine == 1 && data[2] == 1)
-      {
-        flag_10_sec_termine = 0;
-        etat_actuel = retour_maison;
-      }
+      
       else if (data[1] == 0)
       {
         etat_actuel = lecture_trame;
@@ -762,26 +775,29 @@ int main()
       etat_actuel = lecture_trame;
       break;
     case rejouer_sequence:
-      LED = 1;
-      pc.write(buffer_enregsitrement, 250);
-      for (uint16_t i = 0; i < 100; i++)
+      LED = 0;
+      if (flag_enregistrement_1 == 1)
       {
-        data[5] = buffer_enregsitrement[i * 5];
-        data[6] = buffer_enregsitrement[(i * 5) + 1];
-        data[7] = buffer_enregsitrement[(i * 5) + 2];
-        data[8] = buffer_enregsitrement[(i * 5) + 3];
-        data[9] = buffer_enregsitrement[(i * 5) + 4];
-        flag_rejouer_10sec = 0;
-        while(flag_rejouer_10sec < 100){
-          MouvementMoteur();
+        flag_enregistrement_1 = 0;
+        for (uint16_t i = 0; i < 100; i++)
+        {
+          data[5] = buffer_enregsitrement_1[i * 5];
+          data[6] = buffer_enregsitrement_1[(i * 5) + 1];
+          data[7] = buffer_enregsitrement_1[(i * 5) + 2];
+          data[8] = buffer_enregsitrement_1[(i * 5) + 3];
+          data[9] = buffer_enregsitrement_1[(i * 5) + 4];
+          flag_rejouer_10sec = 0;
+          while (flag_rejouer_10sec < 100)
+          {
+            MouvementMoteur();
+          }
+          flag_rejouer_10sec = 0;
         }
-        flag_rejouer_10sec = 0;
       }
-
       etat_actuel = lecture_trame;
       break;
     case retour_maison:
-      LED = 0;
+      LED = 1;
       if (valeur_encodeur > 0)
       {
         dirPinC = 1;
@@ -812,7 +828,7 @@ int main()
       ServoPince.write(0.08);
       dutyCyclePince = 0.08;
       thread_sleep_for(1000);
-      if (data[2] == 1)
+      if (data[2] == 2)
       {
         etat_actuel = rejouer_sequence;
       }
