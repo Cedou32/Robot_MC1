@@ -28,12 +28,14 @@ enum EtatLib
 struct StateInfo { // Déclaration de la structure
     EtatLib etat;
     std::string nom;
+    uint8_t mode;
+    bool status;
 };
 
 class TouchInterface
 {
 public:
-    static StateInfo detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t flagEnregistremnent, uint8_t flagSelectionEnregistrement);
+    static StateInfo detectBouton(int positionX, int positionY, bool flagMenu, bool flagModes, uint8_t modeActuel, uint8_t enregistrementActuel);
 };
 
 #endif

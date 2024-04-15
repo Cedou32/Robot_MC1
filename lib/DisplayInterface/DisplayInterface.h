@@ -57,8 +57,21 @@ public:
     void BtnRejouerAppuye();
     void FermerBtnRejouer();
 
+    void Decompte0();
+    void Decompte1();
+    void Decompte2();
+    void Decompte3();
+    void Decompte4();
+    void Decompte5();
+    void Decompte6();
+    void Decompte7();
+    void Decompte8();
+    void Decompte9();
+    void EffacerDecompte();
+
     void AffichageLibre();
     void AffichageEnregistrer();
+    void EffacerEnregistrement();
     void AffichageDemo();
     void AffichageDebug();
 
@@ -72,6 +85,7 @@ public:
     void FermerMenu();
 
     void Modes();
+    void FermerModes();
     void Libre();
     void Enregistrer();
     void Demo();

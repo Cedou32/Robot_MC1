@@ -1,0 +1,67 @@
+
+//******Fonctions pour les interruptions******//
+// Verification du niveau de la batterie
+void VerifBatterie()
+{
+  compteur = compteur + 1;
+  flagBatterie = true;
+}
+
+
+  // Attacher la fonction de lecture de la batterie
+  InterruptionBatterie.attach(&VerifBatterie, 0.01);
+
+
+
+
+case Demarrage:
+      Ecran.Initialisation(); // Initialisation de l'ecran
+      Ecran.LogoOn();         // Afficher logo
+
+      // Lecture tension de la batterie
+      batterie = (Batt.read_u16() * (100.0 / 40000.0));
+      ligne = batterie * 0.43 + 11;
+      if (batterie > 100)
+      {
+        batterie = 100;
+      }
+      else if (batterie < 0)
+      {
+        batterie = 0;
+      }
+
+      // afficher l'icone de la batteire
+      Ecran.IconeBatterie(batterie, ligne);
+      // afficher le bouton menu
+      Ecran.BtnMenuNonAppuye();
+      etat = Attente;
+      break;
+
+    case Batterie:
+      // lecture du niveau de la batterie et mise a jour de l'icone
+      batterie = (Batt.read_u16() * (100.0 / 40000.0));
+      ligne = batterie * 0.43 + 11;
+      if (ligne != prevLigne)
+      {
+        if (batterie > 100)
+        {
+          batterie = 100;
+        }
+        else if (batterie < 0)
+        {
+          batterie = 0;
+        }
+        Ecran.BatterieInteractif(batterie, prevBatterie, ligne, prevLigne);
+        prevBatterie = batterie;
+        prevLigne = ligne;
+      }
+      etat = Attente;
+      break;
+
+
+      
+      if (flagBatterie == true)
+      {
+        flagBatterie = false;
+        etat = Batterie;
+      }
