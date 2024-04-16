@@ -124,7 +124,7 @@ int main()
       {
         etat = TransmissionTrame;
       }
-      else if (data[4] == 1)
+      else if (data[5] == 1)
       {
         etat = TransmissionTrame;
       }
@@ -269,7 +269,8 @@ int main()
         LED = 1;
         InterruptionEnregistrement.attach(&FinEnregistrement, 10.0);
         timer.attach(&chaqueSeconde, 1.0);
-        data[4] = 1;
+        data[4] = enregistrementActuel;
+        data[5] = 1;
         pc.write(data, sizeof(data));
         etat = Attente;
       }
@@ -285,6 +286,7 @@ int main()
         Ecran.FinEnregistrement();
         data[3] = 0;
         data[4] = 0;
+        data[5] = 0;
         pc.write(data, sizeof(data));
         etat = Attente;
       }
@@ -295,12 +297,16 @@ int main()
         Ecran.BtnRejouerAppuye();
         thread_sleep_for(250);
         Ecran.FermerBtnRejouer();
-        data[5] = 1;
+
+        data[3] = 4;
+        data[4] = enregistrementActuel;
+        data[5] = 2;
         pc.write(data, sizeof(data));
+        data[4] = 0;
         data[5] = 0;
         etat = Attente;
       }
-
+      
       etat = Attente;
       break;
 
