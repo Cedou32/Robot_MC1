@@ -50,6 +50,7 @@ int16_t resultat_encodeur = 0;
 uint8_t buffer_enregsitrement_1[500];
 uint8_t buffer_enregsitrement_2[500];
 uint8_t buffer_enregsitrement_3[500];
+uint8_t buff[500];
 
 uint8_t flag_10_sec_termine = 0;
 uint8_t flag_rejouer_10sec = 0;
@@ -59,6 +60,9 @@ uint8_t flag_enregistrement_2 = 0;
 uint8_t flag_enregistrement_3 = 0;
 
 uint16_t curseur_enregistrement = 0;
+
+uint8_t nouvelEnregistrement = 0;
+uint8_t ancienEnregistrement = 0;
 
 //*****Libre******//
 bool flag_libre = 0;
@@ -572,6 +576,79 @@ void LectureEEPROM()
   cs2 = 1;
 }
 
+void Enregistrement(uint8_t enregistrement)
+{
+  if (flag_reception_trame == 1)
+  {
+    buff[curseur_enregistrement] = data[5];
+    pc.write(&buff[curseur_enregistrement], 1);
+    curseur_enregistrement++;
+    buff[curseur_enregistrement] = data[6];
+    pc.write(&buff[curseur_enregistrement], 1);
+    curseur_enregistrement++;
+    buff[curseur_enregistrement] = data[7];
+    pc.write(&buff[curseur_enregistrement], 1);
+    curseur_enregistrement++;
+    buff[curseur_enregistrement] = data[8];
+    pc.write(&buff[curseur_enregistrement], 1);
+    curseur_enregistrement++;
+    buff[curseur_enregistrement] = data[9];
+    pc.write(&buff[curseur_enregistrement], 1);
+    curseur_enregistrement++;
+    flag_reception_trame = 0;
+  }
+  // if (curseur_enregistrement == 499)
+  //{
+  switch (enregistrement)
+  {
+  case 1:
+    memcpy(buffer_enregsitrement_1, buff, sizeof(buff));
+    break;
+  case 2:
+    memcpy(buffer_enregsitrement_2, buff, sizeof(buff));
+    break;
+  case 3:
+    memcpy(buffer_enregsitrement_3, buff, sizeof(buff));
+    break;
+  }
+  //}
+}
+
+void Rejouer(uint8_t enregistrement)
+{
+  switch (enregistrement)
+  {
+  case 1:
+    memcpy(buff, buffer_enregsitrement_1, sizeof(buffer_enregsitrement_1));
+    break;
+  case 2:
+    memcpy(buff, buffer_enregsitrement_2, sizeof(buffer_enregsitrement_2));
+    break;
+  case 3:
+    memcpy(buff, buffer_enregsitrement_3,sizeof(buffer_enregsitrement_3));
+    break;
+  }
+
+  if (flag_enregistrement_1 == 1)
+  {
+    // flag_enregistrement_1 = 0;
+    for (uint16_t i = 0; i < 100; i++)
+    {
+      data[5] = buff[i * 5];
+      data[6] = buff[(i * 5) + 1];
+      data[7] = buff[(i * 5) + 2];
+      data[8] = buff[(i * 5) + 3];
+      data[9] = buff[(i * 5) + 4];
+      flag_rejouer_10sec = 0;
+      while (flag_rejouer_10sec < 100)
+      {
+        MouvementMoteur();
+      }
+      flag_rejouer_10sec = 0;
+    }
+  }
+}
+
 int main()
 {
 
@@ -643,7 +720,7 @@ int main()
         else if (currentChar == '%' && flag_protection == 4)
         {
           flag_protection = 0;
-          pc.write(data, 10);
+          // pc.write(data, 10);
         }
         else
         {
@@ -729,38 +806,29 @@ int main()
       etat_actuel = lecture_trame;
       break;
     case enregistrement:
-      LED = 0;
-      if (data[1] == 1)
+      // LED = 0;
+
+      if (data[2] == 1)
       {
-        if (data[2] == 1)
-        {
-          flag_enregistrement_1 = 1;
-          MouvementMoteur();
-          if (flag_reception_trame == 1)
-          {
-            buffer_enregsitrement_1[curseur_enregistrement] = data[5];
-            curseur_enregistrement++;
-            buffer_enregsitrement_1[curseur_enregistrement] = data[6];
-            curseur_enregistrement++;
-            buffer_enregsitrement_1[curseur_enregistrement] = data[7];
-            curseur_enregistrement++;
-            buffer_enregsitrement_1[curseur_enregistrement] = data[8];
-            curseur_enregistrement++;
-            buffer_enregsitrement_1[curseur_enregistrement] = data[9];
-            curseur_enregistrement++;
-            flag_reception_trame = 0;
-          }
-          flag_10_sec_termine = 1;
-        }
-        if (flag_10_sec_termine == 1 &&  data[2] == 2)
-        {
+        if (data[1] == 3){
           LED = !LED;
-          flag_10_sec_termine = 0;
-          etat_actuel = retour_maison;
         }
-        etat_actuel = lecture_trame;
+        
+        flag_enregistrement_1 = 1;
+        MouvementMoteur();
+        Enregistrement(data[1]);
+        flag_10_sec_termine = 1;
       }
-      
+
+      etat_actuel = lecture_trame;
+
+      if (flag_10_sec_termine == 1 && data[2] == 2)
+      {
+        //data[1] = 0;
+        // flag_10_sec_termine = 0;
+        etat_actuel = retour_maison;
+      }
+
       else if (data[1] == 0)
       {
         etat_actuel = lecture_trame;
@@ -775,29 +843,12 @@ int main()
       etat_actuel = lecture_trame;
       break;
     case rejouer_sequence:
-      LED = 0;
-      if (flag_enregistrement_1 == 1)
-      {
-        flag_enregistrement_1 = 0;
-        for (uint16_t i = 0; i < 100; i++)
-        {
-          data[5] = buffer_enregsitrement_1[i * 5];
-          data[6] = buffer_enregsitrement_1[(i * 5) + 1];
-          data[7] = buffer_enregsitrement_1[(i * 5) + 2];
-          data[8] = buffer_enregsitrement_1[(i * 5) + 3];
-          data[9] = buffer_enregsitrement_1[(i * 5) + 4];
-          flag_rejouer_10sec = 0;
-          while (flag_rejouer_10sec < 100)
-          {
-            MouvementMoteur();
-          }
-          flag_rejouer_10sec = 0;
-        }
-      }
+      LED = !LED;
+      Rejouer(data[1]);
       etat_actuel = lecture_trame;
       break;
     case retour_maison:
-      LED = 1;
+      // LED = 1;
       if (valeur_encodeur > 0)
       {
         dirPinC = 1;
@@ -830,6 +881,7 @@ int main()
       thread_sleep_for(1000);
       if (data[2] == 2)
       {
+        data[2] = 0;
         etat_actuel = rejouer_sequence;
       }
       else
