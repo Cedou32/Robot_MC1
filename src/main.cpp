@@ -581,24 +581,32 @@ void Enregistrement(uint8_t enregistrement)
   if (flag_reception_trame == 1)
   {
     buff[curseur_enregistrement] = data[5];
-    pc.write(&buff[curseur_enregistrement], 1);
+    //pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[6];
-    pc.write(&buff[curseur_enregistrement], 1);
+    //pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[7];
-    pc.write(&buff[curseur_enregistrement], 1);
+    //pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[8];
-    pc.write(&buff[curseur_enregistrement], 1);
+    //pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[9];
-    pc.write(&buff[curseur_enregistrement], 1);
+    //pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     flag_reception_trame = 0;
   }
-  // if (curseur_enregistrement == 499)
-  //{
+  if (curseur_enregistrement == 495){
+    curseur_enregistrement = 0;
+  }
+  /*
+  uint8_t high = curseur_enregistrement >> 8;
+  uint8_t low = curseur_enregistrement;
+
+  pc.write(&high, 1);
+  pc.write(&low, 1);*/
+
   switch (enregistrement)
   {
   case 1:
@@ -611,7 +619,6 @@ void Enregistrement(uint8_t enregistrement)
     memcpy(buffer_enregsitrement_3, buff, sizeof(buff));
     break;
   }
-  //}
 }
 
 void Rejouer(uint8_t enregistrement)
@@ -785,9 +792,12 @@ int main()
         {
           etat_actuel = retour_maison;
         }
-        else if (ancien_mode == 4)
+        else if (ancien_mode == 4 && nouvelEnregistrement == 0)
         {
           etat_actuel = enregistrement;
+        } 
+        else if (ancien_mode == 4 && nouvelEnregistrement == 1){
+          etat_actuel = retour_maison;
         }
         else if (ancien_mode == 0)
         {
@@ -810,9 +820,6 @@ int main()
 
       if (data[2] == 1)
       {
-        if (data[1] == 3){
-          LED = !LED;
-        }
         
         flag_enregistrement_1 = 1;
         MouvementMoteur();
@@ -888,6 +895,7 @@ int main()
       {
         etat_actuel = detection_mode;
       }
+      if (nouvelEnregistrement == 1)
       break;
     }
   }
