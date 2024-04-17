@@ -57,11 +57,20 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
         result.nom = "Enregistrement";
         result.status = false;
     }
-    else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171 && enregistrementActuel > 0 && result.status == true)
+    else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171)
     {
-        result.etat = Enregistrer;
-        result.nom = "Rejouer";
-        result.status = false;
+        if (modeActuel == 4 && enregistrementActuel > 0 && result.status == true)
+        {
+            result.etat = Enregistrer;
+            result.nom = "Rejouer";
+            result.status = false;
+        }
+        else if (modeActuel == 2)
+        {
+            result.etat = Demo;
+            result.nom = "Demo";
+            result.status = false;
+        }
     }
     else if (positionX >= 69 && positionX <= 111 && positionY >= 129 && positionY <= 171 && modeActuel == 4)
     {
@@ -79,6 +88,30 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
     {
         result.etat = Enregistrer;
         result.nom = "Enregistrement3";
+        result.status = false;
+    }
+    else if (positionX >= 34 && positionX <= 76 && positionY >= 129 && positionY <= 171 && modeActuel == 3)
+    {
+        result.etat = Debogage;
+        result.nom = "Debug1";
+        result.status = false;
+    }
+    else if (positionX >= 104 && positionX <= 146 && positionY >= 129 && positionY <= 171 && modeActuel == 3)
+    {
+        result.etat = Debogage;
+        result.nom = "Debug2";
+        result.status = false;
+    }
+    else if (positionX >= 174 && positionX <= 216 && positionY >= 129 && positionY <= 171 && modeActuel == 3)
+    {
+        result.etat = Debogage;
+        result.nom = "Debug3";
+        result.status = false;
+    }
+    else if (positionX >= 244 && positionX <= 286 && positionY >= 129 && positionY <= 171 && modeActuel == 3)
+    {
+        result.etat = Debogage;
+        result.nom = "Debug4";
         result.status = false;
     }
     else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221 && (flagModes || enregistrementActuel > 0))

@@ -209,12 +209,76 @@ int main()
       break;
 
     case Demo:
-      Ecran.Demo();
+      if (selection == 0)
+      {
+        Ecran.Demo();
+      }
+      else if (selection == 1)
+      {
+        data[7] = 1;
+        if (nomEtat == "Demo")
+        {
+          Ecran.BtnDemarrerAppuye();
+          thread_sleep_for(500);
+          Ecran.BtnDemarrerNonAppuye();
+        }
+        pc.write(data, sizeof(data));
+        data[7] = 0;
+      }
       etat = Attente;
       break;
 
     case Debogage:
-      Ecran.Debogage();
+      if (selection == 0)
+      {
+        Ecran.Debogage();
+      }
+      else if (selection == 1)
+      {
+        data[3] = 3;
+        if (nomEtat == "Debug1")
+        {
+          data[6] = 1;
+          Ecran.BtnDebug1Appuye();
+          Ecran.BtnDebug2NonAppuye();
+          Ecran.BtnDebug3NonAppuye();
+          Ecran.BtnDebug4NonAppuye();
+          thread_sleep_for(500);
+          Ecran.BtnDebug1NonAppuye();
+        }
+        else if (nomEtat == "Debug2")
+        {
+          data[6] = 2;
+          Ecran.BtnDebug2Appuye();
+          Ecran.BtnDebug1NonAppuye();
+          Ecran.BtnDebug3NonAppuye();
+          Ecran.BtnDebug4NonAppuye();
+          thread_sleep_for(500);
+          Ecran.BtnDebug2NonAppuye();
+        }
+        else if (nomEtat == "Debug3")
+        {
+          data[6] = 3;
+          Ecran.BtnDebug3Appuye();
+          Ecran.BtnDebug1NonAppuye();
+          Ecran.BtnDebug2NonAppuye();
+          Ecran.BtnDebug4NonAppuye();
+          thread_sleep_for(500);
+          Ecran.BtnDebug3NonAppuye();
+        }
+        else if (nomEtat == "Debug4")
+        {
+          data[6] = 4;
+          Ecran.BtnDebug4Appuye();
+          Ecran.BtnDebug1NonAppuye();
+          Ecran.BtnDebug2NonAppuye();
+          Ecran.BtnDebug3NonAppuye();
+          thread_sleep_for(500);
+          Ecran.BtnDebug4NonAppuye();
+        }
+        pc.write(data, sizeof(data));
+        data[6] = 0;
+      }
       etat = Attente;
       break;
 
@@ -306,7 +370,7 @@ int main()
         data[5] = 0;
         etat = Attente;
       }
-      
+
       etat = Attente;
       break;
 
@@ -324,12 +388,17 @@ int main()
       case 2:
         data[3] = 2;
         Ecran.AffichageDemo();
+        Ecran.BtnDemarrerNonAppuye();
         modeActuel = 2;
         etat = Attente;
         break;
       case 3:
         data[3] = 3;
         Ecran.AffichageDebug();
+        Ecran.BtnDebug1NonAppuye();
+        Ecran.BtnDebug2NonAppuye();
+        Ecran.BtnDebug3NonAppuye();
+        Ecran.BtnDebug4NonAppuye();
         modeActuel = 3;
         etat = Attente;
         break;

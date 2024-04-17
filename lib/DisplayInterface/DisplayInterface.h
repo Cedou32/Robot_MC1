@@ -43,6 +43,16 @@ public:
     void BtnEnregistrement3NonAppuye();
     void BtnEnregistrement3Appuye();
 
+    void BtnDebug1NonAppuye();
+    void BtnDebug1Appuye();
+    void BtnDebug2NonAppuye();
+    void BtnDebug2Appuye();
+    void BtnDebug3NonAppuye();
+    void BtnDebug3Appuye();
+    void BtnDebug4NonAppuye();
+    void BtnDebug4Appuye();
+
+
     void EffacerAffichageEnregistrement();
 
     void BtnChoisirNonAppuye();
