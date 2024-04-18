@@ -67,6 +67,11 @@ uint8_t ancienEnregistrement = 0;
 //*****Libre******//
 bool flag_libre = 0;
 
+//*******Debug*******//
+bool flag_debug_1 = 0;
+bool flag_debug_2 = 0;
+bool flag_debug_3 = 0;
+bool flag_debug_4 = 0;
 enum etat
 {
   depart,
@@ -581,23 +586,24 @@ void Enregistrement(uint8_t enregistrement)
   if (flag_reception_trame == 1)
   {
     buff[curseur_enregistrement] = data[5];
-    //pc.write(&buff[curseur_enregistrement], 1);
+    // pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[6];
-    //pc.write(&buff[curseur_enregistrement], 1);
+    // pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[7];
-    //pc.write(&buff[curseur_enregistrement], 1);
+    // pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[8];
-    //pc.write(&buff[curseur_enregistrement], 1);
+    // pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     buff[curseur_enregistrement] = data[9];
-    //pc.write(&buff[curseur_enregistrement], 1);
+    // pc.write(&buff[curseur_enregistrement], 1);
     curseur_enregistrement++;
     flag_reception_trame = 0;
   }
-  if (curseur_enregistrement == 495){
+  if (curseur_enregistrement == 495)
+  {
     curseur_enregistrement = 0;
   }
   /*
@@ -632,7 +638,7 @@ void Rejouer(uint8_t enregistrement)
     memcpy(buff, buffer_enregsitrement_2, sizeof(buffer_enregsitrement_2));
     break;
   case 3:
-    memcpy(buff, buffer_enregsitrement_3,sizeof(buffer_enregsitrement_3));
+    memcpy(buff, buffer_enregsitrement_3, sizeof(buffer_enregsitrement_3));
     break;
   }
 
@@ -682,19 +688,19 @@ int main()
       for (int i = 0; i <= 750; i++)
       {
         stepPinC = 1;
-        thread_sleep_for(1);
+        wait_us(1250);
         stepPinC = 0;
-        thread_sleep_for(1);
+        wait_us(1250);
       }
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
       ServoCoude.write(0.03);
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
       ServoPoignet.write(0.09);
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
       ServoPince.write(0.12);
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
       ServoPince.write(0.08);
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
 
       etat_actuel = lecture_trame;
       break;
@@ -795,8 +801,9 @@ int main()
         else if (ancien_mode == 4 && nouvelEnregistrement == 0)
         {
           etat_actuel = enregistrement;
-        } 
-        else if (ancien_mode == 4 && nouvelEnregistrement == 1){
+        }
+        else if (ancien_mode == 4 && nouvelEnregistrement == 1)
+        {
           etat_actuel = retour_maison;
         }
         else if (ancien_mode == 0)
@@ -820,7 +827,7 @@ int main()
 
       if (data[2] == 1)
       {
-        
+
         flag_enregistrement_1 = 1;
         MouvementMoteur();
         Enregistrement(data[1]);
@@ -831,8 +838,8 @@ int main()
 
       if (flag_10_sec_termine == 1 && data[2] == 2)
       {
-        //data[1] = 0;
-        // flag_10_sec_termine = 0;
+        // data[1] = 0;
+        //  flag_10_sec_termine = 0;
         etat_actuel = retour_maison;
       }
 
@@ -847,6 +854,242 @@ int main()
       break;
     case deboguage:
       LED = 0;
+      if (data[3] == 1)
+      {
+        data[3] = 0;
+        dirPinB = 0;
+        for (int i = 0; i < 1600; i++)
+        {
+          if (i >= 0 && i < 266)
+          {
+            stepPinB = 1;
+            wait_us(1200);
+            stepPinB = 0;
+            wait_us(1200);
+          }
+          else if (i >= 266 && i < 532)
+          {
+            stepPinB = 1;
+            wait_us(1600);
+            stepPinB = 0;
+            wait_us(1600);
+          }
+          else if (i >= 532 && i < 798)
+          {
+            stepPinB = 1;
+            wait_us(2200);
+            stepPinB = 0;
+            wait_us(2200);
+          }
+          else if (i >= 798 && i < 1064)
+          {
+            stepPinB = 1;
+            wait_us(2800);
+            stepPinB = 0;
+            wait_us(2800);
+          }
+          else if (i >= 1064 && i < 1330)
+          {
+            stepPinB = 1;
+            wait_us(3400);
+            stepPinB = 0;
+            wait_us(3400);
+          }
+          else if (i >= 1330 && i < 1600)
+          {
+            stepPinB = 1;
+            wait_us(4000);
+            stepPinB = 0;
+            wait_us(4000);
+          }
+        }
+        dirPinB = 1;
+        for (int i = 0; i < 3200; i++)
+        {
+          if (i >= 0 && i < 533)
+          {
+            stepPinB = 1;
+            wait_us(1200);
+            stepPinB = 0;
+            wait_us(1200);
+          }
+          else if (i >= 533 && i < 1066)
+          {
+            stepPinB = 1;
+            wait_us(1600);
+            stepPinB = 0;
+            wait_us(1600);
+          }
+          else if (i >= 1066 && i < 1599)
+          {
+            stepPinB = 1;
+            wait_us(2200);
+            stepPinB = 0;
+            wait_us(2200);
+          }
+          else if (i >= 1599 && i < 2132)
+          {
+            stepPinB = 1;
+            wait_us(2800);
+            stepPinB = 0;
+            wait_us(2800);
+          }
+          else if (i >= 2132 && i < 2665)
+          {
+            stepPinB = 1;
+            wait_us(3400);
+            stepPinB = 0;
+            wait_us(3400);
+          }
+          else if (i >= 2665 && i < 3200)
+          {
+            stepPinB = 1;
+            wait_us(4000);
+            stepPinB = 0;
+            wait_us(4000);
+          }
+        }
+        dirPinB = 0;
+        for (int i = 0; i < 1600; i++)
+        {
+          stepPinB = 1;
+          wait_us(1000);
+          stepPinB = 0;
+          wait_us(1000);
+        }
+        thread_sleep_for(750);
+        ServoCoude.write(0.065);
+        thread_sleep_for(500);
+        dirPinC = 1;
+        for (int i = 0; i < 750; i++)
+        {
+          if (i >= 0 && i < 133)
+          {
+            stepPinC = 1;
+            wait_us(1200);
+            stepPinC = 0;
+            wait_us(1200);
+          }
+          else if (i >= 133 && i < 266)
+          {
+            stepPinC = 1;
+            wait_us(1600);
+            stepPinC = 0;
+            wait_us(1600);
+          }
+          else if (i >= 266 && i < 399)
+          {
+            stepPinC = 1;
+            wait_us(2200);
+            stepPinC = 0;
+            wait_us(2200);
+          }
+          else if (i >= 399 && i < 532)
+          {
+            stepPinC = 1;
+            wait_us(2800);
+            stepPinC = 0;
+            wait_us(2800);
+          }
+          else if (i >= 532 && i < 665)
+          {
+            stepPinC = 1;
+            wait_us(3400);
+            stepPinC = 0;
+            wait_us(3400);
+          }
+          else if (i >= 665 && i < 800)
+          {
+            stepPinC = 1;
+            wait_us(4000);
+            stepPinC = 0;
+            wait_us(4000);
+          }
+        }
+        dirPinC = 0;
+        for (int i = 0; i < 750; i++)
+        {
+          if (i >= 0 && i < 133)
+          {
+            stepPinC = 1;
+            wait_us(4000);
+            stepPinC = 0;
+            wait_us(4000);
+          }
+          else if (i >= 133 && i < 266)
+          {
+            stepPinC = 1;
+            wait_us(3400);
+            stepPinC = 0;
+            wait_us(3400);
+          }
+          else if (i >= 266 && i < 399)
+          {
+            stepPinC = 1;
+            wait_us(2800);
+            stepPinC = 0;
+            wait_us(2800);
+          }
+          else if (i >= 399 && i < 532)
+          {
+            stepPinC = 1;
+            wait_us(2200);
+            stepPinC = 0;
+            wait_us(2200);
+          }
+          else if (i >= 532 && i < 665)
+          {
+            stepPinC = 1;
+            wait_us(1600);
+            stepPinC = 0;
+            wait_us(1600);
+          }
+          else if (i >= 665 && i < 800)
+          {
+            stepPinC = 1;
+            wait_us(1200);
+            stepPinC = 0;
+            wait_us(1200);
+          }
+        }
+        ServoCoude.write(0.03);
+        thread_sleep_for(500);
+      }else if (data[3] == 2){
+        data[3] = 0;
+        ServoPoignet.write(0.080);
+        thread_sleep_for(500);
+        dirPinC = 1;
+        for (int i = 0; i < 200; i++)
+        {
+          stepPinC = 1;
+          wait_us(1250);
+          stepPinC = 0;
+          wait_us(1250);
+        }
+        thread_sleep_for(750);
+        /*
+        for (int i = 0; i < 2500; i++)
+        thread_sleep_for(750);
+        ServoCoude.write(0.03);
+        thread_sleep_for(500);
+        dirPinC = 0;
+        data[8] = 220;
+        for (int i = 0; i < 750; i++)
+        {
+          MouvementMoteur();
+          ServoCoude.write(dutyCycleCoude);
+        }
+        data[8] = 40;
+        for (int i = 0; i < 2500; i++)
+        {
+          MouvementMoteur();
+          ServoCoude.write(dutyCycleCoude);
+        }*/
+        ServoCoude.write(0.077);
+        thread_sleep_for(1000);
+        ServoCoude.write(0.03);
+        thread_sleep_for(1000);
+      }
       etat_actuel = lecture_trame;
       break;
     case rejouer_sequence:
@@ -874,18 +1117,18 @@ int main()
         stepPinC = 0;
         thread_sleep_for(1);
       }
-      thread_sleep_for(1000);
+      thread_sleep_for(750);
       ServoCoude.write(0.03);
       dutyCycleCoude = 0.03;
-      thread_sleep_for(1000);
+      thread_sleep_for(500);
       ServoPoignet.write(0.09);
       dutyCyclePoignet = 0.09;
-      thread_sleep_for(1000);
+      thread_sleep_for(500);
       ServoPince.write(0.12);
-      thread_sleep_for(1000);
+      thread_sleep_for(500);
       ServoPince.write(0.08);
       dutyCyclePince = 0.08;
-      thread_sleep_for(1000);
+      thread_sleep_for(500);
       if (data[2] == 2)
       {
         data[2] = 0;
@@ -896,7 +1139,7 @@ int main()
         etat_actuel = detection_mode;
       }
       if (nouvelEnregistrement == 1)
-      break;
+        break;
     }
   }
 }
