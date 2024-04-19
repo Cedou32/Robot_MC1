@@ -1130,7 +1130,6 @@ int main()
           ServoCoude.write(dutyCycleCoude); 
         }
         thread_sleep_for(500);
-        thread_sleep_for(500);
         ServoPince.write(0.12);
         thread_sleep_for(500);
         ServoPince.write(0.08);
