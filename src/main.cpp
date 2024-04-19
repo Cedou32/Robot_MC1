@@ -493,9 +493,9 @@ void MouvementMoteur(void)
     {
       dutyCyclePoignet = 0.03;
     }
-    else if (dutyCyclePoignet > 0.125)
+    else if (dutyCyclePoignet > 0.115)
     {
-      dutyCyclePoignet = 0.125;
+      dutyCyclePoignet = 0.115;
     }
     ServoPoignet.write(dutyCyclePoignet);
     //**********Servo Pince//
@@ -692,15 +692,15 @@ int main()
         stepPinC = 0;
         wait_us(1250);
       }
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoCoude.write(0.03);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoPoignet.write(0.09);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoPince.write(0.12);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
       ServoPince.write(0.08);
-      thread_sleep_for(750);
+      thread_sleep_for(1000);
 
       etat_actuel = lecture_trame;
       break;
@@ -1067,28 +1067,34 @@ int main()
           wait_us(1250);
         }
         thread_sleep_for(750);
-        /*
-        for (int i = 0; i < 2500; i++)
-        thread_sleep_for(750);
-        ServoCoude.write(0.03);
-        thread_sleep_for(500);
-        dirPinC = 0;
-        data[8] = 220;
-        for (int i = 0; i < 750; i++)
-        {
-          MouvementMoteur();
-          ServoCoude.write(dutyCycleCoude);
-        }
-        data[8] = 40;
-        for (int i = 0; i < 2500; i++)
-        {
-          MouvementMoteur();
-          ServoCoude.write(dutyCycleCoude);
-        }*/
         ServoCoude.write(0.077);
         thread_sleep_for(1000);
         ServoCoude.write(0.03);
         thread_sleep_for(1000);
+        dirPinC = 0;
+        for (int i = 0; i < 200; i++)
+        {
+          stepPinC = 1;
+          wait_us(1250);
+          stepPinC = 0;
+          wait_us(1250);
+        }
+        thread_sleep_for(1500);
+        ServoPoignet.write(0.09);
+      }
+      else if (data[3] == 3){
+        data[3] = 0;
+        thread_sleep_for(4000);
+        ServoPoignet.write(0.115);
+        thread_sleep_for(1500);
+        ServoCoude.write(0.050);
+        thread_sleep_for(10000);
+        ServoPoignet.write(0.03);
+        thread_sleep_for(10000);
+        ServoPoignet.write(0.09);
+        thread_sleep_for(1500);
+        ServoCoude.write(0.03);
+        thread_sleep_for(1500);
       }
       etat_actuel = lecture_trame;
       break;
