@@ -72,6 +72,14 @@ bool flag_debug_1 = 0;
 bool flag_debug_2 = 0;
 bool flag_debug_3 = 0;
 bool flag_debug_4 = 0;
+
+/******Demo*******/
+int flag_protectionDemo = 0;
+bool flagDemo = 0;
+
+char currentCharDemo;
+
+uint8_t dataDemo[10];
 enum etat
 {
   depart,
@@ -86,7 +94,7 @@ enum etat
   lecture_vitesse
 };
 
-void VerifServo()
+void VerifServoEtLecture()
 {
   flagServo = 1;
   flag_rejouer_10sec += 1;
@@ -662,13 +670,50 @@ void Rejouer(uint8_t enregistrement)
   }
 }
 
+void LectureDemo()
+{
+  if (pc.readable())
+  {
+    pc.read(&currentCharDemo, 1);
+    if (currentCharDemo == '#')
+    {
+      flag_protectionDemo++;
+    }
+    else if (currentCharDemo == '@' && flag_protectionDemo == 1)
+    {
+      flag_protectionDemo++;
+    }
+    else if (currentCharDemo == '+' && flag_protectionDemo == 2)
+    {
+      flag_protectionDemo++;
+      for (int i = 0; i <= 9; i++)
+      {
+        pc.read(&currentCharDemo, 1);
+        dataDemo[i] = currentCharDemo;
+      }
+    }
+    else if (currentCharDemo == '?' && flag_protectionDemo == 3)
+    {
+      flag_protectionDemo++;
+    }
+    else if (currentCharDemo == '%' && flag_protectionDemo == 4)
+    {
+      flag_protectionDemo = 0;
+      // pc.write(data, 10);
+    }
+    else
+    {
+      memset(dataDemo, 125, 10);
+    }
+  }
+}
 int main()
 {
 
   spi.format(8, 0);
   spi.frequency(5000000);
 
-  InterruptionServo.attach(&VerifServo, 0.001);
+  InterruptionServo.attach(&VerifServoEtLecture, 0.001);
   InterruptionStepperBase.attach(&VerifStepper, 0.0002);
 
   data[5] = 125;
@@ -688,9 +733,9 @@ int main()
       for (int i = 0; i <= 750; i++)
       {
         stepPinC = 1;
-        wait_us(1250);
+        wait_us(2000);
         stepPinC = 0;
-        wait_us(1250);
+        wait_us(2000);
       }
       thread_sleep_for(1000);
       ServoCoude.write(0.03);
@@ -852,9 +897,16 @@ int main()
       LED = 0;
       if (data[4] == 1)
       {
+        /*********Portion steppers**********/
         dirPinB = 0;
         for (int i = 0; i < 1600; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
           if (i >= 0 && i < 266)
           {
             stepPinB = 1;
@@ -899,8 +951,21 @@ int main()
           }
         }
         dirPinB = 1;
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          data[4] = 0;
+          etat_actuel = lecture_trame;
+          break;
+        }
         for (int i = 0; i < 3200; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
           if (i >= 0 && i < 533)
           {
             stepPinB = 1;
@@ -945,19 +1010,57 @@ int main()
           }
         }
         dirPinB = 0;
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          data[4] = 0;
+          etat_actuel = lecture_trame;
+          break;
+        }
         for (int i = 0; i < 1600; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
           stepPinB = 1;
           wait_us(1000);
           stepPinB = 0;
           wait_us(1000);
         }
-        thread_sleep_for(750);
-        ServoCoude.write(0.065);
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          data[4] = 0;
+          etat_actuel = lecture_trame;
+          break;
+        }
+        thread_sleep_for(1000);
+        while (dutyCycleCoude < 0.065)
+        {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
+          dutyCycleCoude += 0.00001;
+          ServoCoude.write(dutyCycleCoude);
+        }
+        thread_sleep_for(1000);
         dirPinC = 1;
         for (int i = 0; i < 750; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          valeur_encodeur -= 2;
           if (i >= 0 && i < 133)
           {
             stepPinC = 1;
@@ -1002,8 +1105,21 @@ int main()
           }
         }
         dirPinC = 0;
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
         for (int i = 0; i < 750; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          valeur_encodeur += 2;
           if (i >= 0 && i < 133)
           {
             stepPinC = 1;
@@ -1047,95 +1163,289 @@ int main()
             wait_us(1200);
           }
         }
-        ServoCoude.write(0.03);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        while (dutyCycleCoude > 0.03)
+        {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
+          dutyCycleCoude -= 0.00001;
+          ServoCoude.write(dutyCycleCoude);
+        }
         thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        /************Portion servo Coude*************/
         while (dutyCyclePoignet > 0.08)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCyclePoignet -= 0.00001;
           ServoPoignet.write(dutyCyclePoignet);
+        }
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
         }
         thread_sleep_for(500);
         dirPinC = 1;
         for (int i = 0; i < 200; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          valeur_encodeur--;
           stepPinC = 1;
           wait_us(1250);
           stepPinC = 0;
           wait_us(1250);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCycleCoude < 0.077)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCycleCoude += 0.00001;
           ServoCoude.write(dutyCycleCoude);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCycleCoude > 0.03)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCycleCoude -= 0.00001;
           ServoCoude.write(dutyCycleCoude);
         }
-        thread_sleep_for(500);
+        thread_sleep_for(1000);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        /************Servo Poignet************/
         dirPinC = 0;
         for (int i = 0; i < 200; i++)
         {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
           stepPinC = 1;
           wait_us(1250);
           stepPinC = 0;
           wait_us(1250);
         }
-        thread_sleep_for(500);
+        thread_sleep_for(1000);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
         while (dutyCyclePoignet < 0.09)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCyclePoignet += 0.00001;
           ServoPoignet.write(dutyCyclePoignet);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCyclePoignet < 0.115)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCyclePoignet += 0.00001;
           ServoPoignet.write(dutyCyclePoignet);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCycleCoude < 0.05)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCycleCoude += 0.00001;
           ServoCoude.write(dutyCycleCoude);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCyclePoignet > 0.03)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCyclePoignet -= 0.00001;
           ServoPoignet.write(dutyCyclePoignet);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCyclePoignet < 0.09)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCyclePoignet += 0.00001;
           ServoPoignet.write(dutyCyclePoignet);
         }
-        thread_sleep_for(500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
         while (dutyCycleCoude > 0.03)
         {
-          wait_us(250);
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
           dutyCycleCoude -= 0.00001;
-          ServoCoude.write(dutyCycleCoude); 
+          ServoCoude.write(dutyCycleCoude);
         }
-        thread_sleep_for(500);
-        ServoPince.write(0.12);
-        thread_sleep_for(500);
-        ServoPince.write(0.08);
-        thread_sleep_for(1500);
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        /***********Servo Pince***********/
+        thread_sleep_for(1000);
+        while (dutyCyclePince < 0.12)
+        {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
+          dutyCyclePince += 0.01;
+          ServoPince.write(dutyCyclePince);
+        }
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
+        while (dutyCyclePince > 0.08)
+        {
+          LectureDemo();
+          if (dataDemo[4] == 2)
+          {
+            flagDemo = 1;
+            break;
+          }
+          wait_us(500);
+          dutyCyclePince -= 0.01;
+          ServoPince.write(dutyCyclePince);
+        }
+        if (flagDemo == 1)
+        {
+          flagDemo = 0;
+          etat_actuel = retour_maison;
+          break;
+        }
+        thread_sleep_for(1000);
+      }else if (data[4] == 0){
+        etat_actuel = lecture_trame;
       }
-      etat_actuel = lecture_trame;
       break;
     case deboguage:
       LED = 0;
@@ -1461,9 +1771,9 @@ int main()
       for (int i = 0; i < resultat_encodeur; i++)
       {
         stepPinC = 1;
-        thread_sleep_for(1);
+        wait_us(2000);
         stepPinC = 0;
-        thread_sleep_for(1);
+        wait_us(2000);
       }
       thread_sleep_for(750);
       ServoCoude.write(0.03);
@@ -1485,6 +1795,11 @@ int main()
       else
       {
         etat_actuel = detection_mode;
+      }
+      if (dataDemo[4] == 2){
+        dataDemo[4] = 0; 
+        data[4] = 0;
+        etat_actuel = lecture_trame;
       }
       if (nouvelEnregistrement == 1)
         break;
