@@ -12,13 +12,14 @@
 #include "Arial24x23.h"
 #include "GraphicsDisplay.h"
 
-class DisplayInterface {
+class DisplayInterface
+{
 public:
     DisplayInterface(PinName mosi, PinName miso, PinName sclk, PinName cs, PinName rst, PinName dc);
 
     void BtnOn();
     void BtnOff();
-    
+
     void Initialisation();
 
     void BtnMenuNonAppuye();
@@ -26,7 +27,7 @@ public:
 
     void BtnModesNonAppuye();
     void BtnModesAppuye();
-    
+
     void BtnLibreNonAppuye();
     void BtnLibreAppuye();
     void BtnEnregistrerNonAppuye();
@@ -52,16 +53,14 @@ public:
     void BtnDebug4NonAppuye();
     void BtnDebug4Appuye();
 
-
-    void EffacerAffichageEnregistrement();
-
-    void BtnChoisirNonAppuye();
-    void BtnChoisirAppuye();
-
     void BtnDemarrerNonAppuye();
     void BtnDemarrerAppuye();
     void FermerBtnDemarrer();
     void FinEnregistrement();
+
+    void BtnArreterNonAppuye();
+    void BtnArreterAppuye();
+    void FermerBtnArreter();
 
     void BtnRejouerNonAppuye();
     void BtnRejouerAppuye();
@@ -110,7 +109,6 @@ public:
 
 private:
     SPI_TFT_ILI9341 TFT;
-
 };
 
 #endif

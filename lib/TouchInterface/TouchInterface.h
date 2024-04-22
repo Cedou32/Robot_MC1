@@ -21,7 +21,6 @@ enum EtatLib
     Demo,
     Debogage,
     Enregistrer,
-    Selection,
     TransmissionTrame,
 };
 

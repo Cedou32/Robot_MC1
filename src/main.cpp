@@ -41,6 +41,7 @@ bool flagBatterie = false;
 bool flagFinEnregistrement = false;
 uint8_t modeActuel = 0;
 uint8_t enregistrementActuel = 0;
+bool enregistrementChoisi = false;
 
 // Trames
 uint8_t data[15];
@@ -120,7 +121,7 @@ int main()
       break;
 
     case Attente:
-      if (mode == 1 && status == true) // Mode libre choisi
+      if (modeActuel == 1) // Mode libre choisi
       {
         etat = TransmissionTrame;
       }
@@ -174,15 +175,15 @@ int main()
       break;
     case Menu:
       flagMenu = !flagMenu; // activer le flag du bouton
-      if (flagMenu == true)
+      if (flagMenu == true || modeActuel != 0)
       {
         Ecran.Menu();
-
         modeActuel = 0;
         enregistrementActuel = 0;
         selection = 0;
         flagFinEnregistrement = false;
         flagModes = false;
+        enregistrementChoisi = false;
       }
       else if (flagMenu == false)
       {
@@ -193,6 +194,7 @@ int main()
         selection = 0;
         flagFinEnregistrement = false;
         flagModes = false;
+        enregistrementChoisi = false;
       }
       etat = Attente;
       break;
@@ -205,129 +207,169 @@ int main()
 
     case Libre:
       Ecran.Libre();
+      thread_sleep_for(50);
+      Ecran.Choisir();
+      Ecran.AffichageLibre();
+      modeActuel = 1;
+      data[3] = 1;
+
+      pc.write(data, sizeof(data));
+
+      /*flagMenu = false;
+      flagModes = false;*/
       etat = Attente;
       break;
 
     case Demo:
-      if (selection == 0)
-      {
-        Ecran.Demo();
-      }
-      else if (selection == 1)
+
+      if (nomEtat == "StartDemo")
       {
         data[7] = 1;
-        if (nomEtat == "Demo")
-        {
-          Ecran.BtnDemarrerAppuye();
-          thread_sleep_for(500);
-          Ecran.BtnDemarrerNonAppuye();
-        }
-        pc.write(data, sizeof(data));
-        data[7] = 0;
+        Ecran.BtnDemarrerAppuye();
+        thread_sleep_for(50);
+        Ecran.BtnDemarrerNonAppuye();
       }
+      else if (nomEtat == "StopDemo")
+      {
+        data[7] = 2;
+        Ecran.BtnArreterAppuye();
+        thread_sleep_for(50);
+        Ecran.BtnArreterNonAppuye();
+      }
+      else
+      {
+        Ecran.Demo();
+        thread_sleep_for(50);
+        Ecran.Choisir();
+        data[3] = 2;
+        Ecran.AffichageDemo();
+        Ecran.BtnDemarrerNonAppuye();
+        Ecran.BtnArreterNonAppuye();
+        modeActuel = 2;
+        flagMenu = false;
+        flagModes = false;
+      }
+
+      pc.write(data, sizeof(data));
+      data[7] = 0;
+
       etat = Attente;
       break;
 
     case Debogage:
-      if (selection == 0)
+
+      if (nomEtat == "Debug1")
+      {
+        data[6] = 1;
+        Ecran.BtnDebug1Appuye();
+        Ecran.BtnDebug2NonAppuye();
+        Ecran.BtnDebug3NonAppuye();
+        Ecran.BtnDebug4NonAppuye();
+        thread_sleep_for(250);
+        Ecran.BtnDebug1NonAppuye();
+      }
+      else if (nomEtat == "Debug2")
+      {
+        data[6] = 2;
+        Ecran.BtnDebug2Appuye();
+        Ecran.BtnDebug1NonAppuye();
+        Ecran.BtnDebug3NonAppuye();
+        Ecran.BtnDebug4NonAppuye();
+        thread_sleep_for(250);
+        Ecran.BtnDebug2NonAppuye();
+      }
+      else if (nomEtat == "Debug3")
+      {
+        data[6] = 3;
+        Ecran.BtnDebug3Appuye();
+        Ecran.BtnDebug1NonAppuye();
+        Ecran.BtnDebug2NonAppuye();
+        Ecran.BtnDebug4NonAppuye();
+        thread_sleep_for(250);
+        Ecran.BtnDebug3NonAppuye();
+      }
+      else if (nomEtat == "Debug4")
+      {
+        data[6] = 4;
+        Ecran.BtnDebug4Appuye();
+        Ecran.BtnDebug1NonAppuye();
+        Ecran.BtnDebug2NonAppuye();
+        Ecran.BtnDebug3NonAppuye();
+        thread_sleep_for(250);
+        Ecran.BtnDebug4NonAppuye();
+      }
+      else if (nomEtat == "Debogage")
       {
         Ecran.Debogage();
-      }
-      else if (selection == 1)
-      {
+        thread_sleep_for(50);
+        Ecran.Choisir();
         data[3] = 3;
-        if (nomEtat == "Debug1")
-        {
-          data[6] = 1;
-          Ecran.BtnDebug1Appuye();
-          Ecran.BtnDebug2NonAppuye();
-          Ecran.BtnDebug3NonAppuye();
-          Ecran.BtnDebug4NonAppuye();
-          thread_sleep_for(500);
-          Ecran.BtnDebug1NonAppuye();
-        }
-        else if (nomEtat == "Debug2")
-        {
-          data[6] = 2;
-          Ecran.BtnDebug2Appuye();
-          Ecran.BtnDebug1NonAppuye();
-          Ecran.BtnDebug3NonAppuye();
-          Ecran.BtnDebug4NonAppuye();
-          thread_sleep_for(500);
-          Ecran.BtnDebug2NonAppuye();
-        }
-        else if (nomEtat == "Debug3")
-        {
-          data[6] = 3;
-          Ecran.BtnDebug3Appuye();
-          Ecran.BtnDebug1NonAppuye();
-          Ecran.BtnDebug2NonAppuye();
-          Ecran.BtnDebug4NonAppuye();
-          thread_sleep_for(500);
-          Ecran.BtnDebug3NonAppuye();
-        }
-        else if (nomEtat == "Debug4")
-        {
-          data[6] = 4;
-          Ecran.BtnDebug4Appuye();
-          Ecran.BtnDebug1NonAppuye();
-          Ecran.BtnDebug2NonAppuye();
-          Ecran.BtnDebug3NonAppuye();
-          thread_sleep_for(500);
-          Ecran.BtnDebug4NonAppuye();
-        }
-        pc.write(data, sizeof(data));
-        data[6] = 0;
+        Ecran.AffichageDebug();
+        Ecran.BtnDebug1NonAppuye();
+        Ecran.BtnDebug2NonAppuye();
+        Ecran.BtnDebug3NonAppuye();
+        Ecran.BtnDebug4NonAppuye();
+        modeActuel = 3;
+        flagMenu = false;
+        flagModes = false;
       }
+      pc.write(data, sizeof(data));
+
+      data[6] = 0;
+
       etat = Attente;
       break;
 
     case Enregistrer:
-      if (selection == 0)
+      if (nomEtat == "Enregistrer")
       {
+        data[3] = 4;
+        modeActuel = 4;
         Ecran.Enregistrer();
+        thread_sleep_for(50);
+        Ecran.Choisir();
+        Ecran.AffichageEnregistrer();
+        pc.write(data, sizeof(data));
+        flagMenu = false;
+        flagModes = false;
       }
-      else if (selection == 1)
+
+      if (nomEtat == "Enregistrement1" && enregistrementChoisi == false)
       {
-        if (nomEtat == "Enregistrement1")
-        {
-          enregistrementActuel = 1;
-          Ecran.BtnEnregistrement1Appuye();
-          Ecran.BtnEnregistrement2NonAppuye();
-          Ecran.BtnEnregistrement3NonAppuye();
-          Ecran.BtnChoisirNonAppuye();
-        }
-        else if (nomEtat == "Enregistrement2")
-        {
-          enregistrementActuel = 2;
-          Ecran.BtnEnregistrement1NonAppuye();
-          Ecran.BtnEnregistrement2Appuye();
-          Ecran.BtnEnregistrement3NonAppuye();
-          Ecran.BtnChoisirNonAppuye();
-        }
-        else if (nomEtat == "Enregistrement3")
-        {
-          enregistrementActuel = 3;
-          Ecran.BtnEnregistrement1NonAppuye();
-          Ecran.BtnEnregistrement2NonAppuye();
-          Ecran.BtnEnregistrement3Appuye();
-          Ecran.BtnChoisirNonAppuye();
-        }
-      }
-      else if (selection == 2 && nomEtat != "Enregistrement")
-      {
-        selection = 3;
+        enregistrementChoisi = true;
+        enregistrementActuel = 1;
+        Ecran.BtnEnregistrement1Appuye();
+        thread_sleep_for(50);
         Ecran.EffacerEnregistrement();
         Ecran.BtnDemarrerNonAppuye();
         Ecran.BtnRejouerNonAppuye();
-        etat = Attente;
       }
-
-      // Demarrer enregistrement
-      if (nomEtat == "Enregistrement" && flagFinEnregistrement == false)
+      else if (nomEtat == "Enregistrement2" && enregistrementChoisi == false)
       {
+        enregistrementChoisi = true;
+        enregistrementActuel = 2;
+        Ecran.BtnEnregistrement2Appuye();
+        thread_sleep_for(50);
+        Ecran.EffacerEnregistrement();
+        Ecran.BtnDemarrerNonAppuye();
+        Ecran.BtnRejouerNonAppuye();
+      }
+      else if (nomEtat == "Enregistrement3" && enregistrementChoisi == false)
+      {
+        enregistrementChoisi = true;
+        enregistrementActuel = 3;
+        Ecran.BtnEnregistrement3Appuye();
+        thread_sleep_for(50);
+        Ecran.EffacerEnregistrement();
+        Ecran.BtnDemarrerNonAppuye();
+        Ecran.BtnRejouerNonAppuye();
+      }
+      // Demarrer enregistrement
+      if (nomEtat == "Enregistrement")
+      {
+        enregistrementChoisi = true;
         Ecran.BtnDemarrerAppuye();
-        thread_sleep_for(250);
+        thread_sleep_for(50);
         Ecran.FermerBtnDemarrer();
         Ecran.FermerBtnRejouer();
         LED = 1;
@@ -352,74 +394,35 @@ int main()
         data[4] = 0;
         data[5] = 0;
         pc.write(data, sizeof(data));
+        thread_sleep_for(1000);
+        Ecran.EffacerEnregistrement();
+        Ecran.BtnDemarrerNonAppuye();
+        Ecran.BtnRejouerNonAppuye();
         etat = Attente;
       }
 
       // Rejouer
       if (nomEtat == "Rejouer")
       {
-        Ecran.BtnRejouerAppuye();
-        thread_sleep_for(250);
-        Ecran.FermerBtnRejouer();
-
         data[3] = 4;
         data[4] = enregistrementActuel;
         data[5] = 2;
         pc.write(data, sizeof(data));
         data[4] = 0;
         data[5] = 0;
+
+        Ecran.BtnRejouerAppuye();
+        thread_sleep_for(50);
+        Ecran.FermerBtnRejouer();
+        thread_sleep_for(50);
+        Ecran.BtnRejouerNonAppuye();
+
         etat = Attente;
       }
+
+      nomEtat = "";
 
       etat = Attente;
-      break;
-
-    case Selection:
-      selection += 1;
-      Ecran.Choisir();
-      switch (mode)
-      {
-      case 1:
-        Ecran.AffichageLibre();
-        modeActuel = 1;
-        data[3] = 1;
-        etat = Attente;
-        break;
-      case 2:
-        data[3] = 2;
-        Ecran.AffichageDemo();
-        Ecran.BtnDemarrerNonAppuye();
-        modeActuel = 2;
-        etat = Attente;
-        break;
-      case 3:
-        data[3] = 3;
-        Ecran.AffichageDebug();
-        Ecran.BtnDebug1NonAppuye();
-        Ecran.BtnDebug2NonAppuye();
-        Ecran.BtnDebug3NonAppuye();
-        Ecran.BtnDebug4NonAppuye();
-        modeActuel = 3;
-        etat = Attente;
-        break;
-      case 4:
-        data[3] = 4;
-        Ecran.AffichageEnregistrer();
-        if (selection == 1)
-        {
-          Ecran.BtnEnregistrement1NonAppuye();
-          Ecran.BtnEnregistrement2NonAppuye();
-          Ecran.BtnEnregistrement3NonAppuye();
-        }
-        modeActuel = 4;
-        etat = Enregistrer;
-        break;
-      }
-      pc.write(data, sizeof(data));
-
-      flagMenu = false;
-      flagModes = false;
-
       break;
 
     case TransmissionTrame:

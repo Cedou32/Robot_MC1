@@ -16,13 +16,13 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
         result.nom = "Menu";
         result.status = false;
     }
-    else if (positionX >= 99 && positionX <= 221 && positionY >= 59 && positionY <= 91 && flagMenu)
+    else if (positionX >= 99 && positionX <= 221 && positionY >= 59 && positionY <= 91 && flagMenu && modeActuel == 0)
     {
         result.etat = Modes;
         result.nom = "Modes";
         result.status = false;
     }
-    else if (positionX >= 49 && positionX <= 151 && positionY >= 109 && positionY <= 136 && flagModes)
+    else if (positionX >= 49 && positionX <= 151 && positionY >= 109 && positionY <= 136 && flagModes && modeActuel == 0)
     {
         result.etat = Libre;
         result.nom = "Libre";
@@ -30,36 +30,45 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
         result.status = false;
     }
 
-    else if (positionX >= 49 && positionX <= 151 && positionY >= 144 && positionY <= 171 && flagModes)
+    else if (positionX >= 49 && positionX <= 151 && positionY >= 144 && positionY <= 171 && flagModes && modeActuel == 0)
     {
         result.etat = Demo;
         result.nom = "Demo";
         result.mode = 2;
         result.status = false;
     }
-    else if (positionX >= 169 && positionX <= 271 && positionY >= 144 && positionY <= 171 && flagModes)
+    else if (positionX >= 169 && positionX <= 271 && positionY >= 144 && positionY <= 171 && flagModes && modeActuel == 0)
     {
         result.etat = Debogage;
         result.nom = "Debogage";
         result.mode = 3;
         result.status = false;
     }
-    else if (positionX >= 169 && positionX <= 271 && positionY >= 109 && positionY <= 136 && flagModes)
+    else if (positionX >= 169 && positionX <= 271 && positionY >= 109 && positionY <= 136 && flagModes && modeActuel == 0)
     {
         result.etat = Enregistrer;
         result.nom = "Enregistrer";
         result.mode = 4;
         result.status = false;
     }
-    else if (positionX >= 84 && positionX <= 236 && positionY >= 99 && positionY <= 131 && enregistrementActuel > 0 && result.status == true)
+    else if (positionX >= 84 && positionX <= 236 && positionY >= 99 && positionY <= 131)
     {
-        result.etat = Enregistrer;
-        result.nom = "Enregistrement";
-        result.status = false;
+        if (modeActuel == 4 && enregistrementActuel > 0)
+        {
+            result.etat = Enregistrer;
+            result.nom = "Enregistrement";
+            result.status = false;
+        }
+        else if (modeActuel == 2)
+        {
+            result.etat = Demo;
+            result.nom = "StartDemo";
+            result.status = false;
+        }
     }
     else if (positionX >= 84 && positionX <= 236 && positionY >= 139 && positionY <= 171)
     {
-        if (modeActuel == 4 && enregistrementActuel > 0 && result.status == true)
+        if (modeActuel == 4 && enregistrementActuel > 0)
         {
             result.etat = Enregistrer;
             result.nom = "Rejouer";
@@ -68,7 +77,7 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
         else if (modeActuel == 2)
         {
             result.etat = Demo;
-            result.nom = "Demo";
+            result.nom = "StopDemo";
             result.status = false;
         }
     }
@@ -114,12 +123,12 @@ StateInfo TouchInterface::detectBouton(int positionX, int positionY, bool flagMe
         result.nom = "Debug4";
         result.status = false;
     }
-    else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221 && (flagModes || enregistrementActuel > 0))
+    /*else if (positionX >= 239 && positionX <= 311 && positionY >= 189 && positionY <= 221 && (flagModes || enregistrementActuel > 0))
     {
         result.etat = Selection;
         result.nom = "Selection";
         result.status = true;
-    }
+    }*/
     else
     {
         result.etat = Attente;
