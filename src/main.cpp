@@ -215,8 +215,8 @@ int main()
 
       pc.write(data, sizeof(data));
 
-      /*flagMenu = false;
-      flagModes = false;*/
+      flagMenu = false;
+      flagModes = false;
       etat = Attente;
       break;
 
