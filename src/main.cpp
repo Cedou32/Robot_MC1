@@ -59,6 +59,7 @@ uint8_t flag_reception_trame = 0;
 uint8_t flag_enregistrement_1 = 0;
 uint8_t flag_enregistrement_2 = 0;
 uint8_t flag_enregistrement_3 = 0;
+uint8_t flag_demarrer = 0;
 
 uint16_t curseur_enregistrement = 0;
 
@@ -709,6 +710,7 @@ void LectureDemo()
     }
   }
 }
+
 int main()
 {
 
@@ -874,6 +876,7 @@ int main()
 
       if (data[2] == 1)
       {
+        flag_demarrer = 1;
         flag_10_sec = 0;
         flag_enregistrement_1 = 1;
         MouvementMoteur();
@@ -883,7 +886,8 @@ int main()
 
       etat_actuel = lecture_trame;
 
-      if (flag_10_sec_termine == 1 && flag_10_sec >= 10000){
+      if (flag_demarrer == 1 && flag_10_sec >= 10000){
+        flag_demarrer = 0;
         etat_actuel = retour_maison;
       }
       if (flag_10_sec_termine == 1 && data[2] == 2)
