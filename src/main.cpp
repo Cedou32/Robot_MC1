@@ -52,6 +52,7 @@ uint8_t buffer_enregsitrement_2[500];
 uint8_t buffer_enregsitrement_3[500];
 uint8_t buff[500];
 
+uint16_t flag_10_sec = 0;
 uint8_t flag_10_sec_termine = 0;
 uint8_t flag_rejouer_10sec = 0;
 uint8_t flag_reception_trame = 0;
@@ -98,6 +99,7 @@ void VerifServoEtLecture()
 {
   flagServo = 1;
   flag_rejouer_10sec += 1;
+  flag_10_sec += 1;
 }
 
 void VerifStepper()
@@ -872,7 +874,7 @@ int main()
 
       if (data[2] == 1)
       {
-
+        flag_10_sec = 0;
         flag_enregistrement_1 = 1;
         MouvementMoteur();
         Enregistrement(data[1]);
@@ -881,14 +883,15 @@ int main()
 
       etat_actuel = lecture_trame;
 
+      if (flag_10_sec_termine == 1 && flag_10_sec >= 10000){
+        etat_actuel = retour_maison;
+      }
       if (flag_10_sec_termine == 1 && data[2] == 2)
       {
         // data[1] = 0;
         //  flag_10_sec_termine = 0;
         etat_actuel = retour_maison;
-      }
-
-      else if (data[1] == 0)
+      }else if (data[1] == 0)
       {
         etat_actuel = lecture_trame;
       }
