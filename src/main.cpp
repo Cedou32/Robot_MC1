@@ -884,7 +884,7 @@ int main()
       if (flag_10_sec_termine == 1 && data[2] == 2)
       {
         // data[1] = 0;
-        //  flag_10_sec_termine = 0;
+        // flag_10_sec_termine = 0;
         etat_actuel = retour_maison;
       }
 
@@ -955,7 +955,7 @@ int main()
         {
           flagDemo = 0;
           data[4] = 0;
-          etat_actuel = lecture_trame;
+          etat_actuel = retour_maison;
           break;
         }
         for (int i = 0; i < 3200; i++)
@@ -1014,7 +1014,7 @@ int main()
         {
           flagDemo = 0;
           data[4] = 0;
-          etat_actuel = lecture_trame;
+          etat_actuel = retour_maison;
           break;
         }
         for (int i = 0; i < 1600; i++)
@@ -1034,7 +1034,7 @@ int main()
         {
           flagDemo = 0;
           data[4] = 0;
-          etat_actuel = lecture_trame;
+          etat_actuel = retour_maison;
           break;
         }
         thread_sleep_for(1000);
