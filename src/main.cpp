@@ -59,7 +59,6 @@ uint8_t flag_reception_trame = 0;
 uint8_t flag_enregistrement_1 = 0;
 uint8_t flag_enregistrement_2 = 0;
 uint8_t flag_enregistrement_3 = 0;
-uint8_t flag_demarrer = 0;
 
 uint16_t curseur_enregistrement = 0;
 
@@ -638,7 +637,7 @@ void Enregistrement(uint8_t enregistrement)
   }
 }
 
-void Rejouer(uint8_t enregistrement)
+void  Rejouer(uint8_t enregistrement)
 {
   switch (enregistrement)
   {
@@ -710,7 +709,6 @@ void LectureDemo()
     }
   }
 }
-
 int main()
 {
 
@@ -792,7 +790,11 @@ int main()
       etat_actuel = detection_mode;
       break;
     case detection_mode:
-      if (data[0] == 1)
+      if (data[0] == 0)
+      {
+        etat_actuel = retour_maison;
+      }
+      else if (data[0] == 1)
       {
         if (ancien_mode > 1)
         {
@@ -876,7 +878,6 @@ int main()
 
       if (data[2] == 1)
       {
-        flag_demarrer = 1;
         flag_10_sec = 0;
         flag_enregistrement_1 = 1;
         MouvementMoteur();
@@ -886,8 +887,8 @@ int main()
 
       etat_actuel = lecture_trame;
 
-      if (flag_demarrer == 1 && flag_10_sec >= 10000){
-        flag_demarrer = 0;
+      if (flag_10_sec_termine == 1 && flag_10_sec >= 10000)
+      {
         etat_actuel = retour_maison;
       }
       if (flag_10_sec_termine == 1 && data[2] == 2)
@@ -895,7 +896,8 @@ int main()
         // data[1] = 0;
         // flag_10_sec_termine = 0;
         etat_actuel = retour_maison;
-      }else if (data[1] == 0)
+      }
+      else if (data[1] == 0)
       {
         etat_actuel = lecture_trame;
       }
@@ -1450,7 +1452,9 @@ int main()
           break;
         }
         thread_sleep_for(1000);
-      }else if (data[4] == 0){
+      }
+      else if (data[4] == 0)
+      {
         etat_actuel = lecture_trame;
       }
       break;
@@ -1803,13 +1807,20 @@ int main()
       {
         etat_actuel = detection_mode;
       }
-      if (dataDemo[4] == 2){
-        dataDemo[4] = 0; 
+      if (dataDemo[4] == 2)
+      {
+        dataDemo[4] = 0;
         data[4] = 0;
         etat_actuel = lecture_trame;
       }
-      if (nouvelEnregistrement == 1)
-        break;
+      if (data[0] == 0)
+      {
+        etat_actuel = lecture_trame;
+        data[0] = 5;
+      }
+      // if (nouvelEnregistrement == 1)
+
+      break;
     }
   }
 }
