@@ -887,10 +887,7 @@ int main()
 
       etat_actuel = lecture_trame;
 
-      if (flag_10_sec_termine == 1 && flag_10_sec >= 10000)
-      {
-        etat_actuel = retour_maison;
-      }
+      
       if (flag_10_sec_termine == 1 && data[2] == 2)
       {
         // data[1] = 0;
