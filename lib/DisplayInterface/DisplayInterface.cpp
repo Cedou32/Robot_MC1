@@ -132,8 +132,8 @@ void DisplayInterface::BtnDebogageNonAppuye()
     TFT.rect(169, 144, 271, 171, Black);
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(Black);
-    TFT.locate(175, 147);
-    TFT.printf("Debug");
+    TFT.locate(185, 147);
+    TFT.printf("Test");
 }
 void DisplayInterface::BtnDebogageAppuye()
 {
@@ -141,8 +141,8 @@ void DisplayInterface::BtnDebogageAppuye()
     TFT.rect(169, 144, 271, 171, LightGrey);
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(LightGrey);
-    TFT.locate(175, 147);
-    TFT.printf("Debug");
+    TFT.locate(185, 147);
+    TFT.printf("Test");
 }
 
 void DisplayInterface::BtnEnregistrement1NonAppuye()
