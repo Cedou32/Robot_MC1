@@ -463,7 +463,7 @@ void DisplayInterface::AffichageDebug()
     TFT.set_font((unsigned char *)Arial24x23);
     TFT.foreground(Black);
     TFT.locate(80, 60);
-    TFT.printf("Mode: Debug");
+    TFT.printf("Mode: Test");
 }
 
 void DisplayInterface::IconeBatterie(int8_t batterie, uint8_t ligne)
